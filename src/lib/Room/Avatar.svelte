@@ -14,7 +14,7 @@
 	alt=""
 />
 
-<style>
+<style lang="postcss">
 	.avatar {
 		user-select: none;
 	}

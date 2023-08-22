@@ -6,7 +6,7 @@
 	<slot />
 </button>
 
-<style>
+<style lang="postcss">
 	button {
 		padding: 0.25em 0.5em;
 		border-radius: 0.25em;

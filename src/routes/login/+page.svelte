@@ -55,7 +55,7 @@
 	</div>
 </div>
 
-<style>
+<style lang="postcss">
 	.center {
 		display: grid;
 		place-items: center;

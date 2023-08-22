@@ -30,7 +30,7 @@
 	</main>
 </div>
 
-<style>
+<style lang="postcss">
 	.layout {
 		height: 100%;
 		display: grid;

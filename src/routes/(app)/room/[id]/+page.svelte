@@ -11,7 +11,7 @@
 	<Timeline room={data.room}></Timeline>
 {/if}
 
-<style>
+<style lang="postcss">
 	.center {
 		height: 100%;
 		display: grid;

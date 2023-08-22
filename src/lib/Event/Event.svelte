@@ -31,7 +31,7 @@
 	</div>
 </div>
 
-<style>
+<style lang="postcss">
 	.event-wrapper:hover {
 		background-color: #a1a2d310;
 	}

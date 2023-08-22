@@ -32,7 +32,7 @@
 	<RoomList {rooms}></RoomList>
 </div>
 
-<style>
+<style lang="postcss">
 	.spaces {
 		display: flex;
 		gap: 0.25rem;

@@ -14,7 +14,7 @@
 	{/if}
 </label>
 
-<style>
+<style lang="postcss">
 	label {
 		display: grid;
 		grid-template-rows: min-content 1fr;

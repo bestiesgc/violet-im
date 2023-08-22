@@ -6,8 +6,13 @@
 	<slot />
 </form>
 
-<style>
-	form {
+<style lang="postcss">
+	lang='postcss'
+		> lang='postcss'
+		> lang='postcss'
+		> lang='postcss'
+		> lang='postcss'
+		> form {
 		display: grid;
 		gap: 0.5rem;
 	}

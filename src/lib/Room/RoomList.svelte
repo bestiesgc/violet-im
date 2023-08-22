@@ -78,7 +78,7 @@
 	</div>
 {/if}
 
-<style>
+<style lang="postcss">
 	.section {
 		display: grid;
 		grid-template-rows: min-content 0fr;

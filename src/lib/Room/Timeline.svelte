@@ -25,7 +25,7 @@
 	{/await}
 </ol>
 
-<style>
+<style lang="postcss">
 	.timeline {
 		display: flex;
 		flex-direction: column;
