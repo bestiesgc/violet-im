@@ -12,6 +12,9 @@
 			img.removeAttribute('height')
 			img.src = client.matrixClient.mxcUrlToHttp(img.src)
 		})
+		bodyDoc.querySelectorAll('mx-reply').forEach(reply => {
+			reply.remove()
+		})
 		cleanBody = DOMPurify.sanitize(bodyDoc.body.innerHTML)
 	}
 	$: parseBody(body)
@@ -24,11 +27,9 @@
 
 <style>
 	:global(.emoji) {
+		display: inline;
+		vertical-align: middle;
 		height: 1.5em;
 		width: 1.5em;
-	}
-	:global(.emoji:only-child) {
-		height: 2.5em;
-		width: 2.5em;
 	}
 </style>

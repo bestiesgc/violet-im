@@ -8,7 +8,7 @@
 
 <ol class="timeline scroller">
 	<div style:margin-top="auto"></div>
-	{#await client.wrapTimeline(timeline) then timeline}
+	{#await client.wrapTimeline(timeline, room) then timeline}
 		{#each timeline as event, i}
 			<li>
 				<Event

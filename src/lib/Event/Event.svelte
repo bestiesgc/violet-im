@@ -12,6 +12,7 @@
 			type: event.getType(),
 			sender: event.getSender(),
 			reactions: event.reactions,
+			replyEvent: event.replyEvent,
 			content: clearContent
 		}
 	}

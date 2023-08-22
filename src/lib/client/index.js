@@ -141,7 +141,7 @@ class MatrixClientWrapper {
 			.filter(e => e)
 			.find(e => e.getType() === 'm.room.message')
 	}
-	async wrapTimeline(timeline) {
+	async wrapTimeline(timeline, room) {
 		timeline = await this.decryptTimeline(timeline)
 		const newTimeline = []
 		for (const event of timeline) {
@@ -170,6 +170,11 @@ class MatrixClientWrapper {
 					console.warn('Unknown event type', event.getType())
 				// eslint-disable-next-line no-fallthrough
 				case 'm.room.message':
+					if (event.replyEventId) {
+						event.replyEvent = await this.decryptEvent(
+							await room.findEventById(event.replyEventId)
+						)
+					}
 					newTimeline.push(event)
 					break
 			}

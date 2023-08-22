@@ -6,64 +6,105 @@
 	export let lastEvent = null
 	export let nextEvent = null
 	$: startsGroup = lastEvent?.sender.userId != sender.userId
-	$: endsGroup = event.reactions ?? nextEvent?.sender.userId != sender.userId
+	$: endsGroup =
+		event.reactions ??
+		nextEvent?.replyEvent ??
+		nextEvent?.sender.userId != sender.userId
 </script>
 
 <div
-	class="message"
+	class="message-wrapper"
 	class:from-me={sender.userId == client.getUserId()}
 	class:starts-group={startsGroup}
 	class:ends-group={endsGroup}
 >
-	<img
-		aria-hidden="true"
-		src={client.getMemberAvatarUrl(sender, 32)}
-		alt=""
-		class="avatar"
-	/>
-	<div class="content">
-		<div class="sender">
-			<p class="name">{sender.name}</p>
+	{#if event.replyEvent}
+		<div class="reply-line">
+			<div class="fancy-arrow"></div>
+			<span class="sender">{event.replyEvent.sender.name}</span>
+			<span class="text"
+				><Body
+					body={event.replyEvent.getContent().formatted_body ??
+						event.replyEvent.getContent().body}
+				/></span
+			>
 		</div>
-		<div
-			class="body"
-			style:border-top-left-radius={lastEvent?.reactions ? '0.5rem' : undefined}
-		>
-			<Body body={event.content?.formatted_body ?? event.content?.body}></Body>
-		</div>
-		{#if event.reactions}
-			<div class="reactions">
-				{#each Object.keys(event.reactions) as reaction}
-					<span class="reaction">
-						{#if reaction.startsWith('mxc://')}
-							<img
-								class="reaction-emoji"
-								title={event.reactions[reaction].shortcode}
-								src={client.matrixClient.mxcUrlToHttp(reaction)}
-								alt={event.reactions[reaction].shortcode}
-							/>
-						{:else}
-							{reaction}
-						{/if}
-						<span aria-hidden="true" class="reactors">
-							{#each event.reactions[reaction].senders as reactor}
-								<img src={client.getMemberAvatarUrl(reactor, 16)} alt="" />
-							{/each}
-						</span>
-					</span>
-				{/each}
+	{/if}
+	<div class="message">
+		<img
+			aria-hidden="true"
+			src={client.getMemberAvatarUrl(sender, 32)}
+			alt=""
+			class="avatar"
+		/>
+		<div class="content">
+			<div class="sender">
+				<p class="name">{sender.name}</p>
 			</div>
-		{/if}
+			<div
+				class="body"
+				class:body-starts-group={event.replyEvent ?? lastEvent?.reactions}
+			>
+				<Body body={event.content?.formatted_body ?? event.content?.body}
+				></Body>
+			</div>
+			{#if event.reactions}
+				<div class="reactions">
+					{#each Object.keys(event.reactions) as reaction}
+						<span class="reaction">
+							{#if reaction.startsWith('mxc://')}
+								<img
+									class="reaction-emoji"
+									title={event.reactions[reaction].shortcode}
+									src={client.matrixClient.mxcUrlToHttp(reaction)}
+									alt={event.reactions[reaction].shortcode}
+								/>
+							{:else}
+								{reaction}
+							{/if}
+							<span aria-hidden="true" class="reactors">
+								{#each event.reactions[reaction].senders as reactor}
+									<img src={client.getMemberAvatarUrl(reactor, 16)} alt="" />
+								{/each}
+							</span>
+						</span>
+					{/each}
+				</div>
+			{/if}
+		</div>
 	</div>
 </div>
 
 <style lang="postcss">
-	.message {
+	.reply-line {
+		width: fit-content;
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		margin: 0.25rem 0;
+		margin-inline-start: 2.5rem;
+		font-size: 0.875rem;
+	}
+	.reply-line .fancy-arrow {
+		width: 0.5rem;
+		height: 0.25rem;
+		margin-top: 0.25rem;
+		border-top-left-radius: 50%;
+		border-top: 1px solid currentColor;
+		border-left: 1px solid currentColor;
+	}
+	.reply-line .text {
+		border-radius: 0.5rem;
+		background-color: var(--slate-800);
+	}
+	.message-wrapper {
 		padding: 1px 0;
+		margin-inline-end: 1rem;
+	}
+	.message {
 		display: grid;
 		grid-template-columns: 2rem 1fr;
 		gap: 0.5rem;
-		margin-inline-end: 1rem;
 	}
 	.avatar {
 		user-select: none;
@@ -77,6 +118,10 @@
 		padding: 0.25rem;
 		border-radius: 0.5rem;
 		background-color: var(--slate-800);
+	}
+	.body :global(.emoji:only-child) {
+		height: 2.5em;
+		width: 2.5em;
 	}
 	.reactions {
 		margin-top: 2px;
@@ -108,12 +153,12 @@
 	.starts-group {
 		margin-top: 1rem;
 	}
-	.message:not(.starts-group) .avatar {
+	.message-wrapper:not(.starts-group) .avatar {
 		visibility: hidden;
 		width: 0px;
 		height: 0px;
 	}
-	.message:not(.starts-group) .sender {
+	.message-wrapper:not(.starts-group) .message .sender {
 		position: absolute;
 		width: 1px;
 		height: 1px;
@@ -124,10 +169,10 @@
 		white-space: nowrap;
 		border-width: 0;
 	}
-	.message:not(.starts-group) .body {
+	.message-wrapper:not(.starts-group) .body:not(.body-starts-group) {
 		border-top-left-radius: 0;
 	}
-	.message:not(.ends-group) .body {
+	.message-wrapper:not(.ends-group) .body {
 		border-bottom-left-radius: 0;
 	}
 	.from-me .body {
@@ -138,10 +183,17 @@
 			margin-inline-start: auto;
 			margin-inline-end: 0;
 			margin-inline-start: 1rem;
+			.reply-line {
+				margin-inline-start: auto;
+			}
+			.reply-line .fancy-arrow {
+				transform: scaleX(-1);
+				order: 3;
+			}
 			.body {
 				margin-inline-start: auto;
 			}
-			.sender,
+			.message .sender,
 			.avatar {
 				opacity: 0;
 				width: 0px;
@@ -152,8 +204,8 @@
 				border-width: 0;
 			}
 		}
-		.from-me:not(.starts-group) .body {
-			border-top-right-radius: 0;
+		.from-me:not(.starts-group) .body,
+		.body-starts-group {
 			border-top-left-radius: 0.5rem;
 		}
 		.from-me:not(.ends-group) .body {
