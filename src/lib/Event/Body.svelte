@@ -12,7 +12,6 @@
 			img.removeAttribute('height')
 			img.src = client.matrixClient.mxcUrlToHttp(img.src)
 		})
-		console.log(bodyDoc.body.innerHTML)
 		cleanBody = DOMPurify.sanitize(bodyDoc.body.innerHTML)
 	}
 	$: parseBody(body)

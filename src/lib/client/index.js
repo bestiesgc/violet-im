@@ -167,10 +167,9 @@ class MatrixClientWrapper {
 					break
 				}
 				default:
-					console.log('Unknown event type', event.getType())
+					console.warn('Unknown event type', event.getType())
 				// eslint-disable-next-line no-fallthrough
 				case 'm.room.message':
-					console.log(event)
 					newTimeline.push(event)
 					break
 			}
