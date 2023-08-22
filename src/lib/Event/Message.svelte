@@ -52,11 +52,9 @@
 					></Body>
 				</Bubble>
 			{:else}
-				<img
-					src={client.matrixClient.mxcUrlToHttp(event.content.url)}
-					alt=""
-					class="body"
-				/>
+				{#await client.getAttachment(event) then attachmentUrl}
+					<img src={attachmentUrl} alt="" class="body" />
+				{/await}
 			{/if}
 			{#if event.reactions}
 				<div class="reactions">

@@ -1,3 +1,5 @@
+import { decryptAttachment } from 'matrix-encrypt-attachment'
+
 async function importDependencies() {
 	if (typeof window != 'undefined') window.global ||= window
 	const {
@@ -103,6 +105,19 @@ class MatrixClientWrapper {
 		if (event.clearEvent) return event
 		await event.attemptDecryption(this.matrixClient.crypto, { isRetry: true })
 		return event
+	}
+	async getAttachment(event) {
+		const isEncrypted = !event.content.url
+		const url = this.matrixClient.mxcUrlToHttp(
+			isEncrypted ? event.content.file.url : event.content.url
+		)
+		if (!isEncrypted) {
+			return url
+		}
+		const media = await (await fetch(url)).arrayBuffer()
+		const decrypted = await decryptAttachment(media, event.content.file)
+		const blob = new Blob([decrypted], { type: event.content.file.mimetype })
+		return URL.createObjectURL(blob)
 	}
 	getMemberAvatarUrl(member, size = 64) {
 		const avatar = member.getAvatarUrl(
