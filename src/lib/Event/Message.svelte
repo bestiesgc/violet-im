@@ -59,7 +59,7 @@
 	</div>
 </div>
 
-<style>
+<style lang="postcss">
 	.message {
 		padding: 1px 0;
 		display: grid;
@@ -67,37 +67,12 @@
 		gap: 0.5rem;
 		margin-inline-end: 1rem;
 	}
-	.message.from-me {
-		margin-inline-start: auto;
-		margin-inline-end: 0;
-		margin-inline-start: 1rem;
-	}
-	.message.from-me .body {
-		margin-inline-start: auto;
-		background-color: var(--slate-700);
-	}
-	.message.from-me .sender {
-		display: none;
-	}
-	.message.from-me .avatar {
-		visibility: hidden;
-		width: 1px;
-		height: 1px;
-	}
-	.message .avatar {
+	.avatar {
 		user-select: none;
 		width: 2rem;
 		border-radius: 0.25rem;
 	}
-	.message.starts-group {
-		margin-top: 1rem;
-	}
-	.message:not(.starts-group) .avatar {
-		visibility: hidden;
-		width: 1px;
-		height: 1px;
-	}
-	.message .body {
+	.body {
 		position: relative;
 		width: fit-content;
 		max-width: min(100%, 40rem);
@@ -105,32 +80,55 @@
 		border-radius: 0.5rem;
 		background-color: var(--slate-800);
 	}
-	.message .reactions {
+	.reactions {
 		margin-top: 2px;
 		display: flex;
 		gap: 0.25rem;
 	}
-	.message .reaction {
+	.reaction {
 		display: flex;
 		gap: 0.25rem;
 		border-radius: 0.75rem;
 		padding: 0.125rem;
 		background-color: var(--violet-600);
 	}
-	.message .reaction .reactors {
+	.reaction .reactors {
 		display: flex;
 		gap: 0.125rem;
 	}
-	.message .reaction .reaction-emoji {
+	.reaction .reaction-emoji {
 		width: 1.25rem;
 		aspect-ratio: 1;
 		object-fit: cover;
 	}
-	.message .reaction .reactors img {
+	.reaction .reactors img {
 		width: 1.25rem;
 		aspect-ratio: 1;
 		object-fit: cover;
 		border-radius: 100%;
+	}
+	.from-me {
+		margin-inline-start: auto;
+		margin-inline-end: 0;
+		margin-inline-start: 1rem;
+		.body {
+			margin-inline-start: auto;
+			background-color: var(--slate-700);
+		}
+		.sender,
+		.avatar {
+			visibility: hidden;
+			width: 0px;
+			height: 0px;
+		}
+	}
+	.starts-group {
+		margin-top: 1rem;
+	}
+	.message:not(.starts-group) .avatar {
+		visibility: hidden;
+		width: 0px;
+		height: 0px;
 	}
 	.message:not(.starts-group) .sender {
 		position: absolute;
@@ -149,11 +147,11 @@
 	.message:not(.ends-group) .body {
 		border-bottom-left-radius: 0;
 	}
-	.message.from-me:not(.starts-group) .body {
+	.from-me:not(.starts-group) .body {
 		border-top-right-radius: 0;
 		border-top-left-radius: 0.5rem;
 	}
-	.message.from-me:not(.ends-group) .body {
+	.from-me:not(.ends-group) .body {
 		border-bottom-right-radius: 0;
 		border-bottom-left-radius: 0.5rem;
 	}
