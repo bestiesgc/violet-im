@@ -2,7 +2,6 @@
 	import client from '$lib/client/index.js'
 	import DOMPurify from 'dompurify'
 	export let body
-	let cleanBody
 	function parseBody(body) {
 		const parser = new DOMParser()
 		const bodyDoc = parser.parseFromString(body, 'text/html')
@@ -15,18 +14,20 @@
 		bodyDoc.querySelectorAll('mx-reply').forEach(reply => {
 			reply.remove()
 		})
-		cleanBody = DOMPurify.sanitize(bodyDoc.body.innerHTML)
+		return DOMPurify.sanitize(bodyDoc.body.innerHTML)
 	}
-	$: parseBody(body)
+	$: cleanBody = parseBody(body)
 </script>
 
 {#if cleanBody}
 	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-	{@html cleanBody}
+	<div class="body">
+		{@html cleanBody}
+	</div>
 {/if}
 
 <style>
-	:global(.emoji) {
+	.body :global(.emoji) {
 		display: inline;
 		vertical-align: middle;
 		height: 1.5em;
