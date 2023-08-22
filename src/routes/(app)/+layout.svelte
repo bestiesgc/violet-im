@@ -1,4 +1,5 @@
 <script>
+	import { getAllRooms } from '$lib/client/index.js'
 	import Sidebar from '$lib/Sidebar.svelte'
 	import { page } from '$app/stores'
 
@@ -6,9 +7,7 @@
 	let spaces = []
 
 	async function load() {
-		let allRooms = (await window.matrixClient.getJoinedRooms()).joined_rooms
-			.map(roomId => window.matrixClient.getRoom(roomId))
-			.filter(a => a)
+		let allRooms = await getAllRooms()
 		if ($page.data.spaceChildren) {
 			rooms = allRooms.filter(room =>
 				$page.data.spaceChildren.includes(room.roomId)

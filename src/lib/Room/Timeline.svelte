@@ -9,13 +9,6 @@
 	function onNewEvent() {
 		timeline = timeline
 	}
-
-	onMount(() => {
-		window.matrixClient.on(RoomEvent.Timeline, onNewEvent)
-		return () => {
-			window.matrixClient.removeListener(RoomEvent.Timeline, onNewEvent)
-		}
-	})
 </script>
 
 <ol class="timeline scroller">

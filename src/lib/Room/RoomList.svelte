@@ -1,10 +1,9 @@
 <script>
+	import { getDmRoomIds } from '$lib/client/index.js'
 	import RoomAvatar from '$lib/Room/Avatar.svelte'
 	export let rooms
 
-	let dmRoomIds = Object.values(
-		window.matrixClient.getAccountData('m.direct')?.getContent()
-	).flat()
+	let dmRoomIds = getDmRoomIds()
 
 	let directMessages = []
 	let notDirectMessages = []

@@ -1,4 +1,5 @@
 <script>
+	import { getMemberAvatarUrl, getUserId } from '$lib/client/index.js'
 	export let event
 	export let sender
 	export let startsGroup = false
@@ -7,13 +8,13 @@
 
 <div
 	class="message"
-	class:from-me={sender.userId == window.matrixClient.getUserId()}
+	class:from-me={sender.userId == getUserId()}
 	class:starts-group={startsGroup}
 	class:ends-group={endsGroup}
 >
 	<img
 		aria-hidden="true"
-		src={sender.getAvatarUrl(window.matrixClient.baseUrl, 32, 32)}
+		src={getMemberAvatarUrl(sender, 32)}
 		alt=""
 		class="avatar"
 	/>
@@ -22,7 +23,7 @@
 			<p class="name">{sender.name}</p>
 		</div>
 		<div class="body">
-			{@html event.content.formatted_body ?? event.content.body}
+			{@html event.content?.formatted_body ?? event.content?.body}
 		</div>
 	</div>
 </div>

@@ -1,15 +1,11 @@
-if (typeof window != 'undefined') window.global ||= window
-
-import { loadClient } from '$lib/client/load.js'
+import { start, getRoom, getDmRoomIds } from '$lib/client/index.js'
 const { EventTimeline } = await import('matrix-js-sdk')
 
 export async function load({ params }) {
 	if (params.id == '@me') return {}
-	await loadClient()
-	const dmRoomIds = Object.values(
-		window.matrixClient.getAccountData('m.direct')?.getContent()
-	).flat()
-	const room = window.matrixClient.getRoom(params.id)
+	await start()
+	const dmRoomIds = getDmRoomIds()
+	const room = getRoom(params.id)
 	let space = room.isSpaceRoom() ? room : null
 	const roomIsSpace = space ? true : false
 	if (!space) {
@@ -17,7 +13,7 @@ export async function load({ params }) {
 			.getLiveTimeline()
 			.getState(EventTimeline.FORWARDS)
 			?.getStateEvents('m.space.parent') ?? [])?.[0]?.getStateKey()
-		if (parent) space = window.matrixClient.getRoom(parent)
+		if (parent) space = getRoom(parent)
 	}
 	const spaceChildren = space
 		?.getLiveTimeline()

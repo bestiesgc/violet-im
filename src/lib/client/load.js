@@ -1,16 +1,36 @@
-if (typeof window != 'undefined') window.global ||= window
-const {
-	ClientEvent,
-	CryptoEvent,
-	IndexedDBCryptoStore,
-	IndexedDBStore,
-	createClient
-} = await import('matrix-js-sdk')
-const { VerifierEvent } = await import('matrix-js-sdk/lib/crypto-api')
-const { verificationMethods } = await import('matrix-js-sdk/lib/crypto')
+async function importDependencies() {
+	if (typeof window != 'undefined') window.global ||= window
+	const {
+		ClientEvent,
+		CryptoEvent,
+		IndexedDBCryptoStore,
+		IndexedDBStore,
+		createClient
+	} = await import('matrix-js-sdk')
+	const { VerifierEvent } = await import('matrix-js-sdk/lib/crypto-api')
+	const { verificationMethods } = await import('matrix-js-sdk/lib/crypto')
+	return {
+		ClientEvent,
+		CryptoEvent,
+		IndexedDBCryptoStore,
+		IndexedDBStore,
+		createClient,
+		VerifierEvent,
+		verificationMethods
+	}
+}
 
-export async function loadClient() {
+export default async function loadClient() {
 	if (window.matrixClient) return
+	const {
+		ClientEvent,
+		CryptoEvent,
+		IndexedDBCryptoStore,
+		IndexedDBStore,
+		createClient,
+		VerifierEvent,
+		verificationMethods
+	} = await importDependencies()
 	// Initialize IndexedDB stores
 	const indexedDBStore = new IndexedDBStore({
 		indexedDB,
