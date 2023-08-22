@@ -105,21 +105,6 @@
 		object-fit: cover;
 		border-radius: 100%;
 	}
-	.from-me {
-		margin-inline-start: auto;
-		margin-inline-end: 0;
-		margin-inline-start: 1rem;
-		.body {
-			margin-inline-start: auto;
-			background-color: var(--slate-700);
-		}
-		.sender,
-		.avatar {
-			visibility: hidden;
-			width: 0px;
-			height: 0px;
-		}
-	}
 	.starts-group {
 		margin-top: 1rem;
 	}
@@ -145,12 +130,36 @@
 	.message:not(.ends-group) .body {
 		border-bottom-left-radius: 0;
 	}
-	.from-me:not(.starts-group) .body {
-		border-top-right-radius: 0;
-		border-top-left-radius: 0.5rem;
+	.from-me .body {
+		background-color: var(--slate-700);
 	}
-	.from-me:not(.ends-group) .body {
-		border-bottom-right-radius: 0;
-		border-bottom-left-radius: 0.5rem;
+	@media screen and (min-width: 800px) {
+		.from-me {
+			margin-inline-start: auto;
+			margin-inline-end: 0;
+			margin-inline-start: 1rem;
+			.body {
+				margin-inline-start: auto;
+			}
+			.sender,
+			.avatar {
+				width: 1px;
+				height: 1px;
+				padding: 0;
+				margin: -1px;
+				overflow: hidden;
+				clip: rect(0, 0, 0, 0);
+				white-space: nowrap;
+				border-width: 0;
+			}
+		}
+		.from-me:not(.starts-group) .body {
+			border-top-right-radius: 0;
+			border-top-left-radius: 0.5rem;
+		}
+		.from-me:not(.ends-group) .body {
+			border-bottom-right-radius: 0;
+			border-bottom-left-radius: 0.5rem;
+		}
 	}
 </style>
