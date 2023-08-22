@@ -40,14 +40,15 @@
 						{#if reaction.startsWith('mxc://')}
 							<img
 								class="reaction-emoji"
+								title={event.reactions[reaction].shortcode}
 								src={window.matrixClient.mxcUrlToHttp(reaction)}
-								alt=""
+								alt={event.reactions[reaction].shortcode}
 							/>
 						{:else}
 							{reaction}
 						{/if}
 						<span aria-hidden="true" class="reactors">
-							{#each event.reactions[reaction] as reactor}
+							{#each event.reactions[reaction].senders as reactor}
 								<img src={getMemberAvatarUrl(reactor, 16)} alt="" />
 							{/each}
 						</span>

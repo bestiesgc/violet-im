@@ -83,11 +83,15 @@ export async function wrapTimeline(timeline) {
 				newTimeline[relatesToIndex].reactions =
 					newTimeline[relatesToIndex].reactions ?? {}
 				newTimeline[relatesToIndex].reactions[content['m.relates_to'].key] =
-					newTimeline[relatesToIndex].reactions[content['m.relates_to'].key] ??
-					[]
-				newTimeline[relatesToIndex].reactions[content['m.relates_to'].key].push(
-					event.sender
-				)
+					newTimeline[relatesToIndex].reactions[
+						content['m.relates_to'].key
+					] ?? {
+						shortcode: content.shortcode,
+						senders: []
+					}
+				newTimeline[relatesToIndex].reactions[
+					content['m.relates_to'].key
+				].senders.push(event.sender)
 				break
 			}
 			default:
