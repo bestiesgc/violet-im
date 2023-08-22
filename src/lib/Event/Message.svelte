@@ -37,7 +37,15 @@
 			<div class="reactions">
 				{#each Object.keys(event.reactions) as reaction}
 					<span class="reaction">
-						{reaction}
+						{#if reaction.startsWith('mxc://')}
+							<img
+								class="reaction-emoji"
+								src={window.matrixClient.mxcUrlToHttp(reaction)}
+								alt=""
+							/>
+						{:else}
+							{reaction}
+						{/if}
 						<span aria-hidden="true" class="reactors">
 							{#each event.reactions[reaction] as reactor}
 								<img src={getMemberAvatarUrl(reactor, 16)} alt="" />
@@ -111,6 +119,11 @@
 	.message .reaction .reactors {
 		display: flex;
 		gap: 0.125rem;
+	}
+	.message .reaction .reaction-emoji {
+		width: 1.25rem;
+		aspect-ratio: 1;
+		object-fit: cover;
 	}
 	.message .reaction .reactors img {
 		width: 1.25rem;
