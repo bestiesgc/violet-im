@@ -204,9 +204,9 @@
 				border-width: 0;
 			}
 		}
-		.from-me:not(.starts-group) .body,
-		.body-starts-group {
+		.from-me:not(.starts-group) .body:not(.body-starts-group) {
 			border-top-left-radius: 0.5rem;
+			border-top-right-radius: 0;
 		}
 		.from-me:not(.ends-group) .body {
 			border-bottom-right-radius: 0;
