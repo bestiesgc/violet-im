@@ -1,4 +1,5 @@
 <script>
+	import DOMPurify from 'dompurify'
 	import { getMemberAvatarUrl, getUserId } from '$lib/client/index.js'
 	export let event
 	export let sender
@@ -23,7 +24,9 @@
 			<p class="name">{sender.name}</p>
 		</div>
 		<div class="body">
-			{@html event.content?.formatted_body ?? event.content?.body}
+			{@html DOMPurify.sanitize(
+				event.content?.formatted_body ?? event.content?.body
+			)}
 		</div>
 	</div>
 </div>
