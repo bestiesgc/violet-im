@@ -69,7 +69,7 @@
 	}
 	.message .avatar {
 		width: 2rem;
-		border-radius: 100%;
+		border-radius: 0.25rem;
 	}
 	.message:not(.sequential-message) {
 		margin-top: 1rem;
