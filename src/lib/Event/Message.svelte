@@ -41,13 +41,21 @@
 			<div class="sender">
 				<p class="name">{sender.name}</p>
 			</div>
-			<div
-				class="body"
-				class:body-starts-group={event.replyEvent ?? lastEvent?.reactions}
-			>
-				<Body body={event.content?.formatted_body ?? event.content?.body}
-				></Body>
-			</div>
+			{#if event.content.msgtype != 'm.image'}
+				<div
+					class="body"
+					class:body-starts-group={event.replyEvent ?? lastEvent?.reactions}
+				>
+					<Body body={event.content?.formatted_body ?? event.content?.body}
+					></Body>
+				</div>
+			{:else}
+				<img
+					src={client.matrixClient.mxcUrlToHttp(event.content.url)}
+					alt=""
+					class="body"
+				/>
+			{/if}
 			{#if event.reactions}
 				<div class="reactions">
 					{#each Object.keys(event.reactions) as reaction}
@@ -118,6 +126,9 @@
 		padding: 0.25rem;
 		border-radius: 0.5rem;
 		background-color: var(--slate-800);
+	}
+	img.body {
+		padding: 0;
 	}
 	.body :global(.emoji:only-child) {
 		height: 2.5em;
