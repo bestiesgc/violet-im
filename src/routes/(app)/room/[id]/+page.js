@@ -14,15 +14,14 @@ export async function load({ params }) {
 		const parent = (room
 			.getLiveTimeline()
 			.getState(EventTimeline.FORWARDS)
-			?.getStateEvents('m.space.parent') ?? [])?.[0].getStateKey()
+			?.getStateEvents('m.space.parent') ?? [])?.[0]?.getStateKey()
 		if (parent) space = window.matrixClient.getRoom(parent)
 	}
-	const spaceChildren = (
-		space
-			?.getLiveTimeline()
-			.getState(EventTimeline.FORWARDS)
-			?.getStateEvents('m.space.child') ?? []
-	).map(e => e.getStateKey())
+	const spaceChildren = space
+		?.getLiveTimeline()
+		.getState(EventTimeline.FORWARDS)
+		?.getStateEvents('m.space.child')
+		.map(e => e?.getStateKey())
 	return {
 		room,
 		roomId: room.roomId,
