@@ -104,7 +104,7 @@
 	.message .reaction {
 		display: flex;
 		gap: 0.25rem;
-		border-radius: 0.5rem;
+		border-radius: 0.75rem;
 		padding: 0.125rem;
 		background-color: var(--violet-600);
 	}
