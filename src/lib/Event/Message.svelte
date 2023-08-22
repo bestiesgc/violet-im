@@ -1,5 +1,5 @@
 <script>
-	import DOMPurify from 'dompurify'
+	import Body from './Body.svelte'
 	import { getMemberAvatarUrl, getUserId } from '$lib/client/index.js'
 	export let event
 	export let sender
@@ -29,9 +29,7 @@
 			class="body"
 			style:border-top-left-radius={lastEvent?.reactions ? '0.5rem' : undefined}
 		>
-			{@html DOMPurify.sanitize(
-				event.content?.formatted_body ?? event.content?.body
-			)}
+			<Body body={event.content?.formatted_body ?? event.content?.body}></Body>
 		</div>
 		{#if event.reactions}
 			<div class="reactions">
