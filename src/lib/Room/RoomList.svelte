@@ -1,9 +1,9 @@
 <script>
-	import { getDmRoomIds } from '$lib/client/index.js'
+	import client from '$lib/client/index.js'
 	import RoomAvatar from '$lib/Room/Avatar.svelte'
 	export let rooms
 
-	const dmRoomIds = getDmRoomIds()
+	const dmRoomIds = client.getDmRoomIds()
 
 	let directMessages = []
 	let notDirectMessages = []

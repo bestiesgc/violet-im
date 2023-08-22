@@ -1,6 +1,6 @@
 <script>
 	import Body from './Body.svelte'
-	import { getMemberAvatarUrl, getUserId } from '$lib/client/index.js'
+	import client from '$lib/client/index.js'
 	export let event
 	export let sender
 	export let lastEvent = null
@@ -11,13 +11,13 @@
 
 <div
 	class="message"
-	class:from-me={sender.userId == getUserId()}
+	class:from-me={sender.userId == client.getUserId()}
 	class:starts-group={startsGroup}
 	class:ends-group={endsGroup}
 >
 	<img
 		aria-hidden="true"
-		src={getMemberAvatarUrl(sender, 32)}
+		src={client.getMemberAvatarUrl(sender, 32)}
 		alt=""
 		class="avatar"
 	/>
@@ -39,7 +39,7 @@
 							<img
 								class="reaction-emoji"
 								title={event.reactions[reaction].shortcode}
-								src={window.matrixClient.mxcUrlToHttp(reaction)}
+								src={client.matrixClient.mxcUrlToHttp(reaction)}
 								alt={event.reactions[reaction].shortcode}
 							/>
 						{:else}
@@ -47,7 +47,7 @@
 						{/if}
 						<span aria-hidden="true" class="reactors">
 							{#each event.reactions[reaction].senders as reactor}
-								<img src={getMemberAvatarUrl(reactor, 16)} alt="" />
+								<img src={client.getMemberAvatarUrl(reactor, 16)} alt="" />
 							{/each}
 						</span>
 					</span>

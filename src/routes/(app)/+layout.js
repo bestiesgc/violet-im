@@ -1,5 +1,5 @@
 import { redirect } from '@sveltejs/kit'
-import { start } from '$lib/client/index.js'
+import client from '$lib/client/index.js'
 
 export const ssr = false
 
@@ -8,5 +8,5 @@ export async function load() {
 	if (!loggedIn) {
 		throw redirect(307, '/login')
 	}
-	await start()
+	await client.start()
 }

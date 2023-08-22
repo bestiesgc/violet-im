@@ -1,11 +1,11 @@
-import { start, getRoom, getDmRoomIds } from '$lib/client/index.js'
+import client from '$lib/client/index.js'
 const { EventTimeline } = await import('matrix-js-sdk')
 
 export async function load({ params }) {
 	if (params.id == '@me') return {}
-	await start()
-	const dmRoomIds = getDmRoomIds()
-	const room = getRoom(params.id)
+	await client.start()
+	const dmRoomIds = client.getDmRoomIds()
+	const room = client.getRoom(params.id)
 	let space = room.isSpaceRoom() ? room : null
 	const roomIsSpace = space ? true : false
 	if (!space) {
@@ -13,7 +13,7 @@ export async function load({ params }) {
 			.getLiveTimeline()
 			.getState(EventTimeline.FORWARDS)
 			?.getStateEvents('m.space.parent') ?? [])?.[0]?.getStateKey()
-		if (parent) space = getRoom(parent)
+		if (parent) space = client.getRoom(parent)
 	}
 	const spaceChildren = space
 		?.getLiveTimeline()

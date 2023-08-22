@@ -1,4 +1,5 @@
 <script>
+	import client from '$lib/client/index.js'
 	import DOMPurify from 'dompurify'
 	export let body
 	let cleanBody
@@ -9,7 +10,7 @@
 			img.classList.add('emoji')
 			img.removeAttribute('width')
 			img.removeAttribute('height')
-			img.src = window.matrixClient.mxcUrlToHttp(img.src)
+			img.src = client.matrixClient.mxcUrlToHttp(img.src)
 		})
 		console.log(bodyDoc.body.innerHTML)
 		cleanBody = DOMPurify.sanitize(bodyDoc.body.innerHTML)

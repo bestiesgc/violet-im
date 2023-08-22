@@ -1,5 +1,5 @@
 <script>
-	import { getAllRooms } from '$lib/client/index.js'
+	import client from '$lib/client/index.js'
 	import Sidebar from '$lib/Sidebar.svelte'
 	import { page } from '$app/stores'
 
@@ -7,7 +7,7 @@
 	let spaces = []
 
 	async function load() {
-		const allRooms = await getAllRooms()
+		const allRooms = await client.getAllRooms()
 		if ($page.data.spaceChildren) {
 			rooms = allRooms.filter(room =>
 				$page.data.spaceChildren.includes(room.roomId)

@@ -1,9 +1,5 @@
 <script>
-	import {
-		wrapTimeline,
-		getNextMessageEvent,
-		getLastMessageEvent
-	} from '$lib/client/index.js'
+	import client from '$lib/client/index.js'
 	import Event from '$lib/Event/Event.svelte'
 
 	export let room
@@ -12,13 +8,13 @@
 
 <ol class="timeline scroller">
 	<div style:margin-top="auto"></div>
-	{#await wrapTimeline(timeline) then timeline}
+	{#await client.wrapTimeline(timeline) then timeline}
 		{#each timeline as event, i}
 			<li>
 				<Event
 					{event}
-					nextEvent={getNextMessageEvent(timeline, i)}
-					lastEvent={getLastMessageEvent(timeline, i)}
+					nextEvent={client.getNextMessageEvent(timeline, i)}
+					lastEvent={client.getLastMessageEvent(timeline, i)}
 				/>
 			</li>
 		{/each}
