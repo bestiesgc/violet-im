@@ -55,7 +55,7 @@ class MatrixClientWrapper {
 
 		await matrixClient.initCrypto()
 		await matrixClient.startClient()
-		matrixClient.getCrypto().globalBlacklistUnverifiedDevices = false
+		matrixClient.setGlobalErrorOnUnknownDevices(false)
 		this.matrixClient = matrixClient
 
 		await new Promise(resolve => {
@@ -172,6 +172,7 @@ class MatrixClientWrapper {
 					console.warn('Unknown event type', event.getType())
 				// eslint-disable-next-line no-fallthrough
 				case 'm.room.message':
+					console.log('message', event)
 					if (event.replyEventId) {
 						const replyEvent = await room.findEventById(event.replyEventId)
 						if (replyEvent) {
