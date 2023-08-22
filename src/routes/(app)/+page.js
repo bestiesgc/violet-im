@@ -1,3 +1,5 @@
+import { redirect } from '@sveltejs/kit'
+
 export async function load() {
-	return {}
+	throw redirect(307, '/room/@me')
 }

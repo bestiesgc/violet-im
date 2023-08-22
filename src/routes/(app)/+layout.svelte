@@ -6,7 +6,6 @@
 	let spaces = []
 
 	async function load() {
-		rooms = []
 		let allRooms = (await window.matrixClient.getJoinedRooms()).joined_rooms
 			.map(roomId => window.matrixClient.getRoom(roomId))
 			.filter(a => a)
@@ -28,15 +27,7 @@
 <div class="layout">
 	<Sidebar {spaces} {rooms}></Sidebar>
 	<main>
-		{#if $page.data.roomId}
-			<div class="center">
-				<h1>chat isnt actually here yet lol</h1>
-			</div>
-		{:else}
-			<div class="center">
-				<h1>pick a conversation</h1>
-			</div>
-		{/if}
+		<slot />
 	</main>
 </div>
 
@@ -51,10 +42,5 @@
 	.layout :global(main) {
 		background-color: var(--slate-900);
 		border-radius: 0.25rem;
-	}
-	.center {
-		height: 100%;
-		display: grid;
-		place-items: center;
 	}
 </style>
