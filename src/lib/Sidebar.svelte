@@ -33,21 +33,6 @@
 </div>
 
 <style>
-	.panel {
-		background-color: var(--slate-900);
-		border-radius: 0.25rem;
-		scrollbar-width: thin;
-		scrollbar-color: var(--slate-500) transparent;
-		min-height: 0;
-		overflow-y: auto;
-	}
-	.panel::-webkit-scrollbar,
-	.panel::-webkit-scrollbar {
-		width: 0.25rem;
-	}
-	.panel::-webkit-scrollbar-thumb {
-		border-radius: 0.25rem;
-	}
 	.spaces {
 		display: flex;
 		gap: 0.25rem;
