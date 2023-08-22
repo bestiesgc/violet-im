@@ -28,9 +28,10 @@ export function getDmRooms() {
 	return getDmRoomIds().map(id => getRoom(id))
 }
 export async function decryptEvent(event) {
-	if (!event.isEncrypted()) return
-	if (event.clearEvent) return
+	if (!event.isEncrypted()) return event
+	if (event.clearEvent) return event
 	await event.attemptDecryption(window.matrixClient.crypto, { isRetry: true })
+	return event
 }
 export function getMemberAvatarUrl(member, size = 64) {
 	const avatar = member.getAvatarUrl(
@@ -52,4 +53,20 @@ export function getRoomAvatarUrl(room, size = 64) {
 	const fallbackMember = room.getAvatarFallbackMember()
 	if (!fallbackMember) return null
 	return getMemberAvatarUrl(fallbackMember, size)
+}
+export async function decryptTimeline(timeline) {
+	return await Promise.all(timeline.map(e => decryptEvent(e)))
+}
+export function getLastMessageEvent(timeline, i) {
+	return timeline
+		.slice(0, i)
+		.reverse()
+		.filter(e => e)
+		.find(e => e.getType() === 'm.room.message')
+}
+export function getNextMessageEvent(timeline, i) {
+	return timeline
+		.slice(i + 1)
+		.filter(e => e)
+		.find(e => e.getType() === 'm.room.message')
 }

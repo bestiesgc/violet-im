@@ -1,6 +1,5 @@
 <script>
 	import Message from './Message.svelte'
-	import { decryptEvent } from '$lib/client/index.js'
 
 	export let event
 	export let lastEvent
@@ -8,7 +7,6 @@
 
 	let eventStuff
 	async function loadEventStuff(event) {
-		await decryptEvent(event)
 		const clearContent = event.getClearContent()
 		eventStuff = {
 			type: event.getType(),
@@ -21,22 +19,13 @@
 
 <div class="event-wrapper">
 	<div class="event">
-		{#if event.isEncrypted()}
-			{#if eventStuff && eventStuff.type == 'm.room.message'}
-				<Message
-					event={eventStuff}
-					sender={event.sender}
-					endsGroup={nextEvent?.sender.userId != event.sender.userId}
-					startsGroup={lastEvent?.sender.userId != event.sender.userId}
-				/>
-			{:else}
-				<Message
-					event={{ content: { body: 'Encrypted message, loading...' } }}
-					sender={event.sender}
-					endsGroup={nextEvent?.sender.userId != event.sender.userId}
-					startsGroup={lastEvent?.sender.userId != event.sender.userId}
-				/>
-			{/if}
+		{#if eventStuff && eventStuff.type == 'm.room.message'}
+			<Message
+				event={eventStuff}
+				sender={event.sender}
+				endsGroup={nextEvent?.sender.userId != event.sender.userId}
+				startsGroup={lastEvent?.sender.userId != event.sender.userId}
+			/>
 		{/if}
 	</div>
 </div>
