@@ -15,3 +15,9 @@
 	aria-hidden="true"
 	alt=""
 />
+
+<style>
+	.avatar {
+		user-select: none;
+	}
+</style>

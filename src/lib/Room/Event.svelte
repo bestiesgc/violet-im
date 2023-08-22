@@ -68,6 +68,7 @@
 		height: 1px;
 	}
 	.message .avatar {
+		user-select: none;
 		width: 2rem;
 		border-radius: 0.25rem;
 	}
