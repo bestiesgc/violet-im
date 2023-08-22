@@ -42,3 +42,15 @@ body {
 	white-space: nowrap;
 	border-width: 0;
 }
+
+.scroller {
+	scrollbar-width: thin;
+	scrollbar-color: var(--slate-500) transparent;
+	overflow-y: auto;
+}
+.scroller::-webkit-scrollbar {
+	width: 0.25rem;
+}
+.scroller::-webkit-scrollbar-thumb {
+	border-radius: 0.25rem;
+}

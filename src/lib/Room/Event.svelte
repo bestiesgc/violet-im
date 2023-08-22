@@ -13,31 +13,34 @@
 	}
 </script>
 
-{#if event.event.type == 'm.room.encrypted'}
-	{#if event.clearEvent && eventStuff.type == 'm.room.message'}
-		<li
-			class="message"
-			class:from-me={event.sender.userId == window.matrixClient.getUserId()}
-			class:sequential-message={lastEvent?.sender.userId == event.sender.userId}
-			class:ends-group={nextEvent?.sender.userId != event.sender.userId}
-		>
-			<img
-				aria-hidden="true"
-				src={event.sender.getAvatarUrl(window.matrixClient.baseUrl, 32, 32)}
-				alt=""
-				class="avatar"
-			/>
-			<div class="content">
-				<div class="sender">
-					<p class="name">{event.sender.name}</p>
-				</div>
-				<div class="body">
-					{@html eventStuff.content.formatted_body ?? eventStuff.content.body}
+<div class="event">
+	{#if event.event?.type == 'm.room.encrypted'}
+		{#if event.clearEvent && eventStuff?.type == 'm.room.message'}
+			<div
+				class="message"
+				class:from-me={event.sender.userId == window.matrixClient.getUserId()}
+				class:sequential-message={lastEvent?.sender.userId ==
+					event.sender.userId}
+				class:ends-group={nextEvent?.sender.userId != event.sender.userId}
+			>
+				<img
+					aria-hidden="true"
+					src={event.sender.getAvatarUrl(window.matrixClient.baseUrl, 32, 32)}
+					alt=""
+					class="avatar"
+				/>
+				<div class="content">
+					<div class="sender">
+						<p class="name">{event.sender.name}</p>
+					</div>
+					<div class="body">
+						{@html eventStuff.content.formatted_body ?? eventStuff.content.body}
+					</div>
 				</div>
 			</div>
-		</li>
+		{/if}
 	{/if}
-{/if}
+</div>
 
 <style>
 	.message {

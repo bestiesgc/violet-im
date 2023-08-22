@@ -18,10 +18,12 @@
 	})
 </script>
 
-<ol class="timeline">
+<ol class="timeline scroller">
 	<div style:margin-top="auto"></div>
 	{#each timeline as event, i}
-		<Event {event} nextEvent={timeline[i + 1]} lastEvent={timeline[i - 1]} />
+		<li>
+			<Event {event} nextEvent={timeline[i + 1]} lastEvent={timeline[i - 1]} />
+		</li>
 	{/each}
 </ol>
 
@@ -29,10 +31,14 @@
 	.timeline {
 		display: flex;
 		flex-direction: column;
-		max-width: 60rem;
-		margin: 0 auto;
 		list-style: none;
 		padding: 0.5rem;
+		margin: 0;
+		height: 100%;
 		word-break: break-word;
+	}
+	.timeline :global(.event) {
+		max-width: 60rem;
+		margin: 0 auto;
 	}
 </style>
