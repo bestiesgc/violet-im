@@ -40,6 +40,9 @@ devDependencies:
   postcss-load-config:
     specifier: ^4.0.1
     version: 4.0.1(postcss@8.4.28)
+  postcss-nesting:
+    specifier: ^12.0.1
+    version: 12.0.1(postcss@8.4.28)
   postcss-scrollbar:
     specifier: ^0.5.1
     version: 0.5.1(postcss@8.4.28)
@@ -86,6 +89,15 @@ packages:
     dependencies:
       eslint: 8.47.0
       eslint-config-prettier: 8.10.0(eslint@8.47.0)
+    dev: true
+
+  /@csstools/selector-specificity@3.0.0(postcss-selector-parser@6.0.13):
+    resolution: {integrity: sha512-hBI9tfBtuPIi885ZsZ32IMEU/5nlZH/KOVYJCOh7gyMxaVLGmLedYqFN6Ui1LXkI8JlC8IsuC0rF0btcRZKd5g==}
+    engines: {node: ^14 || ^16 || >=18}
+    peerDependencies:
+      postcss-selector-parser: ^6.0.13
+    dependencies:
+      postcss-selector-parser: 6.0.13
     dev: true
 
   /@esbuild/android-arm64@0.18.20:
@@ -1333,6 +1345,17 @@ packages:
       lilconfig: 2.1.0
       postcss: 8.4.28
       yaml: 2.3.1
+    dev: true
+
+  /postcss-nesting@12.0.1(postcss@8.4.28):
+    resolution: {integrity: sha512-6LCqCWP9pqwXw/njMvNK0hGY44Fxc4B2EsGbn6xDcxbNRzP8GYoxT7yabVVMLrX3quqOJ9hg2jYMsnkedOf8pA==}
+    engines: {node: ^14 || ^16 || >=18}
+    peerDependencies:
+      postcss: ^8.4
+    dependencies:
+      '@csstools/selector-specificity': 3.0.0(postcss-selector-parser@6.0.13)
+      postcss: 8.4.28
+      postcss-selector-parser: 6.0.13
     dev: true
 
   /postcss-safe-parser@6.0.0(postcss@8.4.28):

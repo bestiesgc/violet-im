@@ -1,8 +1,9 @@
 const autoprefixer = require('autoprefixer')
 const scrollbar = require('postcss-scrollbar')
+const postcssNesting = require('postcss-nesting')
 
 const config = {
-	plugins: [scrollbar, autoprefixer]
+	plugins: [postcssNesting, scrollbar, autoprefixer]
 }
 
 module.exports = config
