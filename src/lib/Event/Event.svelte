@@ -17,6 +17,7 @@
 			replyEvent: event.replyEvent,
 			content: clearContent
 		}
+		console.log(eventStuff)
 	}
 	$: loadEventStuff(event)
 </script>
