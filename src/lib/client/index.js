@@ -55,7 +55,7 @@ class MatrixClientWrapper {
 
 		await matrixClient.initCrypto()
 		await matrixClient.startClient()
-		matrixClient.setGlobalErrorOnUnknownDevices(false)
+		matrixClient.getCrypto().globalBlacklistUnverifiedDevices = false
 		this.matrixClient = matrixClient
 
 		await new Promise(resolve => {
@@ -65,9 +65,9 @@ class MatrixClientWrapper {
 		})
 
 		// Handle verification requests
-		matrixClient.on(CryptoEvent.VerificationRequest, async request => {
+		matrixClient.on(CryptoEvent.VerificationRequestReceived, async request => {
 			await request.accept()
-			const verifier = request.beginKeyVerification(verificationMethods.SAS)
+			const verifier = request.startVerification(verificationMethods.SAS)
 			verifier.on(VerifierEvent.ShowSas, async sasData => {
 				await sasData.confirm()
 			})
