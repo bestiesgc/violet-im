@@ -21,7 +21,7 @@
 
 <div class="event-wrapper">
 	<div class="event">
-		{#if event.event?.type == 'm.room.encrypted'}
+		{#if event.isEncrypted()}
 			{#if eventStuff && eventStuff.type == 'm.room.message'}
 				<Message
 					event={eventStuff}

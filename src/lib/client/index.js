@@ -30,9 +30,7 @@ export function getDmRooms() {
 export async function decryptEvent(event) {
 	if (!event.isEncrypted()) return
 	if (event.clearEvent) return
-	if (event.event.type == 'm.room.encrypted') {
-		await event.attemptDecryption(window.matrixClient.crypto, { isRetry: true })
-	}
+	await event.attemptDecryption(window.matrixClient.crypto, { isRetry: true })
 }
 export function getMemberAvatarUrl(member, size = 64) {
 	const avatar = member.getAvatarUrl(
