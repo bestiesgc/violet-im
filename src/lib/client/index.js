@@ -80,6 +80,7 @@ export async function wrapTimeline(timeline) {
 				const relatesToIndex = newTimeline.findIndex(
 					e => e.getId() === content['m.relates_to'].event_id
 				)
+				if (relatesToIndex == -1) continue
 				newTimeline[relatesToIndex].reactions =
 					newTimeline[relatesToIndex].reactions ?? {}
 				newTimeline[relatesToIndex].reactions[content['m.relates_to'].key] =
