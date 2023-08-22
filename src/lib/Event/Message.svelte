@@ -5,8 +5,8 @@
 	export let sender
 	export let lastEvent = null
 	export let nextEvent = null
-	let startsGroup = lastEvent?.sender.userId != sender.userId
-	let endsGroup = event.reactions ?? nextEvent?.sender.userId != sender.userId
+	$: startsGroup = lastEvent?.sender.userId != sender.userId
+	$: endsGroup = event.reactions ?? nextEvent?.sender.userId != sender.userId
 </script>
 
 <div
