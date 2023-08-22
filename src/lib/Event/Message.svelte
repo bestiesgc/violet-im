@@ -1,4 +1,5 @@
 <script>
+	import Bubble from './Bubble.svelte'
 	import Body from './Body.svelte'
 	import client from '$lib/client/index.js'
 	export let event
@@ -42,13 +43,14 @@
 				<p class="name">{sender.name}</p>
 			</div>
 			{#if event.content.msgtype != 'm.image'}
-				<div
-					class="body"
-					class:body-starts-group={event.replyEvent ?? lastEvent?.reactions}
+				<Bubble
+					joinLast={!(event.replyEvent ?? lastEvent?.reactions ?? startsGroup)}
+					joinNext={!endsGroup}
+					rightSide={sender.userId == client.getUserId()}
 				>
 					<Body body={event.content?.formatted_body ?? event.content?.body}
 					></Body>
-				</div>
+				</Bubble>
 			{:else}
 				<img
 					src={client.matrixClient.mxcUrlToHttp(event.content.url)}
@@ -119,14 +121,6 @@
 		width: 2rem;
 		border-radius: 0.25rem;
 	}
-	.body {
-		position: relative;
-		width: fit-content;
-		max-width: min(100%, 40rem);
-		padding: 0.25rem;
-		border-radius: 0.5rem;
-		background-color: var(--slate-800);
-	}
 	img.body {
 		padding: 0;
 	}
@@ -180,12 +174,6 @@
 		white-space: nowrap;
 		border-width: 0;
 	}
-	.message-wrapper:not(.starts-group) .body:not(.body-starts-group) {
-		border-top-left-radius: 0;
-	}
-	.message-wrapper:not(.ends-group) .body {
-		border-bottom-left-radius: 0;
-	}
 	.from-me .body {
 		background-color: var(--slate-700);
 	}
@@ -214,14 +202,6 @@
 				white-space: nowrap;
 				border-width: 0;
 			}
-		}
-		.from-me:not(.starts-group) .body:not(.body-starts-group) {
-			border-top-left-radius: 0.5rem;
-			border-top-right-radius: 0;
-		}
-		.from-me:not(.ends-group) .body {
-			border-bottom-right-radius: 0;
-			border-bottom-left-radius: 0.5rem;
 		}
 	}
 </style>
