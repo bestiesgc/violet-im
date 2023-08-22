@@ -126,7 +126,9 @@ class MatrixClientWrapper {
 		return this.getMemberAvatarUrl(fallbackMember, size)
 	}
 	async decryptTimeline(timeline) {
-		return await Promise.all(timeline.map(e => this.decryptEvent(e)))
+		return await Promise.all(
+			timeline.filter(e => e).map(e => this.decryptEvent(e))
+		)
 	}
 	getLastMessageEvent(timeline, i) {
 		return timeline
@@ -171,9 +173,10 @@ class MatrixClientWrapper {
 				// eslint-disable-next-line no-fallthrough
 				case 'm.room.message':
 					if (event.replyEventId) {
-						event.replyEvent = await this.decryptEvent(
-							await room.findEventById(event.replyEventId)
-						)
+						const replyEvent = await room.findEventById(event.replyEventId)
+						if (replyEvent) {
+							event.replyEvent = await this.decryptEvent(replyEvent)
+						}
 					}
 					newTimeline.push(event)
 					break

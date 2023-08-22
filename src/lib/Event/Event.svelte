@@ -7,7 +7,9 @@
 
 	let eventStuff
 	async function loadEventStuff(event) {
-		const clearContent = event.getClearContent()
+		const clearContent = event.isEncrypted()
+			? event.getClearContent()
+			: event.getContent()
 		eventStuff = {
 			type: event.getType(),
 			sender: event.getSender(),
