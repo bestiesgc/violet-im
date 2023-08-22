@@ -1,14 +1,8 @@
 <script>
-	import { onMount } from 'svelte'
-	import { RoomEvent } from 'matrix-js-sdk'
 	import Event from '$lib/Event/Event.svelte'
 
 	export let room
 	$: timeline = room.getLiveTimeline().events
-
-	function onNewEvent() {
-		timeline = timeline
-	}
 </script>
 
 <ol class="timeline scroller">

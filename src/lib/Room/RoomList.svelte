@@ -3,7 +3,7 @@
 	import RoomAvatar from '$lib/Room/Avatar.svelte'
 	export let rooms
 
-	let dmRoomIds = getDmRoomIds()
+	const dmRoomIds = getDmRoomIds()
 
 	let directMessages = []
 	let notDirectMessages = []
