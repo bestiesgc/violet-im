@@ -1,50 +1,35 @@
 <script>
 	export let event
-	export let lastEvent
-	export let nextEvent
-
-	let eventStuff = event.clearEvent ?? event.event
-	async function loadEventStuff() {
-		await event.getDecryptionPromise()
-		eventStuff = event.clearEvent
-	}
-	if (!event.clearEvent) {
-		loadEventStuff()
-	}
+	export let sender
+	export let startsGroup = false
+	export let endsGroup = false
 </script>
 
-<div class="event">
-	{#if event.event?.type == 'm.room.encrypted'}
-		{#if event.clearEvent && eventStuff?.type == 'm.room.message'}
-			<div
-				class="message"
-				class:from-me={event.sender.userId == window.matrixClient.getUserId()}
-				class:sequential-message={lastEvent?.sender.userId ==
-					event.sender.userId}
-				class:ends-group={nextEvent?.sender.userId != event.sender.userId}
-			>
-				<img
-					aria-hidden="true"
-					src={event.sender.getAvatarUrl(window.matrixClient.baseUrl, 32, 32)}
-					alt=""
-					class="avatar"
-				/>
-				<div class="content">
-					<div class="sender">
-						<p class="name">{event.sender.name}</p>
-					</div>
-					<div class="body">
-						{@html eventStuff.content.formatted_body ?? eventStuff.content.body}
-					</div>
-				</div>
-			</div>
-		{/if}
-	{/if}
+<div
+	class="message"
+	class:from-me={sender.userId == window.matrixClient.getUserId()}
+	class:starts-group={startsGroup}
+	class:ends-group={endsGroup}
+>
+	<img
+		aria-hidden="true"
+		src={sender.getAvatarUrl(window.matrixClient.baseUrl, 32, 32)}
+		alt=""
+		class="avatar"
+	/>
+	<div class="content">
+		<div class="sender">
+			<p class="name">{sender.name}</p>
+		</div>
+		<div class="body">
+			{@html event.content.formatted_body ?? event.content.body}
+		</div>
+	</div>
 </div>
 
 <style>
 	.message {
-		margin: 1px 0;
+		padding: 1px 0;
 		display: grid;
 		grid-template-columns: 2rem 1fr;
 		gap: 0.5rem;
@@ -72,10 +57,10 @@
 		width: 2rem;
 		border-radius: 0.25rem;
 	}
-	.message:not(.sequential-message) {
+	.message.starts-group {
 		margin-top: 1rem;
 	}
-	.message.sequential-message .avatar {
+	.message:not(.starts-group) .avatar {
 		visibility: hidden;
 		width: 1px;
 		height: 1px;
@@ -87,7 +72,7 @@
 		border-radius: 0.5rem;
 		background-color: var(--slate-800);
 	}
-	.message.sequential-message .sender {
+	.message:not(.starts-group) .sender {
 		position: absolute;
 		width: 1px;
 		height: 1px;
@@ -98,13 +83,13 @@
 		white-space: nowrap;
 		border-width: 0;
 	}
-	.message.sequential-message .body {
+	.message:not(.starts-group) .body {
 		border-top-left-radius: 0;
 	}
 	.message:not(.ends-group) .body {
 		border-bottom-left-radius: 0;
 	}
-	.message.from-me.sequential-message .body {
+	.message.from-me:not(.starts-group) .body {
 		border-top-right-radius: 0;
 		border-top-left-radius: 0.5rem;
 	}
