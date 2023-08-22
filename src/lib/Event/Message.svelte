@@ -3,8 +3,10 @@
 	import { getMemberAvatarUrl, getUserId } from '$lib/client/index.js'
 	export let event
 	export let sender
-	export let startsGroup = false
-	export let endsGroup = false
+	export let lastEvent = null
+	export let nextEvent = null
+	let startsGroup = lastEvent?.sender.userId != sender.userId
+	let endsGroup = event.reactions ?? nextEvent?.sender.userId != sender.userId
 </script>
 
 <div
@@ -23,11 +25,28 @@
 		<div class="sender">
 			<p class="name">{sender.name}</p>
 		</div>
-		<div class="body">
+		<div
+			class="body"
+			style:border-top-left-radius={lastEvent?.reactions ? '0.5rem' : undefined}
+		>
 			{@html DOMPurify.sanitize(
 				event.content?.formatted_body ?? event.content?.body
 			)}
 		</div>
+		{#if event.reactions}
+			<div class="reactions">
+				{#each Object.keys(event.reactions) as reaction}
+					<span class="reaction">
+						{reaction}
+						<span aria-hidden="true" class="reactors">
+							{#each event.reactions[reaction] as reactor}
+								<img src={getMemberAvatarUrl(reactor, 16)} alt="" />
+							{/each}
+						</span>
+					</span>
+				{/each}
+			</div>
+		{/if}
 	</div>
 </div>
 
@@ -70,11 +89,34 @@
 		height: 1px;
 	}
 	.message .body {
+		position: relative;
 		width: fit-content;
 		max-width: min(100%, 40rem);
 		padding: 0.25rem;
 		border-radius: 0.5rem;
 		background-color: var(--slate-800);
+	}
+	.message .reactions {
+		margin-top: 2px;
+		display: flex;
+		gap: 0.25rem;
+	}
+	.message .reaction {
+		display: flex;
+		gap: 0.25rem;
+		border-radius: 0.5rem;
+		padding: 0.125rem;
+		background-color: var(--violet-600);
+	}
+	.message .reaction .reactors {
+		display: flex;
+		gap: 0.125rem;
+	}
+	.message .reaction .reactors img {
+		width: 1.25rem;
+		aspect-ratio: 1;
+		object-fit: cover;
+		border-radius: 100%;
 	}
 	.message:not(.starts-group) .sender {
 		position: absolute;

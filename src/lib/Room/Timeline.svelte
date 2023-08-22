@@ -1,6 +1,6 @@
 <script>
 	import {
-		decryptTimeline,
+		wrapTimeline,
 		getNextMessageEvent,
 		getLastMessageEvent
 	} from '$lib/client/index.js'
@@ -12,7 +12,7 @@
 
 <ol class="timeline scroller">
 	<div style:margin-top="auto"></div>
-	{#await decryptTimeline(timeline) then timeline}
+	{#await wrapTimeline(timeline) then timeline}
 		{#each timeline as event, i}
 			<li>
 				<Event

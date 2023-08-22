@@ -11,6 +11,7 @@
 		eventStuff = {
 			type: event.getType(),
 			sender: event.getSender(),
+			reactions: event.reactions,
 			content: clearContent
 		}
 	}
@@ -23,8 +24,8 @@
 			<Message
 				event={eventStuff}
 				sender={event.sender}
-				endsGroup={nextEvent?.sender.userId != event.sender.userId}
-				startsGroup={lastEvent?.sender.userId != event.sender.userId}
+				{nextEvent}
+				{lastEvent}
 			/>
 		{/if}
 	</div>

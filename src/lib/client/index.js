@@ -70,3 +70,33 @@ export function getNextMessageEvent(timeline, i) {
 		.filter(e => e)
 		.find(e => e.getType() === 'm.room.message')
 }
+export async function wrapTimeline(timeline) {
+	timeline = await decryptTimeline(timeline)
+	const newTimeline = []
+	for (const event of timeline) {
+		switch (event.getType()) {
+			case 'm.reaction': {
+				const content = event.getContent()
+				const relatesToIndex = newTimeline.findIndex(
+					e => e.getId() === content['m.relates_to'].event_id
+				)
+				newTimeline[relatesToIndex].reactions =
+					newTimeline[relatesToIndex].reactions ?? {}
+				newTimeline[relatesToIndex].reactions[content['m.relates_to'].key] =
+					newTimeline[relatesToIndex].reactions[content['m.relates_to'].key] ??
+					[]
+				newTimeline[relatesToIndex].reactions[content['m.relates_to'].key].push(
+					event.sender
+				)
+				break
+			}
+			default:
+				console.log('Unknown event type', event.getType())
+			// eslint-disable-next-line no-fallthrough
+			case 'm.room.message':
+				newTimeline.push(event)
+				break
+		}
+	}
+	return newTimeline
+}
