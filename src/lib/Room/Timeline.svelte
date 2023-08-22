@@ -4,8 +4,7 @@
 	import Event from './Event.svelte'
 
 	export let room
-	let timeline = room.getLiveTimeline().events
-	console.log(timeline)
+	$: timeline = room.getLiveTimeline().events
 
 	function onNewEvent() {
 		timeline = timeline
@@ -32,7 +31,6 @@
 		flex-direction: column;
 		max-width: 60rem;
 		margin: 0 auto;
-		height: 100%;
 		list-style: none;
 		padding: 0.5rem;
 		word-break: break-word;
