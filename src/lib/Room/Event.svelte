@@ -6,7 +6,6 @@
 	let eventStuff = event.clearEvent ?? event.event
 	async function loadEventStuff() {
 		await event.getDecryptionPromise()
-		console.log('!!', event.clearEvent)
 		eventStuff = event.clearEvent
 	}
 	if (!event.clearEvent) {
