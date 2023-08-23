@@ -1,6 +1,7 @@
 <script>
 	import Bubble from './Bubble.svelte'
 	import Body from './Body.svelte'
+	import Attachment from './Attachment.svelte'
 	import client from '$lib/client/index.js'
 	export let event
 	export let sender
@@ -58,21 +59,7 @@
 					rightSide={sender.userId == client.getUserId()}
 					noPadding
 				>
-					{#await client.getAttachment(event)}
-						<div
-							class="img img-loading"
-							style:width={event.content.info.w}
-							style:height={event.content.info.h}
-						></div>
-					{:then attachmentUrl}
-						<img
-							width={event.content.info.w}
-							height={event.content.info.h}
-							src={attachmentUrl}
-							alt=""
-							class="img"
-						/>
-					{/await}
+					<Attachment {event} />
 				</Bubble>
 			{/if}
 			{#if event.reactions}
