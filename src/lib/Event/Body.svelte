@@ -2,6 +2,7 @@
 	import client from '$lib/client/index.js'
 	import DOMPurify from 'dompurify'
 	export let body
+	export let allEmoji = false
 	function parseBody(body) {
 		const parser = new DOMParser()
 		const bodyDoc = parser.parseFromString(body, 'text/html')
@@ -14,6 +15,18 @@
 		bodyDoc.querySelectorAll('mx-reply').forEach(reply => {
 			reply.remove()
 		})
+		let isAllEmoji = true
+		bodyDoc.body.childNodes.forEach(node => {
+			if (node.nodeName != 'IMG' || !node.classList.contains('emoji')) {
+				isAllEmoji = false
+			}
+		})
+		if (isAllEmoji) {
+			allEmoji = true
+			bodyDoc.querySelectorAll('img.emoji').forEach(img => {
+				img.classList.add('big-emoji')
+			})
+		}
 		return DOMPurify.sanitize(bodyDoc.body.innerHTML)
 	}
 	$: cleanBody = parseBody(body)

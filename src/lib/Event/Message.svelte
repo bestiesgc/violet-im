@@ -13,6 +13,11 @@
 		nextEvent?.replyEvent ??
 		nextEvent?.sender.userId != sender.userId
 
+	let allEmoji = false
+	$: {
+		console.log('!', allEmoji)
+	}
+
 	function highlightReply() {
 		const timelineScroller = document.querySelector('ol.timeline.scroller')
 		const replyElement = document.getElementById(
@@ -63,7 +68,7 @@
 			alt=""
 			class="avatar"
 		/>
-		<div class="content">
+		<div class="content" class:all-emoji={allEmoji}>
 			<div class="sender">
 				<p class="name">{sender.name}</p>
 			</div>
@@ -73,8 +78,10 @@
 					joinNext={!endsGroup}
 					rightSide={sender.userId == client.getUserId()}
 				>
-					<Body body={event.content?.formatted_body ?? event.content?.body}
-					></Body>
+					<Body
+						bind:allEmoji
+						body={event.content?.formatted_body ?? event.content?.body}
+					/>
 				</Bubble>
 			{:else}
 				<Bubble
@@ -159,9 +166,13 @@
 		width: 2rem;
 		border-radius: 0.25rem;
 	}
-	:global(.bubble .emoji:only-child) {
-		height: 2.5em;
-		width: 2.5em;
+	.all-emoji :global(.bubble) {
+		padding: 0;
+		background: none !important;
+	}
+	.all-emoji :global(.bubble .emoji:only-child) {
+		width: 4em;
+		height: 4em;
 	}
 	.reactions {
 		margin-top: 2px;
