@@ -133,6 +133,7 @@
 		margin-top: 2px;
 		display: flex;
 		gap: 0.25rem;
+		width: fit-content;
 	}
 	.reaction {
 		display: flex;
@@ -199,6 +200,9 @@
 				margin: -1px;
 				white-space: nowrap;
 				border-width: 0;
+			}
+			.reactions {
+				margin-inline-start: auto;
 			}
 		}
 	}
