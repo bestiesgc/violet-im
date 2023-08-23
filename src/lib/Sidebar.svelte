@@ -64,4 +64,7 @@
 		object-fit: cover;
 		border-radius: 0.25rem;
 	}
+	.rooms {
+		padding: 0.5rem 0;
+	}
 </style>
