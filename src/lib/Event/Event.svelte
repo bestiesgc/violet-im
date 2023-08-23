@@ -23,7 +23,7 @@
 </script>
 
 <div class="event-wrapper">
-	<div class="event">
+	<div class="event" id="message_{event?.getId()}">
 		{#if eventStuff && eventStuff.type == 'm.room.message'}
 			<Message
 				event={eventStuff}
@@ -38,5 +38,11 @@
 <style lang="postcss">
 	.event-wrapper:hover {
 		background-color: #a1a2d310;
+	}
+	.event {
+		transition: background-color 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
+	}
+	.event:global(.highlight) {
+		background-color: var(--violet-600);
 	}
 </style>

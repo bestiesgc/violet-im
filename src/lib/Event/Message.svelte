@@ -12,6 +12,30 @@
 		event.reactions ??
 		nextEvent?.replyEvent ??
 		nextEvent?.sender.userId != sender.userId
+
+	function highlightReply() {
+		const timelineScroller = document.querySelector('ol.timeline.scroller')
+		const replyElement = document.getElementById(
+			'message_' + event.replyEvent.getId()
+		)
+		const minimum = timelineScroller.scrollTop + 100
+		const maximum =
+			timelineScroller.scrollTop + timelineScroller.offsetHeight - 100
+		const inView =
+			replyElement.offsetTop > minimum && replyElement.offsetTop < maximum
+		if (!inView) {
+			timelineScroller.scrollTo({
+				top: replyElement.offsetTop - 150,
+				behavior: 'smooth'
+			})
+		}
+		if (!replyElement.classList.contains('highlight')) {
+			replyElement.classList.toggle('highlight', true)
+			setTimeout(() => {
+				replyElement.classList.toggle('highlight', false)
+			}, 1000)
+		}
+	}
 </script>
 
 <div
@@ -21,7 +45,7 @@
 	class:ends-group={endsGroup}
 >
 	{#if event.replyEvent}
-		<div class="reply-line">
+		<button on:click={highlightReply} class="reply-line">
 			<div class="fancy-arrow"></div>
 			<span class="sender">{event.replyEvent.sender.name}</span>
 			<span class="text"
@@ -30,7 +54,7 @@
 						event.replyEvent.getContent().body}
 				/></span
 			>
-		</div>
+		</button>
 	{/if}
 	<div class="message">
 		<img
