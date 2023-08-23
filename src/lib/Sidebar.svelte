@@ -1,4 +1,5 @@
 <script>
+	import { page } from '$app/stores'
 	import RoomAvatar from '$lib/Room/Avatar.svelte'
 	import RoomList from '$lib/Room/RoomList.svelte'
 	export let spaces
@@ -28,7 +29,12 @@
 		</a>
 	{/each}
 </div>
-<div class="panel rooms">
+<div class="panel rooms" class:has-header={$page.data.space}>
+	{#if $page.data.space}
+		<div class="rooms-header">
+			{$page.data.space.name}
+		</div>
+	{/if}
 	<RoomList {rooms}></RoomList>
 </div>
 
@@ -64,7 +70,17 @@
 		object-fit: cover;
 		border-radius: 0.25rem;
 	}
+	.rooms-header {
+		font-weight: 700;
+		padding: 0.75rem 0.5rem;
+		font-size: 1.25rem;
+		margin-bottom: 0.5rem;
+		border-bottom: 1px solid var(--slate-700);
+	}
 	.rooms {
 		padding: 0.5rem 0;
+	}
+	.rooms.has-header {
+		padding-top: 0;
 	}
 </style>

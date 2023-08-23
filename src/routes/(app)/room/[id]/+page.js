@@ -22,6 +22,7 @@ export async function load({ params }) {
 		.map(e => e?.getStateKey())
 	return {
 		room,
+		space,
 		roomIsSpace,
 		roomId: room.roomId,
 		isDirectMessage: dmRoomIds.includes(room.roomId),
