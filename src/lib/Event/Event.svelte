@@ -41,7 +41,7 @@
 	.event {
 		transition: background-color 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
 	}
-	.event:global(.highlight) {
+	.event-wrapper:global(.highlight) {
 		background-color: var(--violet-600);
 	}
 </style>

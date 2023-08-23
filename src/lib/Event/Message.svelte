@@ -31,10 +31,10 @@
 				behavior: 'smooth'
 			})
 		}
-		if (!replyElement.classList.contains('highlight')) {
-			replyElement.classList.toggle('highlight', true)
+		if (!replyElement.parentElement.classList.contains('highlight')) {
+			replyElement.parentElement.classList.toggle('highlight', true)
 			setTimeout(() => {
-				replyElement.classList.toggle('highlight', false)
+				replyElement.parentElement.classList.toggle('highlight', false)
 			}, 1000)
 		}
 	}
