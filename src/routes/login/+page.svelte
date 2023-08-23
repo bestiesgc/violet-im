@@ -43,6 +43,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Log in | Violet</title>
+</svelte:head>
+
 <div class="center">
 	<div class="login-wrapper">
 		<p class="title">login</p>
