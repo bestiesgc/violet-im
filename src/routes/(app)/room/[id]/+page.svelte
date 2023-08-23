@@ -23,7 +23,7 @@
 	let message
 </script>
 
-{#if !data.roomId}
+{#if !data.roomId || data.roomIsSpace}
 	<div class="center">
 		<h1>pick a conversation</h1>
 	</div>
