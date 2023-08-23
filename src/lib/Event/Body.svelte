@@ -6,7 +6,9 @@
 	function parseBody(body) {
 		const parser = new DOMParser()
 		const bodyDoc = parser.parseFromString(body, 'text/html')
+		let isAllEmoji = false
 		bodyDoc.querySelectorAll('img[data-mx-emoticon]').forEach(img => {
+			isAllEmoji = true
 			img.classList.add('emoji')
 			img.removeAttribute('width')
 			img.removeAttribute('height')
@@ -15,7 +17,6 @@
 		bodyDoc.querySelectorAll('mx-reply').forEach(reply => {
 			reply.remove()
 		})
-		let isAllEmoji = true
 		bodyDoc.body.childNodes.forEach(node => {
 			if (node.nodeName != 'IMG' || !node.classList.contains('emoji')) {
 				isAllEmoji = false
