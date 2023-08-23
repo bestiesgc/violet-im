@@ -6,8 +6,8 @@
 	export let room
 
 	let timelineElement
-	let activeTimeline = room.getLiveTimeline()
-	let timeline = activeTimeline.events
+	const activeTimeline = room.getLiveTimeline()
+	const timeline = activeTimeline.events
 	let wrappedTimeline = []
 
 	function onTimeline() {
@@ -17,6 +17,7 @@
 	}
 
 	async function loadPrevious() {
+		oldestMessageId = timeline[0].getId()
 		function getFirstLinkedTimeline() {
 			let tl = activeTimeline
 			while (tl?.getNeighbouringTimeline('b')) {

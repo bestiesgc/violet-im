@@ -20,8 +20,8 @@
 </script>
 
 {#if cleanBody}
-	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	<div class="body">
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 		{@html cleanBody}
 	</div>
 {/if}
