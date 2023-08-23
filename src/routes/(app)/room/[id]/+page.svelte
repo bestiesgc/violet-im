@@ -23,6 +23,10 @@
 	let message
 </script>
 
+<svelte:head>
+	<title>{data.room?.name ? `${data.room.name} | Violet` : 'Violet'}</title>
+</svelte:head>
+
 {#if !data.roomId || data.roomIsSpace}
 	<div class="center">
 		<h1>pick a conversation</h1>
