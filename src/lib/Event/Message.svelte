@@ -138,7 +138,7 @@
 		width: 2rem;
 		border-radius: 0.25rem;
 	}
-	.body :global(.emoji:only-child) {
+	:global(.bubble .emoji:only-child) {
 		height: 2.5em;
 		width: 2.5em;
 	}
@@ -188,7 +188,7 @@
 		white-space: nowrap;
 		border-width: 0;
 	}
-	.from-me .body {
+	.from-me :global(.bubble) {
 		background-color: var(--slate-700);
 	}
 	@media screen and (min-width: 800px) {
@@ -202,9 +202,6 @@
 			.reply-line .fancy-arrow {
 				transform: scaleX(-1);
 				order: 3;
-			}
-			.body {
-				margin-inline-start: auto;
 			}
 			.message .sender,
 			.avatar {
