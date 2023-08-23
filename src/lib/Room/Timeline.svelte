@@ -35,7 +35,10 @@
 		onTimeline()
 	}
 
-	function onScroll() {
+	function onScroll(event) {
+		shouldScroll =
+			timelineElement.scrollTop + timelineElement.offsetHeight ==
+			timelineElement.scrollHeight
 		if (timelineElement?.scrollTop <= 100) loadPrevious()
 	}
 
@@ -50,9 +53,6 @@
 		if (timelineElement) {
 			scrollPosition = timelineElement.scrollTop
 			scrollHeight = timelineElement.scrollHeight
-			shouldScroll =
-				timelineElement.scrollTop + timelineElement.offsetHeight ==
-				timelineElement.scrollHeight
 		}
 	})
 
@@ -68,7 +68,9 @@
 	})
 
 	onMount(() => {
-		loadPrevious(20)
+		loadPrevious(20).then(() => {
+			shouldScroll = true
+		})
 		room.on('Room.timeline', onTimeline)
 		return () => {
 			room.off('Room.timeline', onTimeline)
