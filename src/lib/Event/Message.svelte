@@ -14,9 +14,6 @@
 		nextEvent?.sender.userId != sender.userId
 
 	let allEmoji = false
-	$: {
-		console.log('!', allEmoji)
-	}
 
 	function highlightReply() {
 		const timelineScroller = document.querySelector('ol.timeline.scroller')
