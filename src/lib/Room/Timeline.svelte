@@ -35,7 +35,7 @@
 		onTimeline()
 	}
 
-	function onScroll(event) {
+	function onScroll() {
 		shouldScroll =
 			timelineElement.scrollTop + timelineElement.offsetHeight ==
 			timelineElement.scrollHeight
