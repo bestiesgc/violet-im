@@ -108,6 +108,7 @@
 		border-left: 1px solid currentColor;
 	}
 	.reply-line .text {
+		padding: 0 0.25em;
 		border-radius: 0.5rem;
 		background-color: var(--slate-800);
 	}
