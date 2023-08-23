@@ -6,17 +6,25 @@
 		return rem * parseFloat(getComputedStyle(document.documentElement).fontSize)
 	}
 
+	let attachmentUrl
+	$: loadAttachment(event)
+
+	function loadAttachment() {
+		client.getAttachment(event).then(url => {
+			attachmentUrl = url
+		})
+	}
+
 	const maxWidth = convertRemToPixels(20)
-	// const maxHeight = convertRemToPixels(40)
 </script>
 
-{#await client.getAttachment(event)}
+{#if !attachmentUrl}
 	<div
 		class="attachment loading"
 		style:width={Math.min(event.content.info.w, maxWidth)}
 		style:aspect-ratio="{event.content.info.w} / {event.content.info.h}"
 	></div>
-{:then attachmentUrl}
+{:else}
 	<img
 		width={Math.min(event.content.info.w, maxWidth)}
 		style:aspect-ratio="{event.content.info.w} / {event.content.info.h}"
@@ -24,7 +32,7 @@
 		alt=""
 		class="attachment"
 	/>
-{/await}
+{/if}
 
 <style lang="postcss">
 	.attachment {
