@@ -172,6 +172,7 @@ class MatrixClientWrapper {
 		timeline = await this.decryptTimeline(timeline)
 		const newTimeline = []
 		for (const event of timeline) {
+			if (event.isRedacted()) continue
 			switch (event.getType()) {
 				case 'm.reaction': {
 					const content = event.getContent()
