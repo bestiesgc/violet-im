@@ -94,6 +94,7 @@
 		width: fit-content;
 		display: flex;
 		align-items: center;
+		white-space: nowrap;
 		gap: 0.25rem;
 		margin: 0.25rem 0;
 		margin-inline-start: 2.5rem;
@@ -108,9 +109,17 @@
 		border-left: 1px solid currentColor;
 	}
 	.reply-line .text {
+		max-width: 10rem;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 		padding: 0 0.25em;
 		border-radius: 0.5rem;
 		background-color: var(--slate-800);
+	}
+	.reply-line .text :global(.body) {
+		display: inline;
+		text-overflow: ellipsis;
 	}
 	.message-wrapper {
 		padding: 1px 0;
