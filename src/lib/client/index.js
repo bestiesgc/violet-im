@@ -23,7 +23,9 @@ async function importDependencies() {
 }
 
 class MatrixClientWrapper {
-	constructor() {}
+	constructor() {
+		this.allRooms = []
+	}
 	async start() {
 		if (this.matrixClient) return
 		const {
@@ -65,6 +67,7 @@ class MatrixClientWrapper {
 				resolve()
 			})
 		})
+		this.allRooms = await this.loadAllRooms()
 
 		// Handle verification requests
 		matrixClient.on(CryptoEvent.VerificationRequestReceived, async request => {
@@ -75,6 +78,10 @@ class MatrixClientWrapper {
 			})
 			await verifier.verify()
 		})
+
+		matrixClient.on('RoomMember.membership', async () => {
+			this.allRooms = await this.loadAllRooms()
+		})
 	}
 	getRoom(roomId) {
 		return this.matrixClient.getRoom(roomId)
@@ -82,7 +89,7 @@ class MatrixClientWrapper {
 	getUserId() {
 		return this.matrixClient.getUserId()
 	}
-	async getAllRooms(includeDMs = true) {
+	async loadAllRooms(includeDMs = true) {
 		const allRooms = (await this.matrixClient.getJoinedRooms()).joined_rooms
 			.map(roomId => this.matrixClient.getRoom(roomId))
 			.filter(a => a)
@@ -91,6 +98,9 @@ class MatrixClientWrapper {
 		}
 		const dmRoomIds = this.getDmRoomIds()
 		return allRooms.filter(room => dmRoomIds.includes(room.roomId))
+	}
+	getAllRooms() {
+		return this.allRooms
 	}
 	getDmRoomIds() {
 		return Object.values(

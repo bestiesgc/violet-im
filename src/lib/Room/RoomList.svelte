@@ -5,15 +5,8 @@
 
 	const dmRoomIds = client.getDmRoomIds()
 
-	let directMessages = []
-	let notDirectMessages = []
-
-	$: {
-		if (rooms.length > 0) {
-			directMessages = rooms.filter(room => dmRoomIds.includes(room.roomId))
-			notDirectMessages = rooms.filter(room => !dmRoomIds.includes(room.roomId))
-		}
-	}
+	$: directMessages = rooms.filter(room => dmRoomIds.includes(room.roomId))
+	$: notDirectMessages = rooms.filter(room => !dmRoomIds.includes(room.roomId))
 
 	export let showDirectMessages = true
 	export let showRooms = true

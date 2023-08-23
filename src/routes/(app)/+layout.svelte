@@ -7,7 +7,8 @@
 	let spaces = []
 
 	async function load() {
-		const allRooms = await client.getAllRooms()
+		if (!client.getAllRooms()) await client.loadAllRooms()
+		const allRooms = client.getAllRooms()
 		if ($page.data.spaceChildren) {
 			rooms = allRooms.filter(room =>
 				$page.data.spaceChildren.includes(room.roomId)
