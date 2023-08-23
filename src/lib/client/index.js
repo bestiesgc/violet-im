@@ -61,6 +61,7 @@ class MatrixClientWrapper {
 		await matrixClient.startClient()
 		matrixClient.setGlobalErrorOnUnknownDevices(false)
 		this.matrixClient = matrixClient
+		window.debug_matrixClient = matrixClient
 
 		await new Promise(resolve => {
 			matrixClient.once(ClientEvent.Sync, () => {
