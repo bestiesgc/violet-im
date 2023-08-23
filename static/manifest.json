@@ -1,0 +1,20 @@
+{
+	"name": "Violet",
+	"short_name": "Violet",
+	"description": "A light Matrix web client",
+	"start_url": ".",
+	"display": "standalone",
+	"background_color": "#0c0d17",
+	"icons": [
+		{
+			"src": "favicon.png",
+			"sizes": "24x24",
+			"type": "image/png"
+		},
+		{
+			"src": "favicon.svg",
+			"sizes": "48x48 72x72 96x96 128x128 256x256 512x512",
+			"type": "image/svg+xml"
+		}
+	]
+}
