@@ -75,10 +75,11 @@
 					joinNext={!endsGroup}
 					rightSide={sender.userId == client.getUserId()}
 				>
-					<Body
-						bind:allEmoji
-						body={event.content?.formatted_body ?? event.content?.body}
-					/>
+					{#if event.content?.formatted_body && event.content.format == 'org.matrix.custom.html'}
+						<Body bind:allEmoji body={event.content?.formatted_body} />
+					{:else}
+						{event.content?.body}
+					{/if}
 				</Bubble>
 			{:else}
 				<Bubble
