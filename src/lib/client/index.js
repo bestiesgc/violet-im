@@ -165,8 +165,9 @@ class MatrixClientWrapper {
 			switch (event.getType()) {
 				case 'm.reaction': {
 					const content = event.getContent()
+					const relatesToId = event.relationEventId
 					const relatesToIndex = newTimeline.findIndex(
-						e => e.getId() === content['m.relates_to'].event_id
+						e => e.getId() === relatesToId
 					)
 					if (relatesToIndex == -1) continue
 					newTimeline[relatesToIndex].reactions =
@@ -187,7 +188,16 @@ class MatrixClientWrapper {
 					console.warn('Unknown event type', event.getType())
 				// eslint-disable-next-line no-fallthrough
 				case 'm.room.message':
-					console.log('message', event)
+					if (event.getContent()['m.new_content']) {
+						const relatesToId = event.relationEventId
+						const relatesToIndex = newTimeline.findIndex(
+							e => e.getId() === relatesToId
+						)
+						if (relatesToIndex == -1) continue
+						newTimeline[relatesToIndex].clearEvent.content =
+							event.getContent()['m.new_content']
+						continue
+					}
 					if (event.replyEventId) {
 						const replyEvent = await room.findEventById(event.replyEventId)
 						if (replyEvent) {

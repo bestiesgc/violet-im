@@ -1,24 +1,38 @@
 <script>
 	import client from '$lib/client/index.js'
 	import Event from '$lib/Event/Event.svelte'
+	import { onMount } from 'svelte'
 
 	export let room
-	$: timeline = room.getLiveTimeline().events
+
+	let timeline = room.getLiveTimeline().events
+	let wrappedTimeline = []
+
+	function onTimeline() {
+		client.wrapTimeline(timeline, room).then(timeline => {
+			wrappedTimeline = timeline
+		})
+	}
+
+	onMount(() => {
+		room.on('Room.timeline', onTimeline)
+		return () => {
+			room.off('Room.timeline', onTimeline)
+		}
+	})
 </script>
 
 <ol class="timeline scroller">
 	<div style:margin-top="auto"></div>
-	{#await client.wrapTimeline(timeline, room) then timeline}
-		{#each timeline as event, i}
-			<li>
-				<Event
-					{event}
-					nextEvent={client.getNextMessageEvent(timeline, i)}
-					lastEvent={client.getLastMessageEvent(timeline, i)}
-				/>
-			</li>
-		{/each}
-	{/await}
+	{#each wrappedTimeline as event, i (event.getId())}
+		<li>
+			<Event
+				{event}
+				nextEvent={client.getNextMessageEvent(wrappedTimeline, i)}
+				lastEvent={client.getLastMessageEvent(wrappedTimeline, i)}
+			/>
+		</li>
+	{/each}
 </ol>
 
 <style lang="postcss">
