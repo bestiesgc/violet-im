@@ -2,6 +2,8 @@
 	import client from '$lib/client/index.js'
 	import Timeline from '$lib/Room/Timeline.svelte'
 	import Textarea from '$lib/GrowingTextarea.svelte'
+	import AtIcon from '$lib/Icons/at.svg'
+	import HashIcon from '$lib/Icons/hash.svg'
 	import * as marked from 'marked'
 	export let data
 	async function sendMessage() {
@@ -33,6 +35,14 @@
 	</div>
 {:else}
 	<div class="room-view">
+		<div class="header">
+			{#if data.isDirectMessage}
+				<AtIcon></AtIcon>
+			{:else}
+				<HashIcon></HashIcon>
+			{/if}
+			<span class="room-name">{data.room.name}</span>
+		</div>
 		{#key data.room}
 			<Timeline room={data.room}></Timeline>
 		{/key}
@@ -60,7 +70,16 @@
 	.room-view {
 		height: 100%;
 		display: grid;
-		grid-template-rows: 1fr auto;
+		grid-template-rows: min-content 1fr auto;
+	}
+	.room-view .header {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		font-weight: 700;
+		padding: 0.75rem 0.5rem;
+		font-size: 1.25rem;
+		border-bottom: 1px solid var(--slate-700);
 	}
 	.form {
 		width: 100%;
