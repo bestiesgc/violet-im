@@ -79,8 +79,9 @@
 	}
 	.rooms {
 		padding: 0.5rem 0;
-	}
-	.rooms.has-header {
 		padding-top: 0;
+	}
+	.rooms :global(.section:first-child .toggle-list) {
+		padding-top: 0.75rem;
 	}
 </style>

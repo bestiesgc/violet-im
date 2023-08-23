@@ -87,6 +87,9 @@
 		padding-block: 0 !important;
 	}
 	.toggle-list {
+		position: sticky;
+		top: 0;
+		background-color: var(--slate-900);
 		padding: 0.25rem 0.5rem;
 		display: flex;
 		align-items: center;
