@@ -9,7 +9,7 @@
 
 	let rooms = []
 	let spaces = []
-	let mobileSidebarOpen = false
+	let mobileSidebarOpen = !$page.data.roomId || $page.data.roomIsSpace
 
 	afterNavigate(() => {
 		if ($page.data.roomId && !$page.data.roomIsSpace) {
