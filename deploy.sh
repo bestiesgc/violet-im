@@ -1,6 +1,6 @@
 #!/bin/sh
-cp -r build/* built
+cp -rT build built
 cd built
-git add .
+git add -A
 git commit -m 'deploy'
 git push -u origin page
