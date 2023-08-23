@@ -46,9 +46,9 @@
 					<HamburgerIcon></HamburgerIcon>
 				</button>
 				{#if $page.data.isDirectMessage}
-					<AtIcon></AtIcon>
+					<AtIcon class="room-icon"></AtIcon>
 				{:else if $page.data.roomId && !$page.data.roomIsSpace}
-					<HashIcon></HashIcon>
+					<HashIcon class="room-icon"></HashIcon>
 				{/if}
 				<span class="room-name"
 					>{$page.data.room?.name && !$page.data.roomIsSpace
@@ -75,12 +75,44 @@
 		gap: 0.25rem;
 		min-height: 0;
 	}
+	.room-view {
+		height: 100%;
+		display: grid;
+		grid-template-rows: min-content 1fr auto;
+	}
+	.room-view .header {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		font-weight: 700;
+		padding: 0.5rem;
+		font-size: 1.25rem;
+		height: 51px;
+		border-bottom: 1px solid var(--slate-700);
+	}
+	.room-view .header :global(.room-icon) {
+		color: var(--slate-500);
+	}
+	.room-view .header .room-name {
+		max-width: calc(100% - 4rem);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.room-view .header button {
+		display: none;
+		place-items: center;
+		width: 2rem;
+		height: 2rem;
+		margin-right: 0.5rem;
+	}
 	@media screen and (max-width: 600px) {
 		.layout {
 			grid-template-columns: 1fr;
 			padding: 0;
 		}
 		.sidebar-wrapper {
+			z-index: 10;
 			background-color: var(--slate-950);
 			border-radius: 0.25rem;
 			width: 100%;
@@ -90,10 +122,18 @@
 			left: 0;
 			top: 0;
 			bottom: 0;
-			transition: transform 400ms;
-		}
-		.sidebar-wrapper:not(.mobile-visible) {
 			transform: translateX(-100%);
+			visibility: hidden;
+			transition:
+				transform 400ms,
+				visibility 400ms 0ms;
+		}
+		.sidebar-wrapper.mobile-visible {
+			transform: translateX(0%);
+			visibility: visible;
+		}
+		.room-view .header button {
+			display: grid;
 		}
 	}
 	.layout :global(main) {
@@ -113,23 +153,5 @@
 	}
 	.layout :global(.panel::-webkit-scrollbar-thumb) {
 		border-radius: 0.25rem;
-	}
-	.room-view {
-		height: 100%;
-		display: grid;
-		grid-template-rows: min-content 1fr auto;
-	}
-	.room-view .header {
-		display: flex;
-		align-items: center;
-		gap: 0.25rem;
-		font-weight: 700;
-		padding: 0.75rem 0.5rem;
-		font-size: 1.25rem;
-		border-bottom: 1px solid var(--slate-700);
-	}
-	.room-view .header button {
-		width: 1.5rem;
-		height: 1.5rem;
 	}
 </style>
