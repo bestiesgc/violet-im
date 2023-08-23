@@ -1,10 +1,11 @@
 <script>
+	import { afterUpdate, beforeUpdate, onMount } from 'svelte'
 	import client from '$lib/client/index.js'
 	import Event from '$lib/Event/Event.svelte'
-	import { onMount } from 'svelte'
 
 	export let room
 
+	let timelineElement
 	let timeline = room.getLiveTimeline().events
 	let wrappedTimeline = []
 
@@ -14,6 +15,24 @@
 		})
 	}
 
+	onTimeline()
+
+	let shouldScroll = true
+
+	beforeUpdate(() => {
+		if (timelineElement) {
+			shouldScroll =
+				timelineElement.scrollTop + timelineElement.offsetHeight ==
+				timelineElement.scrollHeight
+		}
+	})
+
+	afterUpdate(() => {
+		if (shouldScroll) {
+			timelineElement.scrollTop = timelineElement.scrollHeight
+		}
+	})
+
 	onMount(() => {
 		room.on('Room.timeline', onTimeline)
 		return () => {
@@ -22,7 +41,7 @@
 	})
 </script>
 
-<ol class="timeline scroller">
+<ol class="timeline scroller" bind:this={timelineElement}>
 	<div style:margin-top="auto"></div>
 	{#each wrappedTimeline as event, i (event.getId())}
 		<li>
