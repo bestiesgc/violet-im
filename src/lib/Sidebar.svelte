@@ -34,6 +34,8 @@
 		<div class="rooms-header">
 			{$page.data.space.name}
 		</div>
+	{:else}
+		<div class="rooms-header">Home</div>
 	{/if}
 	<RoomList {rooms}></RoomList>
 </div>
