@@ -2,10 +2,12 @@
 	export let joinLast = false
 	export let joinNext = false
 	export let rightSide = false
+	export let noPadding = false
 </script>
 
 <div
 	class="bubble"
+	class:no-padding={noPadding}
 	class:right-side={rightSide}
 	class:join-last={joinLast}
 	class:join-next={joinNext}
@@ -19,7 +21,11 @@
 		max-width: min(100%, 40rem);
 		padding: 0.25rem;
 		border-radius: 0.5rem;
+		overflow: hidden;
 		background-color: var(--slate-800);
+	}
+	.bubble.no-padding {
+		padding: 0;
 	}
 	.bubble:not(.right-side).join-last {
 		border-top-left-radius: 0;

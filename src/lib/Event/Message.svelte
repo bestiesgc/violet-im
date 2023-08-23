@@ -52,9 +52,28 @@
 					></Body>
 				</Bubble>
 			{:else}
-				{#await client.getAttachment(event) then attachmentUrl}
-					<img src={attachmentUrl} alt="" class="body" />
-				{/await}
+				<Bubble
+					joinLast={!(event.replyEvent ?? lastEvent?.reactions ?? startsGroup)}
+					joinNext={!endsGroup}
+					rightSide={sender.userId == client.getUserId()}
+					noPadding
+				>
+					{#await client.getAttachment(event)}
+						<div
+							class="img img-loading"
+							style:width={event.content.info.w}
+							style:height={event.content.info.h}
+						></div>
+					{:then attachmentUrl}
+						<img
+							width={event.content.info.w}
+							height={event.content.info.h}
+							src={attachmentUrl}
+							alt=""
+							class="img"
+						/>
+					{/await}
+				</Bubble>
 			{/if}
 			{#if event.reactions}
 				<div class="reactions">
@@ -118,9 +137,6 @@
 		user-select: none;
 		width: 2rem;
 		border-radius: 0.25rem;
-	}
-	img.body {
-		padding: 0;
 	}
 	.body :global(.emoji:only-child) {
 		height: 2.5em;
