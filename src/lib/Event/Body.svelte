@@ -14,6 +14,9 @@
 			img.removeAttribute('height')
 			img.src = client.matrixClient.mxcUrlToHttp(img.src)
 		})
+		bodyDoc.querySelectorAll('style, script').forEach(el => {
+			el.replaceWith(el.outerHTML)
+		})
 		bodyDoc.querySelectorAll('mx-reply').forEach(reply => {
 			reply.remove()
 		})
@@ -28,7 +31,9 @@
 				img.classList.add('big-emoji')
 			})
 		}
-		return DOMPurify.sanitize(bodyDoc.body.innerHTML)
+		return DOMPurify.sanitize(bodyDoc.body.innerHTML, {
+			FORBID_TAGS: ['style']
+		})
 	}
 	$: cleanBody = parseBody(body)
 </script>
