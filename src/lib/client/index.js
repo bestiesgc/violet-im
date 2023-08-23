@@ -73,7 +73,7 @@ class MatrixClientWrapper {
 		// Handle verification requests
 		matrixClient.on(CryptoEvent.VerificationRequestReceived, async request => {
 			await request.accept()
-			const verifier = request.startVerification(verificationMethods.SAS)
+			const verifier = await request.startVerification(verificationMethods.SAS)
 			verifier.on(VerifierEvent.ShowSas, async sasData => {
 				await sasData.confirm()
 			})
