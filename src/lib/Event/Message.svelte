@@ -177,34 +177,32 @@
 		white-space: nowrap;
 		border-width: 0;
 	}
-	.from-me :global(.bubble) {
-		background-color: var(--slate-700);
-	}
-	@media screen and (min-width: 800px) {
-		.from-me {
+	.from-me {
+		margin-inline-start: auto;
+		margin-inline-end: 0;
+		margin-inline-start: 1rem;
+		:global(.bubble) {
+			background-color: var(--slate-700);
+		}
+		.reply-line {
 			margin-inline-start: auto;
-			margin-inline-end: 0;
-			margin-inline-start: 1rem;
-			.reply-line {
-				margin-inline-start: auto;
-			}
-			.reply-line .fancy-arrow {
-				transform: scaleX(-1);
-				order: 3;
-			}
-			.message .sender,
-			.avatar {
-				opacity: 0;
-				width: 0px;
-				height: 0px;
-				padding: 0;
-				margin: -1px;
-				white-space: nowrap;
-				border-width: 0;
-			}
-			.reactions {
-				margin-inline-start: auto;
-			}
+		}
+		.reply-line .fancy-arrow {
+			transform: scaleX(-1);
+			order: 3;
+		}
+		.message .sender,
+		.avatar {
+			opacity: 0;
+			width: 0px;
+			height: 0px;
+			padding: 0;
+			margin: -1px;
+			white-space: nowrap;
+			border-width: 0;
+		}
+		.reactions {
+			margin-inline-start: auto;
 		}
 	}
 </style>
