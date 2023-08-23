@@ -1,5 +1,5 @@
 import client from '$lib/client/index.js'
-const { EventTimeline } = await import('matrix-js-sdk')
+import { EventTimeline } from 'matrix-js-sdk'
 
 export async function load({ params }) {
 	if (params.id == '@me') return {}
