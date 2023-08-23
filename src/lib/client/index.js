@@ -179,9 +179,11 @@ class MatrixClientWrapper {
 							shortcode: content.shortcode,
 							senders: []
 						}
-					newTimeline[relatesToIndex].reactions[
-						content['m.relates_to'].key
-					].senders.push(event.sender)
+					const thisReaction =
+						newTimeline[relatesToIndex].reactions[content['m.relates_to'].key]
+					if (!thisReaction.senders.includes(event.sender)) {
+						thisReaction.senders.push(event.sender)
+					}
 					break
 				}
 				default:
