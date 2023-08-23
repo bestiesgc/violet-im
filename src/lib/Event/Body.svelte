@@ -40,6 +40,10 @@
 {/if}
 
 <style>
+	.body :global(pre) {
+		word-break: break-word;
+		white-space: pre-wrap;
+	}
 	.body :global(.emoji) {
 		display: inline;
 		vertical-align: middle;
