@@ -6,6 +6,7 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
+		"deploy": "vite build && ./deploy.sh",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"preinstall": "npx only-allow pnpm"
