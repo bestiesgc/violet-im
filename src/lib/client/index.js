@@ -206,8 +206,13 @@ class MatrixClientWrapper {
 							e => e.getId() === relatesToId
 						)
 						if (relatesToIndex == -1) continue
-						newTimeline[relatesToIndex].clearEvent.content =
-							event.getContent()['m.new_content']
+						if (newTimeline[relatesToIndex].clearEvent) {
+							newTimeline[relatesToIndex].clearEvent.content =
+								event.getContent()['m.new_content']
+						} else {
+							newTimeline[relatesToIndex].event.content =
+								event.getContent()['m.new_content']
+						}
 						continue
 					}
 					if (event.replyEventId) {
