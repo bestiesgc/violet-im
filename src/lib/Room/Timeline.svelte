@@ -16,7 +16,7 @@
 		})
 	}
 
-	async function loadPrevious() {
+	async function loadPrevious(limit) {
 		oldestMessageId = timeline[0].getId()
 		function getFirstLinkedTimeline() {
 			let tl = activeTimeline
@@ -29,14 +29,14 @@
 			getFirstLinkedTimeline(timeline),
 			{
 				backwards: true,
-				limit: 30
+				limit
 			}
 		)
 		onTimeline()
 	}
 
 	function onScroll() {
-		if (timelineElement.scrollTop <= 100) loadPrevious()
+		if (timelineElement?.scrollTop <= 100) loadPrevious()
 	}
 
 	onTimeline()
@@ -68,6 +68,7 @@
 	})
 
 	onMount(() => {
+		loadPrevious(20)
 		room.on('Room.timeline', onTimeline)
 		return () => {
 			room.off('Room.timeline', onTimeline)
