@@ -29,7 +29,9 @@
 	</div>
 {:else}
 	<div class="room-view">
-		<Timeline room={data.room}></Timeline>
+		{#key data.room}
+			<Timeline room={data.room}></Timeline>
+		{/key}
 		<div class="form">
 			<Textarea
 				bind:value={message}
