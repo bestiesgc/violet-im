@@ -223,9 +223,6 @@
 		margin-inline-start: auto;
 		margin-inline-end: 0;
 		margin-inline-start: 1rem;
-		:global(.bubble) {
-			background-color: var(--slate-700);
-		}
 		.reply-line {
 			margin-inline-start: auto;
 		}
