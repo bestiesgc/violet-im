@@ -1,4 +1,5 @@
 <script>
+	import { goto } from '$app/navigation'
 	import { onMount } from 'svelte'
 	import Form from '$lib/Form/Form.svelte'
 	import TextInput from '$lib/Form/TextInput.svelte'
@@ -40,6 +41,7 @@
 		localStorage.setItem('token', session.access_token)
 		localStorage.setItem('user_id', session.user_id)
 		localStorage.setItem('device_id', session.device_id)
+		await goto('/room/@me')
 	}
 </script>
 
