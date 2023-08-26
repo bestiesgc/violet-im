@@ -1,11 +1,23 @@
 <script>
+	import { setContext } from 'svelte'
+	import { writable } from 'svelte/store'
 	import client from '$lib/client/index.js'
 	import Sidebar from '$lib/Sidebar.svelte'
 	import AtIcon from '$lib/Icons/at.svg'
 	import HashIcon from '$lib/Icons/hash.svg'
 	import HamburgerIcon from '$lib/Icons/hamburger.svg'
+	import CloseIcon from '$lib/Icons/close.svg'
+	import DeleteIcon from '$lib/Icons/delete.svg'
+	import EditIcon from '$lib/Icons/edit.svg'
+	import ReplyIcon from '$lib/Icons/reply.svg'
 	import { page } from '$app/stores'
 	import { afterNavigate } from '$app/navigation'
+	import { fly } from 'svelte/transition'
+	import { expoOut } from 'svelte/easing'
+	import Ticker from '$lib/Ticker.svelte'
+
+	const selection = writable()
+	setContext('selection', selection)
 
 	let rooms = []
 	let spaces = []
@@ -42,19 +54,61 @@
 	<main class="panel">
 		<div class="room-view">
 			<div class="header">
-				<button on:click={() => (mobileSidebarOpen = !mobileSidebarOpen)}>
-					<HamburgerIcon></HamburgerIcon>
-				</button>
-				{#if $page.data.isDirectMessage}
-					<AtIcon class="room-icon"></AtIcon>
-				{:else if $page.data.roomId && !$page.data.roomIsSpace}
-					<HashIcon class="room-icon"></HashIcon>
+				{#if !$selection}
+					<div
+						class="group"
+						in:fly={{ easing: expoOut, duration: 200, y: -20 }}
+					>
+						<button
+							class="menu-button"
+							on:click={() => (mobileSidebarOpen = !mobileSidebarOpen)}
+						>
+							<HamburgerIcon></HamburgerIcon>
+						</button>
+						{#if $page.data.isDirectMessage}
+							<AtIcon class="room-icon"></AtIcon>
+						{:else if $page.data.roomId && !$page.data.roomIsSpace}
+							<HashIcon class="room-icon"></HashIcon>
+						{/if}
+						<span class="room-name"
+							>{$page.data.room?.name && !$page.data.roomIsSpace
+								? $page.data.room.name
+								: 'Violet'}</span
+						>
+					</div>
+				{:else}
+					<div
+						class="group"
+						in:fly={{ easing: expoOut, duration: 200, y: -20 }}
+					>
+						<button on:click={() => ($selection = null)}>
+							<CloseIcon></CloseIcon>
+						</button>
+						<span class="room-name">
+							<Ticker number={$selection.length}></Ticker> selected
+						</span>
+					</div>
+					<div
+						class="group"
+						in:fly={{ easing: expoOut, duration: 200, y: -20 }}
+					>
+						<!-- TODO: implement actual on:click events -->
+						{#if $selection.length === 1}
+							<button>
+								<span class="sr-only">Reply</span>
+								<ReplyIcon aria-hidden="true"></ReplyIcon>
+							</button>
+							<button>
+								<span class="sr-only">Edit</span>
+								<EditIcon aria-hidden="true"></EditIcon>
+							</button>
+						{/if}
+						<button>
+							<span class="sr-only">Delete</span>
+							<DeleteIcon aria-hidden="true"></DeleteIcon>
+						</button>
+					</div>
 				{/if}
-				<span class="room-name"
-					>{$page.data.room?.name && !$page.data.roomIsSpace
-						? $page.data.room.name
-						: 'Violet'}</span
-				>
 			</div>
 			<slot />
 		</div>
@@ -84,26 +138,37 @@
 		display: flex;
 		align-items: center;
 		gap: 0.25rem;
+		justify-content: space-between;
 		font-weight: 700;
 		padding: 0.5rem;
 		font-size: 1.25rem;
 		height: 51px;
 		border-bottom: 1px solid var(--slate-700);
 	}
+	.room-view .header .group {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+	}
 	.room-view .header :global(.room-icon) {
 		color: var(--slate-500);
 	}
 	.room-view .header .room-name {
-		max-width: calc(100% - 4rem);
+		max-width: 100%;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
 	.room-view .header button {
-		display: none;
+		display: grid;
 		place-items: center;
 		width: 2rem;
 		height: 2rem;
+	}
+	.room-view .header .menu-button {
+		display: none;
+	}
+	.room-view .header .group:first-child button:first-child {
 		margin-right: 0.5rem;
 	}
 	@media screen and (max-width: 600px) {
@@ -125,14 +190,14 @@
 			transform: translateX(-100%);
 			visibility: hidden;
 			transition:
-				transform 400ms,
+				transform 400ms cubic-bezier(0.165, 0.84, 0.44, 1),
 				visibility 400ms 0ms;
 		}
 		.sidebar-wrapper.mobile-visible {
 			transform: translateX(0%);
 			visibility: visible;
 		}
-		.room-view .header button {
+		.room-view .header .menu-button {
 			display: grid;
 		}
 	}

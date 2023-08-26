@@ -4,14 +4,14 @@
 	import Attachment from './Attachment.svelte'
 	import client from '$lib/client/index.js'
 	export let event
-	export let sender
 	export let lastEvent = null
 	export let nextEvent = null
-	$: startsGroup = lastEvent?.sender.userId != sender.userId
+	export let preview = false
+	$: startsGroup = lastEvent?.sender.userId != event.sender.userId
 	$: endsGroup =
 		event.reactions ??
 		nextEvent?.replyEvent ??
-		nextEvent?.sender.userId != sender.userId
+		nextEvent?.sender.userId != event.sender.userId
 
 	let allEmoji = false
 
@@ -42,7 +42,8 @@
 
 <div
 	class="message-wrapper"
-	class:from-me={sender.userId == client.getUserId()}
+	class:from-me={!preview && event.sender.userId == client.getUserId()}
+	style:margin-top={!preview && startsGroup ? '1rem' : '0'}
 	class:starts-group={startsGroup}
 	class:ends-group={endsGroup}
 >
@@ -61,19 +62,19 @@
 	<div class="message">
 		<img
 			aria-hidden="true"
-			src={client.getMemberAvatarUrl(sender, 32)}
+			src={client.getMemberAvatarUrl(event.sender, 32)}
 			alt=""
 			class="avatar"
 		/>
 		<div class="content" class:all-emoji={allEmoji}>
 			<div class="sender">
-				<p class="name">{sender.name}</p>
+				<p class="name">{event.sender.name}</p>
 			</div>
 			{#if event.content.msgtype != 'm.image'}
 				<Bubble
 					joinLast={!(event.replyEvent ?? lastEvent?.reactions ?? startsGroup)}
 					joinNext={!endsGroup}
-					rightSide={sender.userId == client.getUserId()}
+					rightSide={!preview && event.sender.userId == client.getUserId()}
 				>
 					{#if event.content?.formatted_body && event.content.format == 'org.matrix.custom.html'}
 						<Body bind:allEmoji body={event.content?.formatted_body} />
@@ -85,7 +86,7 @@
 				<Bubble
 					joinLast={!(event.replyEvent ?? lastEvent?.reactions ?? startsGroup)}
 					joinNext={!endsGroup}
-					rightSide={sender.userId == client.getUserId()}
+					rightSide={!preview && event.sender.userId == client.getUserId()}
 					noPadding
 				>
 					<Attachment {event} />
@@ -199,9 +200,6 @@
 		aspect-ratio: 1;
 		object-fit: cover;
 		border-radius: 100%;
-	}
-	.starts-group {
-		margin-top: 1rem;
 	}
 	.message-wrapper:not(.starts-group) .avatar {
 		visibility: hidden;
