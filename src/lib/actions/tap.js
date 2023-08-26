@@ -39,17 +39,20 @@ export function tap(node, callback) {
 	}
 	function onTouchStart() {
 		node.addEventListener('touchend', onTouchEnd)
+		setTimeout(() => {
+			cancel()
+		}, 500)
 	}
 	function cancel() {
 		node.removeEventListener('touchend', onTouchEnd)
+		node.removeEventListener('touchmove', cancel)
 	}
 	node.addEventListener('touchstart', onTouchStart)
 	node.addEventListener('touchmove', cancel)
 	return {
 		destroy: () => {
 			node.removeEventListener('touchstart', onTouchStart)
-			node.removeEventListener('touchend', onTouchEnd)
-			node.removeEventListener('touchmove', cancel)
+			cancel()
 		}
 	}
 }
