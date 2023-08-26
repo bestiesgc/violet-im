@@ -43,7 +43,8 @@
 <div
 	class="message-wrapper"
 	class:from-me={!preview && event.sender.userId == client.getUserId()}
-	style:margin-top={!preview && startsGroup ? '1rem' : '0'}
+	style:padding-top={!preview && startsGroup ? '0.5rem' : undefined}
+	style:padding-bottom={!preview && endsGroup ? '0.5rem' : undefined}
 	class:starts-group={startsGroup}
 	class:ends-group={endsGroup}
 >
