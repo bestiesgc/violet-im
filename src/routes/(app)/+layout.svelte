@@ -10,6 +10,7 @@
 	import DeleteIcon from '$lib/Icons/delete.svg'
 	import EditIcon from '$lib/Icons/edit.svg'
 	import ReplyIcon from '$lib/Icons/reply.svg'
+	import CopyIcon from '$lib/Icons/copy.svg'
 	import { page } from '$app/stores'
 	import { afterNavigate } from '$app/navigation'
 	import { fly } from 'svelte/transition'
@@ -103,6 +104,10 @@
 								<EditIcon aria-hidden="true"></EditIcon>
 							</button>
 						{/if}
+						<button>
+							<span class="sr-only">Copy</span>
+							<CopyIcon aria-hidden="true"></CopyIcon>
+						</button>
 						<button>
 							<span class="sr-only">Delete</span>
 							<DeleteIcon aria-hidden="true"></DeleteIcon>
