@@ -22,7 +22,8 @@
 			content: clearContent
 		}
 	}
-	function updateSelection() {
+	function updateSelection(touchEvent) {
+		if (touchEvent.target.closest('button') != null) return
 		if (!$selection) {
 			$selection = [event]
 		} else {
@@ -41,7 +42,7 @@
 	class="event-wrapper"
 	class:selected={$selection?.includes(event)}
 	use:holdtap={updateSelection}
-	use:tap={() => ($selection ? updateSelection() : null)}
+	use:tap={event => ($selection ? updateSelection(event) : null)}
 >
 	<div class="event" id="message_{event?.getId()}">
 		{#if eventStuff && eventStuff.type == 'm.room.message'}
