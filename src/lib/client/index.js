@@ -111,6 +111,9 @@ class MatrixClientWrapper {
 	getDmRooms() {
 		return this.getDmRoomIds().map(id => this.getRoom(id))
 	}
+	async deleteEvent(event) {
+		return this.matrixClient.redactEvent(event.getRoomId(), event.getId())
+	}
 	async decryptEvent(event) {
 		if (!event.isEncrypted()) return event
 		if (event.clearEvent) return event
@@ -171,7 +174,7 @@ class MatrixClientWrapper {
 	}
 	async wrapTimeline(timeline, room) {
 		timeline = await this.decryptTimeline(timeline)
-		const newTimeline = []
+		let newTimeline = []
 		for (const event of timeline) {
 			if (event.isRedacted()) continue
 			switch (event.getType()) {
@@ -196,6 +199,11 @@ class MatrixClientWrapper {
 					if (!thisReaction.senders.includes(event.sender)) {
 						thisReaction.senders.push(event.sender)
 					}
+					break
+				}
+				case 'm.room.redaction': {
+					const relatesToId = event.getAssociatedId()
+					newTimeline = newTimeline.filter(e => e.getId() != relatesToId)
 					break
 				}
 				default:

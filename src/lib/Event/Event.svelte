@@ -1,5 +1,9 @@
 <script>
+	import { tap, holdtap } from '../actions/tap.js'
 	import Message from './Message.svelte'
+	import { getContext } from 'svelte'
+
+	const selection = getContext('selection')
 
 	export let event
 	export let lastEvent
@@ -12,36 +16,70 @@
 			: event.getContent()
 		eventStuff = {
 			type: event.getType(),
-			sender: event.getSender(),
+			sender: event.sender,
 			reactions: event.reactions,
 			replyEvent: event.replyEvent,
 			content: clearContent
 		}
 	}
+	let dontAllowUpdate = false
+	function updateSelection(touchevent, skipDontAllow = false) {
+		if (dontAllowUpdate && touchevent.type == 'touchend') {
+			dontAllowUpdate = false
+			return
+		}
+		if (!skipDontAllow && touchevent.type == 'touchstart')
+			dontAllowUpdate = true
+		if (!$selection) {
+			$selection = [event]
+		} else {
+			if ($selection.includes(event)) {
+				$selection = $selection.filter(e => e !== event)
+				if ($selection.length === 0) $selection = null
+			} else {
+				$selection = [...$selection, event]
+			}
+		}
+	}
 	$: loadEventStuff(event)
 </script>
 
-<div class="event-wrapper">
-	<div class="event" id="message_{event?.getId()}">
-		{#if eventStuff && eventStuff.type == 'm.room.message'}
-			<Message
-				event={eventStuff}
-				sender={event.sender}
-				{nextEvent}
-				{lastEvent}
-			/>
-		{/if}
+{#if !$selection}
+	<div
+		class="event-wrapper"
+		class:selected={$selection?.includes(event)}
+		use:holdtap={event => updateSelection(event, true)}
+	>
+		<div class="event" id="message_{event?.getId()}">
+			{#if eventStuff && eventStuff.type == 'm.room.message'}
+				<Message event={eventStuff} {nextEvent} {lastEvent} />
+			{/if}
+		</div>
 	</div>
-</div>
+{:else}
+	<div
+		class="event-wrapper"
+		class:selected={$selection?.includes(event)}
+		use:holdtap={updateSelection}
+		use:tap={updateSelection}
+	>
+		<div class="event" id="message_{event?.getId()}">
+			{#if eventStuff && eventStuff.type == 'm.room.message'}
+				<Message event={eventStuff} {nextEvent} {lastEvent} />
+			{/if}
+		</div>
+	</div>
+{/if}
 
 <style lang="postcss">
 	.event-wrapper:hover {
 		background-color: #a1a2d310;
 	}
-	.event {
-		transition: background-color 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
+	.event-wrapper {
+		transition: background-color 200ms cubic-bezier(0.075, 0.82, 0.165, 1);
 	}
+	.event-wrapper.selected,
 	.event-wrapper:global(.highlight) {
-		background-color: var(--violet-600);
+		background-color: var(--slate-600);
 	}
 </style>
