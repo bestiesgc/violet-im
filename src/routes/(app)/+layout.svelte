@@ -12,7 +12,7 @@
 	import ReplyIcon from '$lib/Icons/reply.svg'
 	import CopyIcon from '$lib/Icons/copy.svg'
 	import { page } from '$app/stores'
-	import { afterNavigate } from '$app/navigation'
+	import { beforeNavigate, afterNavigate } from '$app/navigation'
 	import { fly } from 'svelte/transition'
 	import { expoOut } from 'svelte/easing'
 	import Ticker from '$lib/Ticker.svelte'
@@ -24,10 +24,12 @@
 	let spaces = []
 	let mobileSidebarOpen = !$page.data.roomId || $page.data.roomIsSpace
 
+	beforeNavigate(() => {
+		$selection = null
+	})
+
 	afterNavigate(() => {
-		if ($page.data.roomId && !$page.data.roomIsSpace) {
-			mobileSidebarOpen = false
-		}
+		mobileSidebarOpen = !($page.data.roomId && !$page.data.roomIsSpace)
 	})
 
 	async function load() {
