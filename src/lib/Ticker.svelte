@@ -20,7 +20,6 @@
 	.ticker {
 		position: relative;
 		display: inline-block;
-		vertical-align: middle;
 	}
 
 	.real {
