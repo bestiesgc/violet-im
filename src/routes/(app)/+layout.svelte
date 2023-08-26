@@ -93,8 +93,8 @@
 						class="group"
 						in:fly={{ easing: expoOut, duration: 200, y: -20 }}
 					>
-						<!-- TODO: implement actual on:click events -->
-						{#if $selection.length === 1}
+						<!-- TODO: implement! -->
+						{#if false && $selection.length === 1}
 							<button>
 								<span class="sr-only">Reply</span>
 								<ReplyIcon aria-hidden="true"></ReplyIcon>
@@ -104,11 +104,33 @@
 								<EditIcon aria-hidden="true"></EditIcon>
 							</button>
 						{/if}
-						<button>
+						<button
+							on:click={() => {
+								const text = $selection
+									.map(event => {
+										const { sender } = event
+										const content = event.getContent().body
+										const name = sender?.name || sender?.username || 'Unknown'
+										return `${name}: ${content}`
+									})
+									.join('\n')
+								const type = 'text/plain'
+								const blob = new Blob([text], { type })
+								const data = [new ClipboardItem({ [type]: blob })]
+								navigator.clipboard.write(data)
+							}}
+						>
 							<span class="sr-only">Copy</span>
 							<CopyIcon aria-hidden="true"></CopyIcon>
 						</button>
-						<button>
+						<button
+							on:click={async () => {
+								await Promise.all(
+									$selection.map(event => client.deleteEvent(event))
+								)
+								$selection = null
+							}}
+						>
 							<span class="sr-only">Delete</span>
 							<DeleteIcon aria-hidden="true"></DeleteIcon>
 						</button>
