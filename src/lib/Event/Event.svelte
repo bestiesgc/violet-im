@@ -22,13 +22,13 @@
 			content: clearContent
 		}
 	}
-	$: loadEventStuff(event)
-</script>
-
-<div
-	class="event-wrapper"
-	class:selected={$selection?.includes(event)}
-	use:tap={() => {
+	let dontAllowUpdate = false
+	function updateSelection(touchevent) {
+		if (dontAllowUpdate && touchevent.type == 'touchend') {
+			dontAllowUpdate = false
+			return
+		}
+		if (touchevent.type == 'touchstart') dontAllowUpdate = true
 		if (!$selection) {
 			$selection = [event]
 		} else {
@@ -39,14 +39,36 @@
 				$selection = [...$selection, event]
 			}
 		}
-	}}
->
-	<div class="event" id="message_{event?.getId()}">
-		{#if eventStuff && eventStuff.type == 'm.room.message'}
-			<Message event={eventStuff} {nextEvent} {lastEvent} />
-		{/if}
+	}
+	$: loadEventStuff(event)
+</script>
+
+{#if !$selection}
+	<div
+		class="event-wrapper"
+		class:selected={$selection?.includes(event)}
+		use:holdtap={updateSelection}
+	>
+		<div class="event" id="message_{event?.getId()}">
+			{#if eventStuff && eventStuff.type == 'm.room.message'}
+				<Message event={eventStuff} {nextEvent} {lastEvent} />
+			{/if}
+		</div>
 	</div>
-</div>
+{:else}
+	<div
+		class="event-wrapper"
+		class:selected={$selection?.includes(event)}
+		use:holdtap={updateSelection}
+		use:tap={updateSelection}
+	>
+		<div class="event" id="message_{event?.getId()}">
+			{#if eventStuff && eventStuff.type == 'm.room.message'}
+				<Message event={eventStuff} {nextEvent} {lastEvent} />
+			{/if}
+		</div>
+	</div>
+{/if}
 
 <style lang="postcss">
 	.event-wrapper:hover {
