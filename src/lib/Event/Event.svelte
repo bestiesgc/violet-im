@@ -23,12 +23,13 @@
 		}
 	}
 	let dontAllowUpdate = false
-	function updateSelection(touchevent) {
+	function updateSelection(touchevent, skipDontAllow = false) {
 		if (dontAllowUpdate && touchevent.type == 'touchend') {
 			dontAllowUpdate = false
 			return
 		}
-		if (touchevent.type == 'touchstart') dontAllowUpdate = true
+		if (!skipDontAllow && touchevent.type == 'touchstart')
+			dontAllowUpdate = true
 		if (!$selection) {
 			$selection = [event]
 		} else {
@@ -47,7 +48,7 @@
 	<div
 		class="event-wrapper"
 		class:selected={$selection?.includes(event)}
-		use:holdtap={updateSelection}
+		use:holdtap={event => updateSelection(event, true)}
 	>
 		<div class="event" id="message_{event?.getId()}">
 			{#if eventStuff && eventStuff.type == 'm.room.message'}
