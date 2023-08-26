@@ -41,6 +41,7 @@
 </script>
 
 <div
+	class:not-preview={!preview}
 	class="message-wrapper"
 	class:from-me={!preview && event.sender.userId == client.getUserId()}
 	style:padding-top={!preview && startsGroup ? '0.5rem' : undefined}
@@ -121,6 +122,11 @@
 </div>
 
 <style lang="postcss">
+	@media screen and (max-width: 600px) {
+		.not-preview {
+			user-select: none;
+		}
+	}
 	.reply-line {
 		width: fit-content;
 		display: flex;
