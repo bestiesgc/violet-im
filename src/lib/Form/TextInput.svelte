@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
 	export let type = 'text'
-	export let label
-	export let value
-	export let placeholder = null
+	export let label: string
+	export let value: string
+	export let placeholder: string | null = null
 </script>
 
 <label>

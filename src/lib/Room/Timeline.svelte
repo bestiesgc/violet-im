@@ -1,37 +1,37 @@
-<script>
+<script lang="ts">
+	import type { EventTimeline, Room } from 'matrix-js-sdk'
 	import { afterUpdate, beforeUpdate, onMount } from 'svelte'
-	import client from '$lib/client/index.js'
+	import client from '$lib/client/index'
 	import Event from '$lib/Event/Event.svelte'
+	import type { WrappedEvent } from '$lib/client/event'
 
-	export let room
+	export let room: Room
 
-	let timelineElement
+	let timelineElement: HTMLElement
 	const activeTimeline = room.getLiveTimeline()
-	const timeline = activeTimeline.events
-	let wrappedTimeline = []
+	const timeline = activeTimeline.getEvents()
+	let wrappedTimeline: WrappedEvent[] = []
 
-	function onTimeline() {
-		client.wrapTimeline(timeline, room).then(timeline => {
-			wrappedTimeline = timeline
-		})
+	async function onTimeline() {
+		wrappedTimeline = await client.wrapTimeline(timeline, room)
 	}
 
-	async function loadPrevious(limit) {
+	async function loadPrevious(limit = 10) {
 		oldestMessageId = timeline[0].getId()
 		function getFirstLinkedTimeline() {
-			let tl = activeTimeline
-			while (tl?.getNeighbouringTimeline('b')) {
-				tl = tl.getNeighbouringTimeline('b')
+			let tl: EventTimeline | null = activeTimeline
+			while (tl?.getNeighbouringTimeline(client.matrixSdk.Direction.Backward)) {
+				tl = tl.getNeighbouringTimeline(client.matrixSdk.Direction.Backward)
 			}
 			return tl
 		}
-		await client.matrixClient.paginateEventTimeline(
-			getFirstLinkedTimeline(timeline),
-			{
+		const tl = getFirstLinkedTimeline()
+		if (tl) {
+			await client.matrixClient.paginateEventTimeline(tl, {
 				backwards: true,
 				limit
-			}
-		)
+			})
+		}
 		onTimeline()
 	}
 
@@ -45,8 +45,8 @@
 	onTimeline()
 
 	let oldestMessageId = timeline[0].getId()
-	let scrollPosition
-	let scrollHeight
+	let scrollPosition: number
+	let scrollHeight: number
 	let shouldScroll = true
 
 	beforeUpdate(() => {
@@ -71,21 +71,21 @@
 		loadPrevious(20).then(() => {
 			shouldScroll = true
 		})
-		room.on('Room.timeline', onTimeline)
+		room.on(client.matrixSdk.RoomEvent.Timeline, onTimeline)
 		return () => {
-			room.off('Room.timeline', onTimeline)
+			room.off(client.matrixSdk.RoomEvent.Timeline, onTimeline)
 		}
 	})
 </script>
 
 <ol class="timeline scroller" bind:this={timelineElement} on:scroll={onScroll}>
 	<div style:margin-top="auto"></div>
-	{#each wrappedTimeline as event, i (event.getId())}
+	{#each wrappedTimeline as event, i (event.id)}
 		<li>
 			<Event
 				{event}
-				nextEvent={client.getNextMessageEvent(wrappedTimeline, i)}
-				lastEvent={client.getLastMessageEvent(wrappedTimeline, i)}
+				nextEvent={client.getNextMessageEvent(wrappedTimeline, i) ?? null}
+				lastEvent={client.getLastMessageEvent(wrappedTimeline, i) ?? null}
 			/>
 		</li>
 	{/each}

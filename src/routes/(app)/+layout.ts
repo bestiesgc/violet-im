@@ -1,5 +1,5 @@
 import { redirect } from '@sveltejs/kit'
-import client from '$lib/client/index.js'
+import client from '$lib/client/index'
 
 export const ssr = false
 

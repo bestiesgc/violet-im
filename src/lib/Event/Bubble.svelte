@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	export let joinLast = false
 	export let joinNext = false
 	export let rightSide = false

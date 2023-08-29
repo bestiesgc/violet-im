@@ -1,9 +1,9 @@
-<script>
-	import client from '$lib/client/index.js'
+<script lang="ts">
+	import client from '$lib/client/index'
 	import DOMPurify from 'dompurify'
-	export let body
+	export let body: string
 	export let allEmoji = false
-	function parseBody(body) {
+	function parseBody(body: string) {
 		const parser = new DOMParser()
 		const bodyDoc = parser.parseFromString(body, 'text/html')
 		let isAllEmoji = false
@@ -12,7 +12,11 @@
 			img.classList.add('emoji')
 			img.removeAttribute('width')
 			img.removeAttribute('height')
-			img.src = client.matrixClient.mxcUrlToHttp(img.src)
+			let src = img.getAttribute('src')
+			if (!src) throw new Error('Invalid img tag')
+			if (src.startsWith('mxc://')) src = client.matrixClient.mxcUrlToHttp(src)
+			if (!src) throw new Error('Invalid img url')
+			img.setAttribute('src', src)
 		})
 		bodyDoc.querySelectorAll('style, script').forEach(el => {
 			el.replaceWith(el.outerHTML)
@@ -21,16 +25,16 @@
 			reply.remove()
 		})
 		bodyDoc.body.childNodes.forEach(node => {
-			if (node.nodeName != 'IMG' || !node.classList.contains('emoji')) {
+			if (node.nodeName != 'IMG') {
 				isAllEmoji = false
 			}
 		})
 		if (isAllEmoji) {
-			allEmoji = true
-			bodyDoc.querySelectorAll('img.emoji').forEach(img => {
-				img.classList.add('big-emoji')
+			bodyDoc.querySelectorAll('img:not(.emoji)').forEach(img => {
+				isAllEmoji = false
 			})
 		}
+		allEmoji = isAllEmoji
 		return DOMPurify.sanitize(bodyDoc.body.innerHTML, {
 			FORBID_TAGS: ['style']
 		})

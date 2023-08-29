@@ -1,16 +1,21 @@
-<script>
-	import client from '$lib/client/index.js'
+<script lang="ts">
+	import client from '$lib/client/index'
 	import Timeline from '$lib/Room/Timeline.svelte'
 	import Textarea from '$lib/GrowingTextarea.svelte'
 	import * as marked from 'marked'
+	import type { IContent } from 'matrix-js-sdk'
 	export let data
+
+	let message: string
+
 	async function sendMessage() {
+		if (!data.roomId) throw new Error('Not in room')
 		const body = message.trim()
 		message = ''
 		const formattedBody = await marked.parse(body, {
 			async: true
 		})
-		const content = {
+		const content: IContent = {
 			msgtype: 'm.text',
 			body
 		}
@@ -20,7 +25,6 @@
 		}
 		await client.matrixClient.sendMessage(data.roomId, content)
 	}
-	let message
 </script>
 
 <svelte:head>

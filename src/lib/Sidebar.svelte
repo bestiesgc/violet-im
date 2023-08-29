@@ -1,9 +1,10 @@
-<script>
+<script lang="ts">
+	import type { Room } from 'matrix-js-sdk'
 	import { page } from '$app/stores'
 	import RoomAvatar from '$lib/Room/Avatar.svelte'
 	import RoomList from '$lib/Room/RoomList.svelte'
-	export let spaces
-	export let rooms
+	export let spaces: Room[]
+	export let rooms: Room[]
 </script>
 
 <div class="panel spaces">
@@ -25,7 +26,7 @@
 	<hr />
 	{#each spaces as space}
 		<a href="/room/{space.roomId}" class="space" title={space.name}>
-			<RoomAvatar size="40" room={space}></RoomAvatar>
+			<RoomAvatar size={40} room={space}></RoomAvatar>
 		</a>
 	{/each}
 </div>

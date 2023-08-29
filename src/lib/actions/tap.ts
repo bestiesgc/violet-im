@@ -1,10 +1,10 @@
-function preventDefault(event) {
+function preventDefault(event: Event) {
 	event.preventDefault()
 }
 
-export function holdtap(node, callback) {
-	let timer
-	function onTouchStart(event) {
+export function holdtap(node: Node, callback: (event?: Event) => void) {
+	let timer: number | null
+	function onTouchStart(event: Event) {
 		timer = setTimeout(() => {
 			timer = null
 			// prevent context menu from showing within 1s of the holdtap
@@ -18,7 +18,7 @@ export function holdtap(node, callback) {
 	node.addEventListener('touchstart', onTouchStart)
 
 	function cancel() {
-		clearTimeout(timer)
+		if (timer) clearTimeout(timer)
 	}
 
 	node.addEventListener('touchend', cancel)
@@ -32,8 +32,8 @@ export function holdtap(node, callback) {
 	}
 }
 
-export function tap(node, callback) {
-	function onTouchEnd(event) {
+export function tap(node: Node, callback: (event?: Event) => void) {
+	function onTouchEnd(event: Event) {
 		callback(event)
 		cancel()
 	}

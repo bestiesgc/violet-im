@@ -1,6 +1,6 @@
-<script>
+<script lang="ts">
 	import { fly } from 'svelte/transition'
-	export let number
+	export let number: number | string
 </script>
 
 <span class="ticker">

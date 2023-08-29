@@ -1,7 +1,8 @@
-<script>
-	import client from '$lib/client/index.js'
+<script lang="ts">
+	import type { Room } from 'matrix-js-sdk'
+	import client from '$lib/client/index'
 	import RoomAvatar from '$lib/Room/Avatar.svelte'
-	export let rooms
+	export let rooms: Room[]
 
 	const dmRoomIds = client.getDmRoomIds()
 
@@ -34,7 +35,7 @@
 		<div class="rooms">
 			{#each directMessages as room}
 				<a href="/room/{room.roomId}" class="room" title={room.name}>
-					<RoomAvatar size="32" {room}></RoomAvatar>
+					<RoomAvatar size={32} {room}></RoomAvatar>
 					<span class="name">{room.name}</span>
 				</a>
 			{/each}
@@ -63,7 +64,7 @@
 		<div class="rooms" id="room-list">
 			{#each notDirectMessages as room}
 				<a href="/room/{room.roomId}" class="room" title={room.name}>
-					<RoomAvatar size="32" {room}></RoomAvatar>
+					<RoomAvatar size={32} {room}></RoomAvatar>
 					<span class="name">{room.name}</span>
 				</a>
 			{/each}

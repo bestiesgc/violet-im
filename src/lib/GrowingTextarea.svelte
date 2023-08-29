@@ -1,7 +1,7 @@
-<script>
-	export let value
-	export let placeholder = null
-	export let name = null
+<script lang="ts">
+	export let value: string
+	export let placeholder: string | null = null
+	export let name: string | null = null
 </script>
 
 <div class="textarea">

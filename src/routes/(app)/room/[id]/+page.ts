@@ -1,4 +1,4 @@
-import client from '$lib/client/index.js'
+import client from '$lib/client/index'
 import { EventTimeline } from 'matrix-js-sdk'
 
 export async function load({ params }) {
@@ -6,6 +6,7 @@ export async function load({ params }) {
 	await client.start()
 	const dmRoomIds = client.getDmRoomIds()
 	const room = client.getRoom(params.id)
+	if (!room) throw new Error('Room not found')
 	let space = room.isSpaceRoom() ? room : null
 	const roomIsSpace = space ? true : false
 	if (!space) {

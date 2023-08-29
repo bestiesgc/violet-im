@@ -1,13 +1,14 @@
-<script>
-	import client from '$lib/client/index.js'
-	export let event
+<script lang="ts">
+	import type { WrappedEvent } from '$lib/client/event'
+	import client from '$lib/client/index'
+	export let event: WrappedEvent
 
-	function convertRemToPixels(rem) {
+	function convertRemToPixels(rem: number) {
 		return rem * parseFloat(getComputedStyle(document.documentElement).fontSize)
 	}
 
-	let attachmentUrl
-	$: loadAttachment(event)
+	let attachmentUrl: string
+	$: event && loadAttachment()
 
 	function loadAttachment() {
 		client.getAttachment(event).then(url => {
@@ -18,20 +19,22 @@
 	const maxWidth = convertRemToPixels(20)
 </script>
 
-{#if !attachmentUrl}
-	<div
-		class="attachment loading"
-		style:width={Math.min(event.content.info.w, maxWidth)}
-		style:aspect-ratio="{event.content.info.w} / {event.content.info.h}"
-	></div>
-{:else}
-	<img
-		width={Math.min(event.content.info.w, maxWidth)}
-		style:aspect-ratio="{event.content.info.w} / {event.content.info.h}"
-		src={attachmentUrl}
-		alt=""
-		class="attachment"
-	/>
+{#if event.content}
+	{#if !attachmentUrl}
+		<div
+			class="attachment loading"
+			style:width={Math.min(event.content.info.w, maxWidth)}
+			style:aspect-ratio="{event.content.info.w} / {event.content.info.h}"
+		></div>
+	{:else}
+		<img
+			width={Math.min(event.content.info.w, maxWidth)}
+			style:aspect-ratio="{event.content.info.w} / {event.content.info.h}"
+			src={attachmentUrl}
+			alt=""
+			class="attachment"
+		/>
+	{/if}
 {/if}
 
 <style lang="postcss">

@@ -1,5 +1,5 @@
-<script>
-	export let type
+<script lang="ts">
+	export let type: 'button' | 'submit' | 'reset' | null | undefined
 </script>
 
 <button {type}>

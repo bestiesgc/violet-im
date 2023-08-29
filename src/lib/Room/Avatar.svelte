@@ -1,6 +1,7 @@
-<script>
-	import client from '$lib/client/index.js'
-	export let room
+<script lang="ts">
+	import type { Room } from 'matrix-js-sdk'
+	import client from '$lib/client/index'
+	export let room: Room
 	export let size = 96
 </script>
 

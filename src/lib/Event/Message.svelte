@@ -1,24 +1,30 @@
-<script>
+<script lang="ts">
 	import Bubble from './Bubble.svelte'
 	import Body from './Body.svelte'
 	import Attachment from './Attachment.svelte'
-	import client from '$lib/client/index.js'
-	export let event
-	export let lastEvent = null
-	export let nextEvent = null
+	import client from '$lib/client/index'
+	import type { WrappedEvent, WrappedMessageEvent } from '$lib/client/event'
+
+	export let event: WrappedMessageEvent
+	export let lastEvent: WrappedEvent | null = null
+	export let nextEvent: WrappedEvent | null = null
 	export let preview = false
-	$: startsGroup = lastEvent?.sender.userId != event.sender.userId
+	$: startsGroup = lastEvent?.sender?.userId != event?.sender?.userId
 	$: endsGroup =
 		event.reactions ??
 		nextEvent?.replyEvent ??
-		nextEvent?.sender.userId != event.sender.userId
+		nextEvent?.sender?.userId != event?.sender?.userId
 
 	let allEmoji = false
 
 	function highlightReply() {
-		const timelineScroller = document.querySelector('ol.timeline.scroller')
-		const replyElement = document.getElementById(
-			'message_' + event.replyEvent.getId()
+		if (!event.replyEvent) throw new Error('Reply event not found')
+		const timelineScroller = <HTMLElement>(
+			document.querySelector('ol.timeline.scroller')
+		)
+		if (!timelineScroller) throw new Error('Timeline scroller not found')
+		const replyElement = <HTMLElement>(
+			document.getElementById('message_' + event.replyEvent.id)
 		)
 		const minimum = timelineScroller.scrollTop + 100
 		const maximum =
@@ -31,10 +37,10 @@
 				behavior: 'smooth'
 			})
 		}
-		if (!replyElement.parentElement.classList.contains('highlight')) {
-			replyElement.parentElement.classList.toggle('highlight', true)
+		if (!replyElement.parentElement?.classList.contains('highlight')) {
+			replyElement.parentElement?.classList.toggle('highlight', true)
 			setTimeout(() => {
-				replyElement.parentElement.classList.toggle('highlight', false)
+				replyElement.parentElement?.classList.toggle('highlight', false)
 			}, 1000)
 		}
 	}
@@ -43,7 +49,7 @@
 <div
 	class:not-preview={!preview}
 	class="message-wrapper"
-	class:from-me={!preview && event.sender.userId == client.getUserId()}
+	class:from-me={!preview && event.sender?.userId == client.getUserId()}
 	style:padding-top={!preview && startsGroup ? '0.5rem' : undefined}
 	style:padding-bottom={!preview && endsGroup ? '0.5rem' : undefined}
 	class:starts-group={startsGroup}
@@ -52,27 +58,29 @@
 	{#if event.replyEvent}
 		<button on:click={highlightReply} class="reply-line">
 			<div class="fancy-arrow"></div>
-			<span class="sender">{event.replyEvent.sender.name}</span>
+			<span class="sender">{event.replyEvent.sender?.name}</span>
 			<span class="text"
 				><Body
-					body={event.replyEvent.getContent().formatted_body ??
-						event.replyEvent.getContent().body}
+					body={event.replyEvent.content?.formatted_body ??
+						event.replyEvent.content?.body}
 				/></span
 			>
 		</button>
 	{/if}
 	<div class="message">
-		<img
-			aria-hidden="true"
-			src={client.getMemberAvatarUrl(event.sender, 32)}
-			alt=""
-			class="avatar"
-		/>
+		{#if event.sender}
+			<img
+				aria-hidden="true"
+				src={client.getMemberAvatarUrl(event.sender, 32)}
+				alt=""
+				class="avatar"
+			/>
+		{/if}
 		<div class="content" class:all-emoji={allEmoji}>
 			<div class="sender">
 				<p class="name">{event.sender.name}</p>
 			</div>
-			{#if event.content.msgtype != 'm.image'}
+			{#if event.content?.msgtype != 'm.image'}
 				<Bubble
 					joinLast={!(event.replyEvent ?? lastEvent?.reactions ?? startsGroup)}
 					joinNext={!endsGroup}

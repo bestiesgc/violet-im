@@ -1,29 +1,20 @@
-<script>
+<script lang="ts">
+	import type { WrappedEvent, WrappedMessageEvent } from '$lib/client/event.js'
+	import type { Writable } from 'svelte/store'
 	import { tap, holdtap } from '../actions/tap.js'
 	import Message from './Message.svelte'
 	import { getContext } from 'svelte'
 
-	const selection = getContext('selection')
+	const selection: Writable<WrappedEvent[] | null> = getContext('selection')
 
-	export let event
-	export let lastEvent
-	export let nextEvent
+	export let event: WrappedEvent
+	export let lastEvent: WrappedEvent | null
+	export let nextEvent: WrappedEvent | null
 
-	let eventStuff
-	async function loadEventStuff(event) {
-		const clearContent = event.isEncrypted()
-			? event.getClearContent()
-			: event.getContent()
-		eventStuff = {
-			type: event.getType(),
-			sender: event.sender,
-			reactions: event.reactions,
-			replyEvent: event.replyEvent,
-			content: clearContent
-		}
-	}
-	function updateSelection(touchEvent) {
-		if (touchEvent.target.closest('button') != null) return
+	let messageEvent = <WrappedMessageEvent>event
+
+	function updateSelection(touchEvent?: Event) {
+		if ((<Element | null>touchEvent?.target)?.closest('button') != null) return
 		if (!$selection) {
 			$selection = [event]
 		} else {
@@ -35,7 +26,6 @@
 			}
 		}
 	}
-	$: loadEventStuff(event)
 </script>
 
 <div
@@ -44,9 +34,9 @@
 	use:holdtap={updateSelection}
 	use:tap={event => ($selection ? updateSelection(event) : null)}
 >
-	<div class="event" id="message_{event?.getId()}">
-		{#if eventStuff && eventStuff.type == 'm.room.message'}
-			<Message event={eventStuff} {nextEvent} {lastEvent} />
+	<div class="event" id="message_{event.id}">
+		{#if event.type == 'm.room.message'}
+			<Message event={messageEvent} {nextEvent} {lastEvent} />
 		{/if}
 	</div>
 </div>

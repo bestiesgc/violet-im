@@ -1,20 +1,22 @@
-<script>
+<script lang="ts">
 	import { goto } from '$app/navigation'
 	import { onMount } from 'svelte'
 	import Form from '$lib/Form/Form.svelte'
 	import TextInput from '$lib/Form/TextInput.svelte'
 	import Button from '$lib/Form/Button.svelte'
 
-	let sdk
+	let sdk: typeof import('matrix-js-sdk')
 	let homeserver = 'matrix.org'
 	let username = ''
 	let password = ''
 
 	onMount(async () => {
+		// @ts-ignore
+		if (window) window.global ||= window
 		sdk = await import('matrix-js-sdk')
 	})
 
-	async function login(e) {
+	async function login(e: Event) {
 		e.preventDefault()
 		let homeserverUrl = homeserver
 		if (!/^https?:\/\//.test(homeserverUrl)) {

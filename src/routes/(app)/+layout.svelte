@@ -1,27 +1,29 @@
-<script>
+<script lang="ts">
 	import { setContext } from 'svelte'
 	import { writable } from 'svelte/store'
-	import client from '$lib/client/index.js'
+	import client from '$lib/client/index'
+	import type { Room } from 'matrix-js-sdk'
 	import Sidebar from '$lib/Sidebar.svelte'
-	import AtIcon from '$lib/Icons/at.svg'
-	import HashIcon from '$lib/Icons/hash.svg'
-	import HamburgerIcon from '$lib/Icons/hamburger.svg'
-	import CloseIcon from '$lib/Icons/close.svg'
-	import DeleteIcon from '$lib/Icons/delete.svg'
-	import EditIcon from '$lib/Icons/edit.svg'
-	import ReplyIcon from '$lib/Icons/reply.svg'
-	import CopyIcon from '$lib/Icons/copy.svg'
+	import AtIcon from '$lib/Icons/at.svg?c'
+	import HashIcon from '$lib/Icons/hash.svg?c'
+	import HamburgerIcon from '$lib/Icons/hamburger.svg?c'
+	import CloseIcon from '$lib/Icons/close.svg?c'
+	import DeleteIcon from '$lib/Icons/delete.svg?c'
+	import EditIcon from '$lib/Icons/edit.svg?c'
+	import ReplyIcon from '$lib/Icons/reply.svg?c'
+	import CopyIcon from '$lib/Icons/copy.svg?c'
 	import { page } from '$app/stores'
 	import { beforeNavigate, afterNavigate } from '$app/navigation'
 	import { fly } from 'svelte/transition'
 	import { expoOut } from 'svelte/easing'
 	import Ticker from '$lib/Ticker.svelte'
+	import type { WrappedEvent } from '$lib/client/event'
 
-	const selection = writable()
+	const selection = writable(<WrappedEvent[] | null>null)
 	setContext('selection', selection)
 
-	let rooms = []
-	let spaces = []
+	let rooms: Room[] = []
+	let spaces: Room[] = []
 	let mobileSidebarOpen = !$page.data.roomId || $page.data.roomIsSpace
 
 	beforeNavigate(() => {
@@ -32,7 +34,7 @@
 		mobileSidebarOpen = !($page.data.roomId && !$page.data.roomIsSpace)
 	})
 
-	async function load() {
+	async function load(_: string) {
 		if (!client.getAllRooms()) await client.loadAllRooms()
 		const allRooms = client.getAllRooms()
 		if ($page.data.spaceChildren) {
@@ -96,7 +98,7 @@
 						in:fly={{ easing: expoOut, duration: 200, y: -20 }}
 					>
 						<!-- TODO: implement! -->
-						{#if false && $selection.length === 1}
+						{#if false && $selection?.length === 1}
 							<button>
 								<span class="sr-only">Reply</span>
 								<ReplyIcon aria-hidden="true"></ReplyIcon>
@@ -108,14 +110,15 @@
 						{/if}
 						<button
 							on:click={() => {
+								if (!$selection) return
 								const text = $selection
 									.map(event => {
-										const { sender } = event
-										const content = event.getContent().body
-										const name = sender?.name || sender?.username || 'Unknown'
-										return `${name}: ${content}`
+										const { sender, content } = event
+										if (!content?.body) return ''
+										const name = sender?.name || 'Unknown'
+										return `${name}: ${content.body}\n`
 									})
-									.join('\n')
+									.join('')
 								const type = 'text/plain'
 								const blob = new Blob([text], { type })
 								const data = [new ClipboardItem({ [type]: blob })]
@@ -127,6 +130,7 @@
 						</button>
 						<button
 							on:click={async () => {
+								if (!$selection) return
 								await Promise.all(
 									$selection.map(event => client.deleteEvent(event))
 								)
