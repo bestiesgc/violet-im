@@ -7,6 +7,8 @@
 
 	const selection: Writable<WrappedEvent[] | null> = getContext('selection')
 
+	let eventElement: HTMLElement
+
 	export let event: WrappedEvent
 	export let lastEvent: WrappedEvent | null
 	export let nextEvent: WrappedEvent | null
@@ -31,8 +33,14 @@
 <div
 	class="event-wrapper"
 	class:selected={$selection?.includes(event)}
+	bind:this={eventElement}
 	use:holdtap={updateSelection}
 	use:tap={event => ($selection ? updateSelection(event) : null)}
+	on:touchstart={() =>
+		eventElement.animate(
+			[{ backgroundColor: '#a1a2d310' }, { backgroundColor: 'transparent' }],
+			{ duration: 500 }
+		)}
 >
 	<div class="event" id="message_{event.id}">
 		{#if event.type == 'm.room.message'}
@@ -42,19 +50,22 @@
 </div>
 
 <style lang="postcss">
-	.event-wrapper:hover {
-		background-color: #a1a2d310;
-	}
 	.event-wrapper {
 		transition: background-color 200ms cubic-bezier(0.075, 0.82, 0.165, 1);
 	}
 	.event-wrapper.selected,
 	.event-wrapper:global(.highlight) {
-		background-color: var(--slate-600);
+		background-color: var(--slate-600) !important;
 	}
 	.event {
+		position: relative;
 		padding: 0 0.5rem;
 		max-width: 60rem;
 		margin: 0 auto;
+	}
+	@media screen and (min-width: 600.01px) {
+		.event-wrapper:hover {
+			background-color: #a1a2d310;
+		}
 	}
 </style>
