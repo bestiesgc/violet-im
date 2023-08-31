@@ -56,10 +56,8 @@ export function isAllEmoji(body: string) {
 			node.nodeName != 'IMG' ||
 			!(<HTMLElement>node).classList?.contains('emoji')
 		) {
-			console.log(node)
 			allEmoji = false
 		}
 	})
-	console.log(body, allEmoji)
 	return allEmoji
 }
