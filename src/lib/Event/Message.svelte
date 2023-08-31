@@ -92,7 +92,7 @@
 					{#if event.content?.formatted_body && event.content.format == 'org.matrix.custom.html'}<Body
 							bind:allEmoji
 							body={event.content?.formatted_body}
-						/>{:else}{event.content?.body}{/if}</Bubble
+						/>{:else}<pre>{event.content?.body}</pre>{/if}</Bubble
 				>
 			{:else}
 				<Bubble
@@ -180,6 +180,11 @@
 		display: grid;
 		grid-template-columns: 2rem 1fr;
 		gap: 0.5rem;
+	}
+	.content pre {
+		margin: 0;
+		font: inherit;
+		white-space: pre-wrap;
 	}
 	.avatar {
 		user-select: none;
