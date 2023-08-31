@@ -17,3 +17,22 @@ export function escape(value: string, is_attr = false) {
 	}
 	return escaped + str.substring(last)
 }
+
+export function decodeEntities(encoded: string) {
+	let translate_re = /&(nbsp|amp|quot|lt|gt);/g
+	let translate: { [key: string]: string } = {
+		nbsp: ' ',
+		amp: '&',
+		quot: '"',
+		lt: '<',
+		gt: '>'
+	}
+	return encoded
+		.replace(translate_re, function (match, entity) {
+			return translate[entity]
+		})
+		.replace(/&#(\d+);/gi, function (match, numStr) {
+			let num = parseInt(numStr, 10)
+			return String.fromCharCode(num)
+		})
+}
