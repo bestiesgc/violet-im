@@ -17,7 +17,6 @@
 	}
 
 	async function loadPrevious(limit = 20) {
-		oldestMessageId = timeline[0].getId()
 		function getFirstLinkedTimeline() {
 			let tl: EventTimeline | null = activeTimeline
 			while (tl?.getNeighbouringTimeline(client.matrixSdk.Direction.Backward)) {
@@ -42,6 +41,7 @@
 		shouldScroll =
 			timelineElement.scrollTop + timelineElement.offsetHeight ==
 			timelineElement.scrollHeight
+		scrollPosition = timelineElement.scrollTop
 		if (timelineElement?.scrollTop <= 100) loadPrevious()
 	}
 
@@ -57,15 +57,23 @@
 		}
 	})
 
-	afterUpdate(() => {
+	function updateScrollPosition() {
 		if (shouldScroll) {
 			timelineElement.scrollTop = timelineElement.scrollHeight
 		} else {
 			if (timeline[0].getId() != oldestMessageId) {
 				timelineElement.scrollTop =
 					scrollPosition + (timelineElement.scrollHeight - scrollHeight)
+			} else {
+				timelineElement.scrollTop =
+					timelineElement.scrollHeight - (scrollHeight - scrollPosition)
 			}
 		}
+	}
+
+	afterUpdate(() => {
+		updateScrollPosition()
+		oldestMessageId = timeline[0].getId()
 		hasLoaded = true
 	})
 
@@ -77,6 +85,8 @@
 		}
 	})
 </script>
+
+<svelte:window on:resize={updateScrollPosition} />
 
 <ol class="timeline scroller" bind:this={timelineElement} on:scroll={onScroll}>
 	<div style:margin-top="auto"></div>
