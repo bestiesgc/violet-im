@@ -97,8 +97,11 @@
 				</Bubble>
 			{:else}
 				<Bubble
-					joinLast={!event.replyEvent ??
-						(Object.keys(lastEvent?.reactions ?? {}).length > 0 || startsGroup)}
+					joinLast={!(
+						Object.keys(lastEvent?.reactions ?? {}).length > 0 ||
+						startsGroup ||
+						event.replyEvent
+					)}
 					joinNext={!endsGroup}
 					rightSide={!preview && event.sender.userId == client.getUserId()}
 					noPadding
