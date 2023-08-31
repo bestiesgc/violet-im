@@ -11,8 +11,6 @@
 	let password = ''
 
 	onMount(async () => {
-		// @ts-ignore
-		if (window) window.global ||= window
 		sdk = await import('matrix-js-sdk')
 	})
 

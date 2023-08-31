@@ -23,8 +23,6 @@ class MatrixClientWrapper {
 	}
 	async start() {
 		if (this.matrixClient) return
-		// @ts-ignore
-		if (typeof window != 'undefined') window.global ||= window
 		this.matrixSdk = await import('matrix-js-sdk')
 		const {
 			ClientEvent,
