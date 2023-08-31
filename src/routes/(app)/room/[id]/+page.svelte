@@ -4,6 +4,7 @@
 	import Textarea from '$lib/GrowingTextarea.svelte'
 	import * as marked from 'marked'
 	import type { IContent } from 'matrix-js-sdk'
+	import { escape } from '$lib/escape'
 	export let data
 
 	let message: string
@@ -12,7 +13,16 @@
 		if (!data.roomId) throw new Error('Not in room')
 		const body = message.trim()
 		message = ''
-		const formattedBody = await marked.parse(body, {
+		let formattedBody = body.replace(
+			/(\n|^)(>[^\s].*(?:\n>[^\s].*)*)/gm,
+			(_, p1, p2) => {
+				return `${p1}<font color="#e574ff">${escape(p2).replace(
+					/\n/gm,
+					'<br>'
+				)}</font>`
+			}
+		)
+		formattedBody = await marked.parse(formattedBody, {
 			async: true
 		})
 		const content: IContent = {
