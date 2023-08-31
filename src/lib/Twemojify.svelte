@@ -1,11 +1,10 @@
 <script lang="ts">
-	import twemoji from '@twemoji/api'
+	import twemoji from '$lib/twemoji'
 
 	export let text: string
-	let elem: Element
+	let elem: HTMLElement
 
 	$: if (elem) {
-		// @ts-ignore
 		twemoji.parse(elem)
 	}
 </script>

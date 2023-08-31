@@ -1,6 +1,6 @@
 import client from '$lib/client/index'
 import DOMPurify from 'dompurify'
-import twemoji from '@twemoji/api'
+import twemoji from '$lib/twemoji'
 
 function linkPrettier(url: string) {
 	return url.replace(/^[a-zA-Z]+?:\/\//, '').replace(/\/$/, '')
@@ -9,8 +9,7 @@ function linkPrettier(url: string) {
 export function parseBody(body: string) {
 	const parser = new DOMParser()
 	const bodyDoc = parser.parseFromString(body, 'text/html')
-	// @ts-ignore
-	twemoji.parse(bodyDoc)
+	twemoji.parse(bodyDoc.body)
 	bodyDoc.querySelectorAll('img[data-mx-emoticon]').forEach(img => {
 		img.classList.add('emoji')
 		img.removeAttribute('width')
