@@ -23,7 +23,7 @@
 	{#if !attachmentUrl}
 		<div
 			class="attachment loading"
-			style:width={Math.min(event.content.info.w, maxWidth)}
+			style:width={Math.min(event.content.info.w, maxWidth) + 'px'}
 			style:aspect-ratio="{event.content.info.w} / {event.content.info.h}"
 		></div>
 	{:else}
