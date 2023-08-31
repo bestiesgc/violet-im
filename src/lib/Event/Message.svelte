@@ -89,12 +89,11 @@
 					joinNext={!endsGroup}
 					rightSide={!preview && event.sender.userId == client.getUserId()}
 				>
-					{#if event.content?.formatted_body && event.content.format == 'org.matrix.custom.html'}
-						<Body bind:allEmoji body={event.content?.formatted_body} />
-					{:else}
-						{event.content?.body}
-					{/if}
-				</Bubble>
+					{#if event.content?.formatted_body && event.content.format == 'org.matrix.custom.html'}<Body
+							bind:allEmoji
+							body={event.content?.formatted_body}
+						/>{:else}{event.content?.body}{/if}</Bubble
+				>
 			{:else}
 				<Bubble
 					joinLast={!(

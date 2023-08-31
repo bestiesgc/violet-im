@@ -37,19 +37,18 @@
 		allEmoji = isAllEmoji
 		return DOMPurify.sanitize(bodyDoc.body.innerHTML, {
 			FORBID_TAGS: ['style']
-		})
+		}).trim()
 	}
 	$: cleanBody = parseBody(body)
 </script>
 
 {#if cleanBody}
-	<div class="body">
-		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-		{@html cleanBody}
-	</div>
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+	<div class="body">{@html cleanBody}</div>
 {/if}
 
 <style>
+	.body,
 	.body :global(pre) {
 		word-break: break-word;
 		white-space: pre-wrap;
