@@ -242,16 +242,22 @@ class MatrixClientWrapper {
 						if (newTimeline[relatesToIndex].content) {
 							newTimeline[relatesToIndex].content =
 								event.getContent()['m.new_content']
+							if (event.replyEventId) {
+								const replyEvent = room.findEventById(event.replyEventId)
+								if (replyEvent) {
+									newTimeline[relatesToIndex].replyEvent =
+										await this.#wrapEvent(replyEvent, room)
+								}
+							}
 						}
 						continue
 					}
-					const wrappedEvent = await this.#wrapEvent(event, room)
-					const timelineIndex = newTimeline.findIndex(
-						e => e.id === wrappedEvent.id
-					)
+					const thisId = event.getId()
+					const timelineIndex = newTimeline.findIndex(e => e.id == thisId)
 					if (timelineIndex != -1) {
-						newTimeline = newTimeline.filter(e => e.id != wrappedEvent.id)
+						continue
 					}
+					const wrappedEvent = await this.#wrapEvent(event, room)
 					newTimeline.push(wrappedEvent)
 					break
 			}
@@ -268,9 +274,6 @@ class MatrixClientWrapper {
 		let replyEvent: MatrixEvent | undefined
 		if (event.replyEventId) {
 			replyEvent = room.findEventById(event.replyEventId)
-			if (replyEvent && replyEvent.isEncrypted()) {
-				replyEvent = await this.decryptEvent(replyEvent)
-			}
 		}
 		const clearContent = event.isEncrypted()
 			? event.getClearContent()
@@ -284,8 +287,9 @@ class MatrixClientWrapper {
 			type: event.getType(),
 			sender: event.sender ?? undefined,
 			reactions: {},
-			replyEvent:
-				(replyEvent && (await this.#wrapEvent(replyEvent, room))) || undefined,
+			replyEvent: replyEvent
+				? await this.#wrapEvent(replyEvent, room)
+				: undefined,
 			content: clearContent ?? undefined
 		}
 	}
