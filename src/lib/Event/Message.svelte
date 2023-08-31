@@ -5,6 +5,7 @@
 	import client from '$lib/client/index'
 	import type { WrappedEvent, WrappedMessageEvent } from '$lib/client/event'
 	import { escape } from '$lib/escape'
+	import Twemojify from '$lib/Twemojify.svelte'
 
 	export let event: WrappedMessageEvent
 	export let lastEvent: WrappedEvent | null = null
@@ -123,13 +124,20 @@
 						<span class="reaction">
 							{#if reaction.startsWith('mxc://')}
 								<img
-									class="reaction-emoji"
+									class="emoji"
 									title={event.reactions[reaction].shortcode}
-									src={client.matrixClient.mxcUrlToHttp(reaction)}
 									alt={event.reactions[reaction].shortcode}
+									src={client.matrixClient.mxcUrlToHttp(reaction)}
+								/>
+							{:else if /^https?:\/\//.test(reaction)}
+								<img
+									class="emoji"
+									title={event.reactions[reaction].shortcode}
+									alt={event.reactions[reaction].shortcode}
+									src={reaction}
 								/>
 							{:else}
-								{reaction}
+								<Twemojify text={reaction}></Twemojify>
 							{/if}
 							<span aria-hidden="true" class="reactors">
 								{#each event.reactions[reaction].senders as reactor}
@@ -223,7 +231,7 @@
 		display: flex;
 		gap: 0.125rem;
 	}
-	.reaction .reaction-emoji {
+	.reaction :global(.emoji) {
 		width: 1.25rem;
 		aspect-ratio: 1;
 		object-fit: cover;
