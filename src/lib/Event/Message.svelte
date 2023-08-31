@@ -151,6 +151,9 @@
 		margin-inline-start: 2.5rem;
 		font-size: 0.875rem;
 	}
+	.reply-line :global(.body) {
+		white-space: nowrap;
+	}
 	.reply-line .fancy-arrow {
 		width: 0.5rem;
 		height: 0.25rem;
