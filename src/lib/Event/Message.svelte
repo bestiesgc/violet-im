@@ -11,8 +11,7 @@
 	export let preview = false
 	$: startsGroup = lastEvent?.sender?.userId != event?.sender?.userId
 	$: endsGroup =
-		event.reactions ??
-		nextEvent?.replyEvent ??
+		(Object.keys(event.reactions).length > 0 || nextEvent?.replyEvent) ??
 		nextEvent?.sender?.userId != event?.sender?.userId
 
 	let allEmoji = false
@@ -82,7 +81,11 @@
 			</div>
 			{#if event.content?.msgtype != 'm.image'}
 				<Bubble
-					joinLast={!(event.replyEvent ?? lastEvent?.reactions ?? startsGroup)}
+					joinLast={!(
+						Object.keys(lastEvent?.reactions ?? {}).length > 0 ||
+						startsGroup ||
+						event.replyEvent
+					)}
 					joinNext={!endsGroup}
 					rightSide={!preview && event.sender.userId == client.getUserId()}
 				>
@@ -94,7 +97,8 @@
 				</Bubble>
 			{:else}
 				<Bubble
-					joinLast={!(event.replyEvent ?? lastEvent?.reactions ?? startsGroup)}
+					joinLast={!event.replyEvent ??
+						(Object.keys(lastEvent?.reactions ?? {}).length > 0 || startsGroup)}
 					joinNext={!endsGroup}
 					rightSide={!preview && event.sender.userId == client.getUserId()}
 					noPadding
@@ -102,7 +106,7 @@
 					<Attachment {event} />
 				</Bubble>
 			{/if}
-			{#if event.reactions}
+			{#if Object.keys(event.reactions).length > 0}
 				<div class="reactions">
 					{#each Object.keys(event.reactions) as reaction}
 						<span class="reaction">
