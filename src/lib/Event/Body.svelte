@@ -3,6 +3,9 @@
 	import DOMPurify from 'dompurify'
 	export let body: string
 	export let allEmoji = false
+	function linkPrettier(url: string) {
+		return url.replace(/^[a-zA-Z]+?:\/\//, '').replace(/\/$/, '')
+	}
 	function parseBody(body: string) {
 		const parser = new DOMParser()
 		const bodyDoc = parser.parseFromString(body, 'text/html')
@@ -23,6 +26,17 @@
 		})
 		bodyDoc.querySelectorAll('mx-reply').forEach(reply => {
 			reply.remove()
+		})
+		bodyDoc.querySelectorAll('a').forEach(a => {
+			a.setAttribute('target', '_blank')
+			a.setAttribute('rel', 'noopener noreferrer')
+			if (a.innerText != a.getAttribute('href')) {
+				const text = a.innerText
+				a.innerText = linkPrettier(a.getAttribute('href') ?? '')
+				a.replaceWith('[' + text + '](', a, ')')
+			} else {
+				a.innerText = linkPrettier(a.getAttribute('href') ?? '')
+			}
 		})
 		bodyDoc.body.childNodes.forEach(node => {
 			if (node.nodeName != 'IMG') {
