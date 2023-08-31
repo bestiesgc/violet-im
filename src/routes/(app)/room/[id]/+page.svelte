@@ -22,9 +22,12 @@
 				)}</font>`
 			}
 		)
-		formattedBody = await marked.parse(formattedBody, {
+		let markedResult = await marked.parseInline(formattedBody, {
 			async: true
 		})
+		if (markedResult) {
+			formattedBody = markedResult
+		}
 		const content: IContent = {
 			msgtype: 'm.text',
 			body
