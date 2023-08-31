@@ -3,10 +3,11 @@
 	export let joinNext = false
 	export let rightSide = false
 	export let noPadding = false
+	export let tail = true
 </script>
 
 <div class="bubble-wrapper" class:right-side={rightSide}>
-	{#if !joinNext}
+	{#if tail && !joinNext}
 		<svg
 			class="svg-appendix"
 			fill="currentColor"
@@ -22,7 +23,7 @@
 		class="bubble"
 		class:no-padding={noPadding}
 		class:join-last={joinLast}
-		class:join-next={joinNext}
+		class:join-next={tail || joinNext}
 	>
 		<slot />
 	</div>
@@ -62,7 +63,7 @@
 	.bubble-wrapper:not(.right-side) .join-last {
 		border-top-left-radius: 0;
 	}
-	.bubble-wrapper:not(.right-side) .bubble {
+	.bubble-wrapper:not(.right-side) .join-next {
 		border-bottom-left-radius: 0;
 	}
 	.bubble-wrapper.right-side {
@@ -71,7 +72,7 @@
 	.bubble-wrapper.right-side .join-last {
 		border-top-right-radius: 0;
 	}
-	.bubble-wrapper.right-side .bubble {
+	.bubble-wrapper.right-side .join-next {
 		border-bottom-right-radius: 0;
 	}
 </style>

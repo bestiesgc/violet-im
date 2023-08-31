@@ -10,9 +10,12 @@
 	export let lastEvent: WrappedEvent | null = null
 	export let nextEvent: WrappedEvent | null = null
 	export let preview = false
-	$: startsGroup = lastEvent?.sender?.userId != event?.sender?.userId
+	$: startsGroup =
+		!lastEvent || lastEvent?.sender?.userId != event?.sender?.userId
 	$: endsGroup =
-		(Object.keys(event.reactions).length > 0 || nextEvent?.replyEvent) ??
+		!nextEvent ||
+		Object.keys(event.reactions).length > 0 ||
+		nextEvent?.replyEvent ||
 		nextEvent?.sender?.userId != event?.sender?.userId
 
 	let allEmoji = false
@@ -82,6 +85,7 @@
 			</div>
 			{#if event.content?.msgtype != 'm.image'}
 				<Bubble
+					tail={!allEmoji}
 					joinLast={!(
 						Object.keys(lastEvent?.reactions ?? {}).length > 0 ||
 						startsGroup ||
@@ -105,6 +109,7 @@
 						startsGroup ||
 						event.replyEvent
 					)}
+					tail={false}
 					joinNext={!endsGroup}
 					rightSide={!preview && event.sender.userId == client.getUserId()}
 					noPadding
