@@ -11,6 +11,18 @@
 
 	async function sendMessage() {
 		if (!data.roomId) throw new Error('Not in room')
+		if (message.startsWith('/html')) {
+			const body = message.replace('/html', '').trim()
+			message = ''
+			const content: IContent = {
+				msgtype: 'm.text',
+				body,
+				format: 'org.matrix.custom.html',
+				formatted_body: body
+			}
+			await client.matrixClient.sendMessage(data.roomId, content)
+			return
+		}
 		const body = message.trim()
 		message = ''
 		let formattedBody = escape(body).replace(
