@@ -16,7 +16,7 @@
 		wrappedTimeline = await client.wrapTimeline(timeline, room)
 	}
 
-	async function loadPrevious(limit = 10) {
+	async function loadPrevious(limit = 20) {
 		oldestMessageId = timeline[0].getId()
 		function getFirstLinkedTimeline() {
 			let tl: EventTimeline | null = activeTimeline
@@ -35,14 +35,15 @@
 		onTimeline()
 	}
 
+	let hasLoaded = false
+
 	function onScroll() {
+		if (!hasLoaded) return
 		shouldScroll =
 			timelineElement.scrollTop + timelineElement.offsetHeight ==
 			timelineElement.scrollHeight
 		if (timelineElement?.scrollTop <= 100) loadPrevious()
 	}
-
-	onTimeline()
 
 	let oldestMessageId = timeline[0].getId()
 	let scrollPosition: number
@@ -65,12 +66,11 @@
 					scrollPosition + (timelineElement.scrollHeight - scrollHeight)
 			}
 		}
+		hasLoaded = true
 	})
 
 	onMount(() => {
-		loadPrevious(20).then(() => {
-			shouldScroll = true
-		})
+		loadPrevious(20)
 		room.on(client.matrixSdk.RoomEvent.Timeline, onTimeline)
 		return () => {
 			room.off(client.matrixSdk.RoomEvent.Timeline, onTimeline)
