@@ -1,8 +1,8 @@
 <script lang="ts">
-	export let type: 'button' | 'submit' | 'reset' | null | undefined
+	export let type: 'button' | 'submit' | 'reset' | null | undefined = undefined
 </script>
 
-<button {type}>
+<button {type} on:click>
 	<slot />
 </button>
 

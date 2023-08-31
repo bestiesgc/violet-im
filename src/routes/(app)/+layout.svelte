@@ -3,7 +3,8 @@
 	import { writable } from 'svelte/store'
 	import client from '$lib/client/index'
 	import type { Room } from 'matrix-js-sdk'
-	import Sidebar from '$lib/Sidebar.svelte'
+	import Sidebar from './Sidebar.svelte'
+	import SettingsDialog from '$lib/Dialogs/Settings.svelte'
 	import AtIcon from '$lib/Icons/at.svg?c'
 	import HashIcon from '$lib/Icons/hash.svg?c'
 	import HamburgerIcon from '$lib/Icons/hamburger.svg?c'
@@ -20,7 +21,9 @@
 	import type { WrappedEvent } from '$lib/client/event'
 
 	const selection = writable(<WrappedEvent[] | null>null)
+	const showSettings = writable(false)
 	setContext('selection', selection)
+	setContext('showSettings', showSettings)
 
 	let rooms: Room[] = []
 	let spaces: Room[] = []
@@ -147,6 +150,10 @@
 		</div>
 	</main>
 </div>
+
+{#if $showSettings}
+	<SettingsDialog></SettingsDialog>
+{/if}
 
 <style lang="postcss">
 	.layout {

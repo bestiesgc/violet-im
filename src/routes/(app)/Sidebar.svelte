@@ -1,10 +1,15 @@
 <script lang="ts">
 	import type { Room } from 'matrix-js-sdk'
+	import { getContext } from 'svelte'
 	import { page } from '$app/stores'
 	import RoomAvatar from '$lib/Room/Avatar.svelte'
 	import RoomList from '$lib/Room/RoomList.svelte'
+	import SettingsIcon from '$lib/Icons/settings.svg?c'
+	import type { Writable } from 'svelte/store'
 	export let spaces: Room[]
 	export let rooms: Room[]
+
+	const showSettings: Writable<boolean> = getContext('showSettings')
 </script>
 
 <div class="panel spaces">
@@ -29,6 +34,13 @@
 			<RoomAvatar size={40} room={space}></RoomAvatar>
 		</a>
 	{/each}
+	<div style:flex-grow="1"></div>
+	<button on:click={() => ($showSettings = true)} class="space">
+		<span class="sr-only">Settings</span>
+		<div class="avatar icon">
+			<SettingsIcon></SettingsIcon>
+		</div>
+	</button>
 </div>
 <div class="panel rooms" class:has-header={$page.data.space}>
 	{#if $page.data.space}
