@@ -111,9 +111,4 @@
 		height: 100%;
 		word-break: break-word;
 	}
-	.timeline :global(.event) {
-		padding: 0 0.5rem;
-		max-width: 60rem;
-		margin: 0 auto;
-	}
 </style>

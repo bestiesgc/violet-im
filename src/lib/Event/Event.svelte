@@ -52,4 +52,9 @@
 	.event-wrapper:global(.highlight) {
 		background-color: var(--slate-600);
 	}
+	.event {
+		padding: 0 0.5rem;
+		max-width: 60rem;
+		margin: 0 auto;
+	}
 </style>
