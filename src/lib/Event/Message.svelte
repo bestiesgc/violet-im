@@ -4,6 +4,7 @@
 	import Attachment from './Attachment.svelte'
 	import client from '$lib/client/index'
 	import type { WrappedEvent, WrappedMessageEvent } from '$lib/client/event'
+	import { escape } from '$lib/escape'
 
 	export let event: WrappedMessageEvent
 	export let lastEvent: WrappedEvent | null = null
@@ -92,7 +93,10 @@
 					{#if event.content?.formatted_body && event.content.format == 'org.matrix.custom.html'}<Body
 							bind:allEmoji
 							body={event.content?.formatted_body}
-						/>{:else}<pre>{event.content?.body}</pre>{/if}</Bubble
+						/>{:else}<Body
+							bind:allEmoji
+							body={escape(event.content?.body)}
+						/>{/if}</Bubble
 				>
 			{:else}
 				<Bubble
@@ -183,11 +187,6 @@
 		display: grid;
 		grid-template-columns: 2rem 1fr;
 		gap: 0.5rem;
-	}
-	.content pre {
-		margin: 0;
-		font: inherit;
-		white-space: pre-wrap;
 	}
 	.avatar {
 		user-select: none;

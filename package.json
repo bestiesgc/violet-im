@@ -43,6 +43,7 @@
 	"license": "GPL-3.0-or-later",
 	"types": "./src/index.d.ts",
 	"dependencies": {
+		"@twemoji/api": "^14.1.2",
 		"dompurify": "^3.0.5",
 		"marked": "^7.0.4",
 		"matrix-encrypt-attachment": "^1.0.3",
