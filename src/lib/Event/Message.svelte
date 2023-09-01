@@ -31,14 +31,15 @@
 		const replyElement = <HTMLElement>(
 			document.getElementById('message_' + event.replyEvent.id)
 		)
-		const minimum = timelineScroller.scrollTop + 100
-		const maximum =
-			timelineScroller.scrollTop + timelineScroller.offsetHeight - 100
+		if (!replyElement) throw new Error('Reply element not found')
+		const replyBox = replyElement.getBoundingClientRect()
+		const timelineBox = timelineScroller.getBoundingClientRect()
 		const inView =
-			replyElement.offsetTop > minimum && replyElement.offsetTop < maximum
+			replyBox.top > timelineBox.top + 100 &&
+			replyBox.top < timelineBox.bottom - 100
 		if (!inView) {
 			timelineScroller.scrollTo({
-				top: replyElement.offsetTop - 150,
+				top: (<HTMLElement>replyElement.offsetParent).offsetTop - 150,
 				behavior: 'smooth'
 			})
 		}

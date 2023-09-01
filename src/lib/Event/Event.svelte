@@ -102,7 +102,6 @@
 			on:click={() => {
 				$selection = [event]
 				$editingOrReplying = 'replying'
-				console.log('!?!?!?', $selection, $editingOrReplying)
 			}}
 		>
 			<span>Reply</span>
@@ -149,11 +148,22 @@
 
 <style lang="postcss">
 	.event-wrapper {
+		position: relative;
 		transition: background-color 200ms cubic-bezier(0.075, 0.82, 0.165, 1);
 	}
-	.event-wrapper.selected,
-	.event-wrapper:global(.highlight) {
+	.event-wrapper.selected {
 		background-color: var(--slate-600) !important;
+	}
+	.event-wrapper::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		opacity: 0;
+		background-color: var(--slate-600) !important;
+		transition: opacity 200ms cubic-bezier(0.075, 0.82, 0.165, 1);
+	}
+	.event-wrapper:global(.highlight::before) {
+		opacity: 0.25;
 	}
 	.event {
 		position: relative;
