@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { Room } from 'matrix-js-sdk'
+	import type { RoomMember } from 'matrix-js-sdk'
 	import client from '$lib/client/index'
-	export let room: Room
+	export let member: RoomMember
 	export let size = 96
 </script>
 
@@ -12,8 +12,7 @@
 	draggable="false"
 	width="{size}px"
 	height="{size}px"
-	src={client.getRoomAvatarUrl(room, size) ??
-		`https://api.dicebear.com/6.x/initials/svg?seed=${room.name}&chars=1`}
+	src={client.getMemberAvatarUrl(member, size)}
 	alt=""
 />
 

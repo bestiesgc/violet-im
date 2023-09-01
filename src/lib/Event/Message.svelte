@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Bubble from './Bubble.svelte'
 	import Body from './Body.svelte'
+	import Avatar from '$lib/Member/Avatar.svelte'
 	import Attachment from './Attachment.svelte'
 	import client from '$lib/client/index'
 	import type { WrappedEvent, WrappedMessageEvent } from '$lib/client/event'
@@ -73,12 +74,7 @@
 	{/if}
 	<div class="message">
 		{#if event.sender}
-			<img
-				aria-hidden="true"
-				src={client.getMemberAvatarUrl(event.sender, 32)}
-				alt=""
-				class="avatar"
-			/>
+			<Avatar member={event.sender} size={32} />
 		{/if}
 		<div class="content" class:all-emoji={allEmoji}>
 			<div class="sender">
@@ -201,7 +197,7 @@
 		grid-template-columns: 2rem 1fr;
 		gap: 0.5rem;
 	}
-	.avatar {
+	.message :global(.avatar) {
 		user-select: none;
 		width: 2rem;
 		border-radius: 0.25rem;
@@ -242,7 +238,7 @@
 		object-fit: cover;
 		border-radius: 100%;
 	}
-	.message-wrapper:not(.starts-group) .avatar {
+	.message-wrapper:not(.starts-group) :global(.avatar) {
 		visibility: hidden;
 		width: 0px;
 		height: 0px;
@@ -270,7 +266,7 @@
 			order: 3;
 		}
 		.message .sender,
-		.avatar {
+		.message :global(.avatar) {
 			opacity: 0;
 			width: 0px;
 			height: 0px;
