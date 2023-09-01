@@ -66,6 +66,7 @@
 			<span class="sender">{event.replyEvent.sender?.name}</span>
 			<span class="text"
 				><Body
+					inline
 					body={event.replyEvent.content?.formatted_body ??
 						event.replyEvent.content?.body}
 				/></span

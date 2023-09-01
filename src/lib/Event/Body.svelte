@@ -2,6 +2,7 @@
 	import { isAllEmoji, parseBody } from './body-cleanup'
 
 	export let body: string
+	export let inline = false
 	export let allEmoji = false
 
 	let parsedBody: {
@@ -17,7 +18,7 @@
 
 {#if parsedBody}
 	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-	<div class="body">
+	<div class="body" class:inline>
 		{#if parsedBody.codePromise}{#await parsedBody.codePromise}{@html parsedBody.text}{:then html}{@html html}{/await}{:else}{@html parsedBody.text}{/if}
 	</div>
 {/if}
@@ -38,6 +39,36 @@
 		border-radius: 0.25rem;
 		color: #b7bec9;
 		background: #262729;
+	}
+	.body :global(blockquote) {
+		padding: 0;
+		margin: 0;
+		background: none;
+	}
+	.body:not(.inline) :global(blockquote) {
+		background-color: var(--slate-900);
+		position: relative;
+		white-space: normal;
+		padding-inline: 0.5rem;
+		padding-block: 0.25rem;
+		border-end-end-radius: 0.25rem;
+		border-start-end-radius: 0.25rem;
+	}
+	.body:not(.inline) :global(blockquote::before) {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		width: 0.125rem;
+		border-radius: 0.5rem;
+		background-color: var(--slate-500);
+	}
+	.body.inline :global(*) {
+		display: inline;
+	}
+	.body.inline :global(br) {
+		display: none;
 	}
 	.body :global(.emoji) {
 		display: inline;
