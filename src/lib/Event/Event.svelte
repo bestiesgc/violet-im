@@ -4,6 +4,8 @@
 	import Dialog from '$lib/Dialogs/Wrapper.svelte'
 	import DeleteIcon from '$lib/Icons/delete.svg?c'
 	import CodeIcon from '$lib/Icons/code.svg?c'
+	import EditIcon from '$lib/Icons/edit.svg?c'
+	import ReplyIcon from '$lib/Icons/reply.svg?c'
 	import type { WrappedEvent, WrappedMessageEvent } from '$lib/client/event.js'
 	import type { Writable } from 'svelte/store'
 	import { tap, holdtap } from '../actions/tap.js'
@@ -11,6 +13,8 @@
 	import { getContext } from 'svelte'
 	import highlight from '$lib/utils/highlight.js'
 	import { finePointer } from '$lib/stores.js'
+	const editingOrReplying: Writable<'editing' | 'replying' | null> =
+		getContext('editingOrReplying')
 
 	const selection: Writable<WrappedEvent[] | null> = getContext('selection')
 
@@ -30,6 +34,7 @@
 			$selection?.findIndex(e => e.id === event.id) !== -1)
 
 	function updateSelection(touchEvent?: Event) {
+		if ($editingOrReplying) return
 		if ((<Element | null>touchEvent?.target)?.closest('button') != null) return
 		if (!$selection) {
 			$selection = [event]
@@ -72,6 +77,10 @@
 				<Message event={messageEvent} {nextEvent} {lastEvent} />
 			{/if}
 			<div class="options">
+				<button on:click={() => ($editingOrReplying = 'replying')}>
+					<span class="sr-only">Reply</span>
+					<ReplyIcon aria-hidden="true"></ReplyIcon>
+				</button>
 				<button on:click={() => client.deleteEvent(event)}>
 					<span class="sr-only">Delete</span>
 					<DeleteIcon aria-hidden="true"></DeleteIcon>
@@ -80,6 +89,24 @@
 		</div>
 	</div>
 	<svelte:fragment slot="contextmenu">
+		<button
+			on:click={() => {
+				$selection = [event]
+				$editingOrReplying = 'replying'
+			}}
+		>
+			<span>Reply</span>
+			<ReplyIcon aria-hidden="true"></ReplyIcon>
+		</button>
+		<button
+			on:click={() => {
+				$selection = [event]
+				$editingOrReplying = 'editing'
+			}}
+		>
+			<span>Edit</span>
+			<EditIcon aria-hidden="true"></EditIcon>
+		</button>
 		<button on:click={() => client.deleteEvent(event)}>
 			<span>Delete</span>
 			<DeleteIcon aria-hidden="true"></DeleteIcon>

@@ -5,6 +5,13 @@
 	import * as marked from 'marked'
 	import type { IContent } from 'matrix-js-sdk'
 	import { decodeEntities, escape } from '$lib/utils/escape'
+	import { getContext } from 'svelte'
+	import type { Writable } from 'svelte/store'
+	import type { WrappedEvent } from '$lib/client/event'
+	const editingOrReplying: Writable<'editing' | 'replying' | null> =
+		getContext('editingOrReplying')
+	const selection: Writable<WrappedEvent[] | null> = getContext('selection')
+
 	export let data
 
 	let message: string
@@ -48,6 +55,23 @@
 			msgtype: 'm.text',
 			body
 		}
+		if ($editingOrReplying) {
+			if ($editingOrReplying == 'editing') {
+				content['m.new_content'] = { ...content }
+				content['m.relates_to'] = {
+					event_id: $selection?.[0].id,
+					rel_type: 'm.replace'
+				}
+			} else {
+				content['m.relates_to'] = {
+					'm.in_reply_to': {
+						event_id: $selection?.[0].id
+					}
+				}
+			}
+			$selection = null
+			$editingOrReplying = null
+		}
 		if (formattedBody != body && decodeEntities(formattedBody) != body) {
 			content.format = 'org.matrix.custom.html'
 			content.formatted_body = formattedBody
@@ -65,9 +89,20 @@
 		<h1>pick a conversation</h1>
 	</div>
 {:else}
-	{#key data.room}
-		<Timeline room={data.room}></Timeline>
-	{/key}
+	<div class="timeline-wrapper">
+		{#key data.room}
+			<Timeline room={data.room}></Timeline>
+		{/key}
+		{#if $editingOrReplying}
+			<div class="form-status">
+				{#if $editingOrReplying == 'editing'}
+					Editing message...
+				{:else if $editingOrReplying == 'replying'}
+					Replying to message...
+				{/if}
+			</div>
+		{/if}
+	</div>
 	<div class="form">
 		<Textarea
 			bind:value={message}
@@ -83,16 +118,36 @@
 {/if}
 
 <style lang="postcss">
+	.timeline-wrapper {
+		position: relative;
+		min-height: 0;
+	}
+	.form-status {
+		border-radius: 0.25rem;
+		width: fit-content;
+		padding: 0.25rem;
+		background-color: var(--slate-950);
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		font-size: 0.75rem;
+		margin-inline: 0.5rem;
+		margin-block-end: 0.75rem;
+	}
 	.center {
 		height: 100%;
 		display: grid;
 		place-items: center;
 	}
 	.form {
+		z-index: 99;
 		width: 100%;
 		max-width: 60rem;
 		margin: 0 auto;
 		padding: 0.5rem;
+		padding-top: 0;
+		margin-top: -0.5rem;
 	}
 	.form :global(.textarea .content) {
 		font: inherit;

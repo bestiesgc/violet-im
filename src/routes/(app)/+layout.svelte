@@ -23,8 +23,10 @@
 	import { finePointer } from '$lib/stores'
 
 	const selection = writable(<WrappedEvent[] | null>null)
+	const editingOrReplying = writable(<'editing' | 'replying' | null>null)
 	const showSettings = writable(false)
 	setContext('selection', selection)
+	setContext('editingOrReplying', editingOrReplying)
 	setContext('showSettings', showSettings)
 
 	let rooms: Room[] = []
@@ -33,6 +35,7 @@
 
 	beforeNavigate(() => {
 		$selection = null
+		$editingOrReplying = null
 	})
 
 	afterNavigate(() => {
@@ -64,7 +67,7 @@
 	<main class="panel">
 		<div class="room-view">
 			<div class="header">
-				{#if $finePointer || !$selection}
+				{#if $finePointer || $editingOrReplying || !$selection}
 					<div
 						class="group"
 						in:fly={{ easing: expoOut, duration: 200, y: -20 }}
@@ -104,15 +107,24 @@
 						class="group"
 						in:fly={{ easing: expoOut, duration: 200, y: -20 }}
 					>
-						<!-- TODO: implement! -->
-						{#if false && $selection?.length === 1}
-							<button>
+						{#if $selection?.length === 1}
+							{#if $selection[0].sender?.userId === client.getUserId()}
+								<button
+									on:click={() => {
+										$editingOrReplying = 'editing'
+									}}
+								>
+									<span class="sr-only">Edit</span>
+									<EditIcon aria-hidden="true"></EditIcon>
+								</button>
+							{/if}
+							<button
+								on:click={() => {
+									$editingOrReplying = 'replying'
+								}}
+							>
 								<span class="sr-only">Reply</span>
 								<ReplyIcon aria-hidden="true"></ReplyIcon>
-							</button>
-							<button>
-								<span class="sr-only">Edit</span>
-								<EditIcon aria-hidden="true"></EditIcon>
 							</button>
 						{/if}
 						<button

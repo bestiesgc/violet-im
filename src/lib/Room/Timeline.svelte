@@ -118,6 +118,7 @@
 		flex-direction: column;
 		list-style: none;
 		padding: 0.5rem 0;
+		padding-bottom: 2rem;
 		margin: 0;
 		height: 100%;
 		word-break: break-word;
