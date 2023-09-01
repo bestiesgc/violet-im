@@ -15,7 +15,7 @@
 	let timelineElement: HTMLElement
 	let timelineHeight: number
 	$: {
-		if (timelineHeight) updateScrollPosition()
+		if (timelineElement && timelineHeight) updateScrollPosition()
 	}
 	const activeTimeline = room.getLiveTimeline()
 	const timeline = activeTimeline.getEvents()
@@ -74,6 +74,7 @@
 	})
 
 	function updateScrollPosition() {
+		if (!timelineElement) return
 		if (shouldScroll) {
 			timelineElement.scrollTop = timelineElement.scrollHeight
 		} else {
