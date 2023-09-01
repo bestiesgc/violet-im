@@ -10,6 +10,7 @@
 	import { tap, holdtap } from '../actions/tap.js'
 	import Message from './Message.svelte'
 	import { getContext } from 'svelte'
+	import highlight from '$lib/utils/highlight.js'
 
 	const selection: Writable<WrappedEvent[] | null> = getContext('selection')
 
@@ -96,9 +97,17 @@
 	<Dialog closeDialog={() => (viewSource = false)}>
 		<span slot="title">View Source</span>
 		{#if event._debug.isEncrypted()}
-			<pre>{JSON.stringify(event._debug.getEffectiveEvent(), null, '\t')}</pre>
+			{#await highlight('json', JSON.stringify(event._debug.getEffectiveEvent(), null, '\t'))}
+				<pre>{@html event._debug.getEffectiveEvent()}</pre>
+			{:then highlighted}
+				<pre>{@html highlighted}</pre>
+			{/await}
 		{:else}
-			<pre>{JSON.stringify(event._debug.getEffectiveEvent(), null, '\t')}</pre>
+			{#await highlight('json', JSON.stringify(event._debug.event, null, '\t'))}
+				<pre>{@html event._debug.event}</pre>
+			{:then highlighted}
+				<pre>{@html highlighted}</pre>
+			{/await}
 		{/if}
 	</Dialog>
 {/if}
