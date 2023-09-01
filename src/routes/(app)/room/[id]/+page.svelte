@@ -3,10 +3,12 @@
 	import Timeline from '$lib/Room/Timeline.svelte'
 	import Textarea from '$lib/GrowingTextarea.svelte'
 	import CloseIcon from '$lib/Icons/close.svg?c'
+	import SendIcon from '$lib/Icons/send.svg?c'
 	import * as marked from 'marked'
 	import type { IContent } from 'matrix-js-sdk'
 	import { decodeEntities, escape } from '$lib/utils/escape'
 	import { getContext } from 'svelte'
+	import { finePointer } from '$lib/stores.js'
 	import type { Writable } from 'svelte/store'
 	import type { WrappedEvent } from '$lib/client/event'
 	const editingOrReplying: Writable<'editing' | 'replying' | null> =
@@ -90,7 +92,7 @@
 		<h1>pick a conversation</h1>
 	</div>
 {:else}
-	<div class="timeline-wrapper">
+	<div class="timeline-wrapper" class:has-form-status={$editingOrReplying}>
 		{#key data.room}
 			<Timeline room={data.room}></Timeline>
 		{/key}
@@ -115,17 +117,25 @@
 			</div>
 		{/if}
 	</div>
-	<div class="form">
+	<div class="form" class:has-buttons={!$finePointer}>
 		<Textarea
 			bind:value={message}
 			on:keydown={e => {
-				if (e.key === 'Enter' && !e.shiftKey) {
-					e.preventDefault()
-					sendMessage()
+				if ($finePointer) {
+					if (e.key === 'Enter' && !e.shiftKey) {
+						e.preventDefault()
+						sendMessage()
+					}
 				}
 			}}
 			placeholder="Send a message..."
 		/>
+		{#if !$finePointer}
+			<button>
+				<span class="sr-only">Send</span>
+				<SendIcon aria-hidden="true" on:click={sendMessage}></SendIcon>
+			</button>
+		{/if}
 	</div>
 {/if}
 
@@ -133,6 +143,9 @@
 	.timeline-wrapper {
 		position: relative;
 		min-height: 0;
+	}
+	.timeline-wrapper.has-form-status :global(.timeline) {
+		padding-bottom: 2rem;
 	}
 	.form-status {
 		display: flex;
@@ -148,7 +161,6 @@
 		right: 0;
 		font-size: 0.75rem;
 		margin-inline: 0.5rem;
-		margin-block-end: 0.75rem;
 	}
 	.form-status button {
 		width: 1.5rem;
@@ -163,13 +175,25 @@
 		place-items: center;
 	}
 	.form {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 0.25rem;
 		z-index: 99;
 		width: 100%;
 		max-width: 60rem;
 		margin: 0 auto;
 		padding: 0.5rem;
-		padding-top: 0;
-		margin-top: -0.5rem;
+	}
+	.form.has-buttons {
+		grid-template-columns: 1fr auto;
+	}
+	.form button {
+		background-color: var(--slate-900);
+		display: grid;
+		place-items: center;
+		width: 2.5rem;
+		height: 2rem;
+		border-radius: 0.25rem;
 	}
 	.form :global(.textarea .content) {
 		font: inherit;
