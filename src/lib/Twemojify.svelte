@@ -1,5 +1,5 @@
 <script lang="ts">
-	import twemoji from '$lib/twemoji'
+	import twemoji from '$lib/utils/twemoji'
 
 	export let text: string
 	let elem: HTMLElement

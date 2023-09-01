@@ -19,7 +19,7 @@
 	import { expoOut } from 'svelte/easing'
 	import Ticker from '$lib/Ticker.svelte'
 	import type { WrappedEvent } from '$lib/client/event'
-	import { useMediaQuery } from '$lib/media'
+	import { useMediaQuery } from '$lib/utils/media'
 
 	const finePointer = useMediaQuery('(pointer: fine)')
 

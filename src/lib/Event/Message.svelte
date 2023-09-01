@@ -4,7 +4,7 @@
 	import Attachment from './Attachment.svelte'
 	import client from '$lib/client/index'
 	import type { WrappedEvent, WrappedMessageEvent } from '$lib/client/event'
-	import { escape } from '$lib/escape'
+	import { escape } from '$lib/utils/escape'
 	import Twemojify from '$lib/Twemojify.svelte'
 
 	export let event: WrappedMessageEvent

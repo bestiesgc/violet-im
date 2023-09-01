@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { useMediaQuery } from '$lib/media'
+	import { useMediaQuery } from '$lib/utils/media'
 	import client from '$lib/client/index'
 	import Context from '$lib/Context.svelte'
 	import DeleteIcon from '$lib/Icons/delete.svg?c'

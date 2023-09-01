@@ -4,7 +4,7 @@
 	import Textarea from '$lib/GrowingTextarea.svelte'
 	import * as marked from 'marked'
 	import type { IContent } from 'matrix-js-sdk'
-	import { decodeEntities, escape } from '$lib/escape'
+	import { decodeEntities, escape } from '$lib/utils/escape'
 	export let data
 
 	let message: string

@@ -1,6 +1,6 @@
 import client from '$lib/client/index'
 import DOMPurify from 'dompurify'
-import twemoji from '$lib/twemoji'
+import twemoji from '$lib/utils/twemoji'
 
 function linkPrettier(url: string) {
 	return url.replace(/^[a-zA-Z]+?:\/\//, '').replace(/\/$/, '')
