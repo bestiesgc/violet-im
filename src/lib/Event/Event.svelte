@@ -1,4 +1,6 @@
 <script lang="ts">
+	import client from '$lib/client/index'
+	import DeleteIcon from '$lib/Icons/delete.svg?c'
 	import type { WrappedEvent, WrappedMessageEvent } from '$lib/client/event.js'
 	import type { Writable } from 'svelte/store'
 	import { tap, holdtap } from '../actions/tap.js'
@@ -46,6 +48,12 @@
 		{#if event.type == 'm.room.message'}
 			<Message event={messageEvent} {nextEvent} {lastEvent} />
 		{/if}
+		<div class="options">
+			<button on:click={() => client.deleteEvent(event)}>
+				<span class="sr-only">Delete</span>
+				<DeleteIcon aria-hidden="true"></DeleteIcon>
+			</button>
+		</div>
 	</div>
 </div>
 
@@ -63,9 +71,30 @@
 		max-width: 60rem;
 		margin: 0 auto;
 	}
-	@media screen and (min-width: 600.01px) {
+	.options {
+		margin-inline-end: 0.25rem;
+		padding: 0rem 0.25rem;
+		border-radius: 0.5rem;
+		background-color: var(--slate-950);
+		display: none;
+		align-items: center;
+		right: 0;
+		top: 0;
+		transform: translateY(-50%);
+		position: absolute;
+		z-index: 99;
+	}
+	.options button {
+		display: grid;
+		place-items: center;
+	}
+	@media (pointer: fine) {
 		.event-wrapper:hover {
 			background-color: #a1a2d310;
+		}
+		.event:hover .options,
+		.options:focus-within {
+			display: flex;
 		}
 	}
 </style>
