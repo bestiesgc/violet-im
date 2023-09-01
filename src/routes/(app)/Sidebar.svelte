@@ -51,7 +51,9 @@
 	{:else}
 		<div class="rooms-header">Home</div>
 	{/if}
-	<RoomList {rooms}></RoomList>
+	<div class="scroller">
+		<RoomList {rooms}></RoomList>
+	</div>
 </div>
 
 <style lang="postcss">
@@ -90,12 +92,13 @@
 		font-weight: 700;
 		padding: 0.75rem 0.5rem;
 		font-size: 1.25rem;
-		margin-bottom: 0.5rem;
 		border-bottom: 1px solid var(--slate-700);
 	}
 	.rooms {
 		padding: 0.5rem 0;
 		padding-top: 0;
+		display: grid;
+		grid-template-rows: auto 1fr;
 	}
 	.rooms :global(.section:first-child .toggle-list) {
 		padding-top: 0.75rem;

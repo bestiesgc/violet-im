@@ -11,10 +11,24 @@
 
 	export let showDirectMessages = true
 	export let showRooms = true
+
+	let directsNavigatable = showDirectMessages
+	let roomsNavigatable = showRooms
 </script>
 
 {#if directMessages.length > 0}
-	<div class="section" class:expanded={showDirectMessages}>
+	<div
+		class="section"
+		class:expanded={showDirectMessages}
+		on:transitionstart={() => {
+			if (showDirectMessages) {
+				directsNavigatable = true
+			}
+		}}
+		on:transitionend={() => {
+			directsNavigatable = showDirectMessages
+		}}
+	>
 		<button
 			aria-controls="dm-list"
 			aria-expanded={showDirectMessages}
@@ -32,8 +46,8 @@
 				><path d="M480-345 240-585l43-43 197 198 197-197 43 43-240 239Z" /></svg
 			>
 		</button>
-		<div class="rooms">
-			{#each directMessages as room}
+		<div class="rooms" style:display={!directsNavigatable ? 'none' : undefined}>
+			{#each directMessages as room (room.roomId)}
 				<a href="/room/{room.roomId}" class="room" title={room.name}>
 					<RoomAvatar size={32} {room}></RoomAvatar>
 					<span class="name">{room.name}</span>
@@ -43,7 +57,18 @@
 	</div>
 {/if}
 {#if notDirectMessages.length > 0}
-	<div class="section" class:expanded={showRooms}>
+	<div
+		class="section"
+		class:expanded={showRooms}
+		on:transitionstart={() => {
+			if (showRooms) {
+				roomsNavigatable = true
+			}
+		}}
+		on:transitionend={() => {
+			roomsNavigatable = showRooms
+		}}
+	>
 		<button
 			aria-controls="room-list"
 			aria-expanded={showRooms}
@@ -61,7 +86,11 @@
 				><path d="M480-345 240-585l43-43 197 198 197-197 43 43-240 239Z" /></svg
 			>
 		</button>
-		<div class="rooms" id="room-list">
+		<div
+			class="rooms"
+			id="room-list"
+			style:display={!roomsNavigatable ? 'none' : undefined}
+		>
 			{#each notDirectMessages as room}
 				<a href="/room/{room.roomId}" class="room" title={room.name}>
 					<RoomAvatar size={32} {room}></RoomAvatar>
