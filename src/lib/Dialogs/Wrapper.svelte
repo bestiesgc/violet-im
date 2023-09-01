@@ -68,6 +68,7 @@
 		background-color: var(--slate-900);
 		border-radius: 0.25rem;
 		overflow: hidden;
+		max-width: 60rem;
 	}
 	.heading {
 		display: grid;
@@ -114,6 +115,7 @@
 			background: none;
 		}
 		.dialog {
+			max-width: unset;
 			border-radius: 0;
 			box-shadow: 0 0 4rem 2rem rgb(0 0 0 / 0.25);
 		}
