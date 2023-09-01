@@ -131,9 +131,9 @@
 			placeholder="Send a message..."
 		/>
 		{#if !$finePointer}
-			<button>
+			<button on:click={sendMessage}>
 				<span class="sr-only">Send</span>
-				<SendIcon aria-hidden="true" on:click={sendMessage}></SendIcon>
+				<SendIcon aria-hidden="true"></SendIcon>
 			</button>
 		{/if}
 	</div>
