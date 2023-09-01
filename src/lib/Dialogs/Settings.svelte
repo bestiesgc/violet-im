@@ -21,3 +21,9 @@
 {:else}
 	<SecureBackup closeDialog={() => (secureBackupSetup = false)}></SecureBackup>
 {/if}
+
+<style>
+	p {
+		margin-bottom: 0.5em;
+	}
+</style>

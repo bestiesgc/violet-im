@@ -107,6 +107,7 @@
 	}
 	.content {
 		padding: 0.75rem 0.5rem;
+		height: 100%;
 	}
 	@media screen and (max-width: 600px) {
 		.dialog-wrapper {

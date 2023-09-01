@@ -22,7 +22,7 @@
 <style>
 	.layout {
 		margin: -0.75rem -0.5rem;
-		width: calc(100% + 0.5rem);
+		width: calc(100% + 1rem);
 		display: grid;
 		grid-template-columns: 8rem 1fr;
 		height: 100%;

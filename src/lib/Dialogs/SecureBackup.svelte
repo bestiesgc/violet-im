@@ -33,7 +33,7 @@
 	<span slot="title">Secure Backup</span>
 	<p>Input a Security Key.</p>
 	<Form on:submit={submit}>
-		<TextInput type="text" label="Security Phrase" bind:value={securityKey} />
+		<TextInput type="text" label="Security Key" bind:value={securityKey} />
 		<Button type="submit">Submit</Button>
 	</Form>
 </Wrapper>
