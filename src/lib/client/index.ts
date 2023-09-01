@@ -1,11 +1,5 @@
 import { decryptAttachment } from 'matrix-encrypt-attachment'
-import type {
-	MatrixClient,
-	MatrixEvent,
-	Room,
-	RoomMember,
-	User
-} from 'matrix-js-sdk'
+import type { MatrixEvent, Room, RoomMember, User } from 'matrix-js-sdk'
 import type { WrappedEvent } from './event'
 import {
 	ClientEvent,
@@ -14,7 +8,6 @@ import {
 	IndexedDBStore,
 	createClient
 } from 'matrix-js-sdk'
-import { goto } from '$app/navigation'
 
 class MatrixClientWrapper {
 	matrixClient: import('matrix-js-sdk').MatrixClient
@@ -45,26 +38,18 @@ class MatrixClientWrapper {
 		const cryptoStore = new IndexedDBCryptoStore(indexedDB, 'crypto-store')
 		await indexedDBStore.startup()
 
-		let matrixClient: MatrixClient
-
-		try {
-			matrixClient = createClient({
-				baseUrl: localStorage.getItem('homeserver') ?? '',
-				accessToken: localStorage.getItem('token') ?? undefined,
-				userId: localStorage.getItem('user_id') ?? '',
-				store: indexedDBStore,
-				deviceId: localStorage.getItem('device_id') ?? '',
-				cryptoStore,
-				verificationMethods: this.verificationMethods,
-				timelineSupport: true
-			})
-			await matrixClient.initCrypto()
-			await matrixClient.startClient()
-		} catch (error) {
-			console.error(error)
-			goto('/login')
-			return
-		}
+		const matrixClient = createClient({
+			baseUrl: localStorage.getItem('homeserver') ?? '',
+			accessToken: localStorage.getItem('token') ?? undefined,
+			userId: localStorage.getItem('user_id') ?? '',
+			store: indexedDBStore,
+			deviceId: localStorage.getItem('device_id') ?? '',
+			cryptoStore,
+			verificationMethods: this.verificationMethods,
+			timelineSupport: true
+		})
+		await matrixClient.initCrypto()
+		await matrixClient.startClient()
 
 		matrixClient.setGlobalErrorOnUnknownDevices(false)
 		this.matrixClient = matrixClient
