@@ -7,12 +7,6 @@
 	let position = { x: 0, y: 0 }
 	let borderBoxSize: ResizeObserverSize[]
 
-	$: {
-		if (borderBoxSize) {
-			console.log('content box!', borderBoxSize)
-		}
-	}
-
 	function onClickOff(e: MouseEvent) {
 		if (!(e.target instanceof HTMLElement)) {
 			return
