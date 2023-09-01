@@ -1,6 +1,7 @@
 import client from '$lib/client/index'
 import DOMPurify from 'dompurify'
 import twemoji from '$lib/utils/twemoji'
+import { highlightElement } from '$lib/utils/highlight'
 
 function linkPrettier(url: string) {
 	return url.replace(/^[a-zA-Z]+?:\/\//, '').replace(/\/$/, '')
@@ -8,7 +9,10 @@ function linkPrettier(url: string) {
 
 export function parseBody(body: string) {
 	const parser = new DOMParser()
-	const bodyDoc = parser.parseFromString(body, 'text/html')
+	const bodyDoc = parser.parseFromString(
+		`<html><body>${body}</body></html>`,
+		'text/html'
+	)
 	twemoji.parse(bodyDoc.body)
 	bodyDoc.querySelectorAll('img[data-mx-emoticon]').forEach(img => {
 		img.classList.add('emoji')
@@ -37,9 +41,25 @@ export function parseBody(body: string) {
 			a.innerText = linkPrettier(a.getAttribute('href') ?? '')
 		}
 	})
-	return DOMPurify.sanitize(bodyDoc.body.innerHTML, {
-		FORBID_TAGS: ['style']
-	}).trim()
+	let codePromise: Promise<string> | null = null
+	if (bodyDoc.querySelector('pre code[class^="language-"]')) {
+		codePromise = (async () => {
+			await Promise.allSettled(
+				[...bodyDoc.querySelectorAll('pre code[class^="language-"]')].map(el =>
+					highlightElement(<HTMLElement>el)
+				)
+			)
+			return DOMPurify.sanitize(bodyDoc.body.innerHTML, {
+				FORBID_TAGS: ['style']
+			}).trim()
+		})()
+	}
+	return {
+		text: DOMPurify.sanitize(bodyDoc.body.innerHTML, {
+			FORBID_TAGS: ['style']
+		}).trim(),
+		codePromise
+	}
 }
 
 export function isAllEmoji(body: string) {

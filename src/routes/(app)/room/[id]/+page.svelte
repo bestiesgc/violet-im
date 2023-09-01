@@ -34,7 +34,11 @@
 				)}</font>`
 			}
 		)
-		let markedResult = await marked.parseInline(formattedBody, {
+		let parser: any = marked.parseInline
+		if (/(^|\n)```[a-z]+\n.*?```/s.test(body)) {
+			parser = marked.parse
+		}
+		let markedResult = await parser(formattedBody, {
 			async: true
 		})
 		if (markedResult) {
