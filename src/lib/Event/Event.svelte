@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { useMediaQuery } from '$lib/media'
 	import client from '$lib/client/index'
+	import Context from '$lib/Context.svelte'
 	import DeleteIcon from '$lib/Icons/delete.svg?c'
 	import type { WrappedEvent, WrappedMessageEvent } from '$lib/client/event.js'
 	import type { Writable } from 'svelte/store'
@@ -17,13 +19,20 @@
 
 	let messageEvent = <WrappedMessageEvent>event
 
+	const finePointer = useMediaQuery('(pointer: fine)')
+
+	$: isSelected =
+		$selection &&
+		($selection?.includes(event) ||
+			$selection?.findIndex(e => e.id === event.id) !== -1)
+
 	function updateSelection(touchEvent?: Event) {
 		if ((<Element | null>touchEvent?.target)?.closest('button') != null) return
 		if (!$selection) {
 			$selection = [event]
 		} else {
-			if ($selection.includes(event)) {
-				$selection = $selection.filter(e => e !== event)
+			if (isSelected) {
+				$selection = $selection.filter(e => e.id !== event.id)
 				if ($selection.length === 0) $selection = null
 			} else {
 				$selection = [...$selection, event]
@@ -32,30 +41,48 @@
 	}
 </script>
 
-<div
-	class="event-wrapper"
-	class:selected={$selection?.includes(event)}
-	bind:this={eventElement}
-	use:holdtap={updateSelection}
-	use:tap={event => ($selection ? updateSelection(event) : null)}
-	on:touchstart={() =>
-		eventElement.animate(
-			[{ backgroundColor: '#a1a2d310' }, { backgroundColor: 'transparent' }],
-			{ duration: 500 }
-		)}
+<Context
+	visible={$finePointer ? isSelected ?? false : false}
+	on:contextmenu={() => {
+		if (!$finePointer) return
+		$selection = [event]
+	}}
+	on:escape={() => {
+		if (!$finePointer) return
+		$selection = null
+	}}
 >
-	<div class="event" id="message_{event.id}">
-		{#if event.type == 'm.room.message'}
-			<Message event={messageEvent} {nextEvent} {lastEvent} />
-		{/if}
-		<div class="options">
-			<button on:click={() => client.deleteEvent(event)}>
-				<span class="sr-only">Delete</span>
-				<DeleteIcon aria-hidden="true"></DeleteIcon>
-			</button>
+	<div
+		class="event-wrapper"
+		class:selected={!$finePointer && isSelected}
+		bind:this={eventElement}
+		use:holdtap={updateSelection}
+		use:tap={event => ($selection ? updateSelection(event) : null)}
+		on:touchstart={() =>
+			eventElement.animate(
+				[{ backgroundColor: '#a1a2d310' }, { backgroundColor: 'transparent' }],
+				{ duration: 500 }
+			)}
+	>
+		<div class="event" id="message_{event.id}">
+			{#if event.type == 'm.room.message'}
+				<Message event={messageEvent} {nextEvent} {lastEvent} />
+			{/if}
+			<div class="options">
+				<button on:click={() => client.deleteEvent(event)}>
+					<span class="sr-only">Delete</span>
+					<DeleteIcon aria-hidden="true"></DeleteIcon>
+				</button>
+			</div>
 		</div>
 	</div>
-</div>
+	<svelte:fragment slot="contextmenu">
+		<button on:click={() => client.deleteEvent(event)}>
+			<span>Delete</span>
+			<DeleteIcon aria-hidden="true"></DeleteIcon>
+		</button>
+	</svelte:fragment>
+</Context>
 
 <style lang="postcss">
 	.event-wrapper {

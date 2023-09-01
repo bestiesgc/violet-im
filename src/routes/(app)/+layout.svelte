@@ -19,6 +19,9 @@
 	import { expoOut } from 'svelte/easing'
 	import Ticker from '$lib/Ticker.svelte'
 	import type { WrappedEvent } from '$lib/client/event'
+	import { useMediaQuery } from '$lib/media'
+
+	const finePointer = useMediaQuery('(pointer: fine)')
 
 	const selection = writable(<WrappedEvent[] | null>null)
 	const showSettings = writable(false)
@@ -62,7 +65,7 @@
 	<main class="panel">
 		<div class="room-view">
 			<div class="header">
-				{#if !$selection}
+				{#if $finePointer || !$selection}
 					<div
 						class="group"
 						in:fly={{ easing: expoOut, duration: 200, y: -20 }}
