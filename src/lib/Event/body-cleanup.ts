@@ -10,7 +10,7 @@ function linkPrettier(url: string) {
 export function parseBody(body: string) {
 	const parser = new DOMParser()
 	const bodyDoc = parser.parseFromString(
-		`<html><body>${body}</body></html>`,
+		`<html><body>${body.replace(/\n(<pre>)/gm, '$1')}</body></html>`,
 		'text/html'
 	)
 	twemoji.parse(bodyDoc.body)
