@@ -12,7 +12,8 @@
 	draggable="false"
 	width="{size}px"
 	height="{size}px"
-	src={client.getMemberAvatarUrl(member, size)}
+	src={client.getMemberAvatarUrl(member, size) ??
+		`https://api.dicebear.com/6.x/initials/svg?seed=${member.name}&chars=1`}
 	alt=""
 />
 
