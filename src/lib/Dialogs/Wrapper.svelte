@@ -49,7 +49,7 @@
 	</div>
 </div>
 
-<style>
+<style lang="postcss">
 	.dialog-wrapper {
 		z-index: 999;
 		position: fixed;

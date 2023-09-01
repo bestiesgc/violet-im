@@ -23,7 +23,7 @@
 	</div>
 {/if}
 
-<style>
+<style lang="postcss">
 	.body,
 	.body :global(pre) {
 		word-break: break-word;

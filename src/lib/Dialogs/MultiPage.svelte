@@ -19,7 +19,7 @@
 	</div>
 </Wrapper>
 
-<style>
+<style lang="postcss">
 	.layout {
 		margin: -0.75rem -0.5rem;
 		width: calc(100% + 1rem);

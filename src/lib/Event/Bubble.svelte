@@ -29,7 +29,7 @@
 	</div>
 </div>
 
-<style>
+<style lang="postcss">
 	.bubble-wrapper {
 		position: relative;
 		width: fit-content;

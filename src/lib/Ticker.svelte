@@ -16,7 +16,7 @@
 	{/key}
 </span>
 
-<style>
+<style lang="postcss">
 	.ticker {
 		position: relative;
 		display: inline-block;

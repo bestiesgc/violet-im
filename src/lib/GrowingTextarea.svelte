@@ -17,7 +17,7 @@
 	/>
 </div>
 
-<style>
+<style lang="postcss">
 	.textarea {
 		display: grid;
 	}

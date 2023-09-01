@@ -22,7 +22,7 @@
 	<SecureBackup closeDialog={() => (secureBackupSetup = false)}></SecureBackup>
 {/if}
 
-<style>
+<style lang="postcss">
 	p {
 		margin-bottom: 0.5em;
 	}
