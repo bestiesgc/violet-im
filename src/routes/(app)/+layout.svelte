@@ -271,7 +271,7 @@
 			padding: 0;
 		}
 		.sidebar-wrapper {
-			z-index: 10;
+			z-index: 100;
 			background-color: var(--slate-950);
 			border-radius: 0.25rem;
 			width: 100%;
