@@ -191,6 +191,7 @@ class MatrixClientWrapper {
 			.find(e => e.type === 'm.room.message')
 	}
 	async wrapTimeline(timeline: MatrixEvent[], room: Room) {
+		await this.#decryptTimeline(timeline)
 		let newTimeline: WrappedEvent[] = []
 		for (const event of timeline) {
 			if (event.isRedacted()) continue
