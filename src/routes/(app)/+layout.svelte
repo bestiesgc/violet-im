@@ -19,9 +19,8 @@
 	import { expoOut } from 'svelte/easing'
 	import Ticker from '$lib/Ticker.svelte'
 	import type { WrappedEvent } from '$lib/client/event'
-	import { useMediaQuery } from '$lib/utils/media'
 
-	const finePointer = useMediaQuery('(pointer: fine)')
+	import { finePointer } from '$lib/stores'
 
 	const selection = writable(<WrappedEvent[] | null>null)
 	const showSettings = writable(false)

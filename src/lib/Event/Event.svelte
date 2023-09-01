@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { useMediaQuery } from '$lib/utils/media'
 	import client from '$lib/client/index'
 	import Context from '$lib/Context.svelte'
 	import Dialog from '$lib/Dialogs/Wrapper.svelte'
@@ -11,6 +10,7 @@
 	import Message from './Message.svelte'
 	import { getContext } from 'svelte'
 	import highlight from '$lib/utils/highlight.js'
+	import { finePointer } from '$lib/stores.js'
 
 	const selection: Writable<WrappedEvent[] | null> = getContext('selection')
 
@@ -23,8 +23,6 @@
 	let messageEvent = <WrappedMessageEvent>event
 
 	let viewSource = false
-
-	const finePointer = useMediaQuery('(pointer: fine)')
 
 	$: isSelected =
 		$selection &&
