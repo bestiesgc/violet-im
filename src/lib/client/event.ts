@@ -1,6 +1,7 @@
 import type { IContent, MatrixEvent, Room, RoomMember } from 'matrix-js-sdk'
 
 export interface WrappedEvent {
+	edited: boolean
 	_debug: MatrixEvent
 	room: Room
 	type: string
@@ -14,6 +15,7 @@ export interface WrappedEvent {
 	}
 	replyEvent?: WrappedEvent
 	content?: IContent
+	editOriginalId: string | undefined
 }
 
 export interface WrappedMessageEvent extends WrappedEvent {

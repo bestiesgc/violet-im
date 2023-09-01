@@ -191,7 +191,6 @@ class MatrixClientWrapper {
 			.find(e => e.type === 'm.room.message')
 	}
 	async wrapTimeline(timeline: MatrixEvent[], room: Room) {
-		await this.#decryptTimeline(timeline)
 		let newTimeline: WrappedEvent[] = []
 		for (const event of timeline) {
 			if (event.isRedacted()) continue
@@ -227,31 +226,24 @@ class MatrixClientWrapper {
 					console.warn('Unknown event type', event.getType())
 				// eslint-disable-next-line no-fallthrough
 				case 'm.room.message':
-					if (event.getContent()['m.new_content']) {
-						const relatesToId = event.relationEventId
+					const wrappedEvent = await this.#wrapEvent(event, room)
+					if (wrappedEvent.editOriginalId) {
 						const relatesToIndex = newTimeline.findIndex(
-							e => e.id === relatesToId
+							e => e.id === wrappedEvent.editOriginalId
 						)
 						if (relatesToIndex == -1) continue
 						if (newTimeline[relatesToIndex].content) {
-							newTimeline[relatesToIndex].content =
-								event.getContent()['m.new_content']
-							if (event.replyEventId) {
-								const replyEvent = room.findEventById(event.replyEventId)
-								if (replyEvent) {
-									newTimeline[relatesToIndex].replyEvent =
-										await this.#wrapEvent(replyEvent, room)
-								}
-							}
+							newTimeline[relatesToIndex].content = wrappedEvent.content
 						}
+						newTimeline[relatesToIndex].edited = true
 						continue
 					}
-					const thisId = event.getId()
-					const timelineIndex = newTimeline.findIndex(e => e.id == thisId)
+					const timelineIndex = newTimeline.findIndex(
+						e => e.id == wrappedEvent.id
+					)
 					if (timelineIndex != -1) {
 						continue
 					}
-					const wrappedEvent = await this.#wrapEvent(event, room)
 					newTimeline.push(wrappedEvent)
 					break
 			}
@@ -259,6 +251,7 @@ class MatrixClientWrapper {
 		return newTimeline
 	}
 	async #wrapEvent(event: MatrixEvent, room: Room): Promise<WrappedEvent> {
+		const type = event.getType()
 		if (event.isBeingDecrypted()) {
 			await event.getDecryptionPromise()
 		} else if (event.shouldAttemptDecryption()) {
@@ -272,20 +265,23 @@ class MatrixClientWrapper {
 		const clearContent = event.isEncrypted()
 			? event.getClearContent()
 			: event.getContent()
-		if (!clearContent) {
-			if (!clearContent) throw new Error('No content')
+		let editOriginalId = undefined
+		if (clearContent?.['m.new_content']) {
+			editOriginalId = event.relationEventId
 		}
 		return {
+			edited: false,
 			_debug: event,
 			room: room,
 			id: <string>event.getId(),
-			type: event.getType(),
+			type: type,
 			sender: event.sender ?? undefined,
 			reactions: {},
 			replyEvent: replyEvent
 				? await this.#wrapEvent(replyEvent, room)
 				: undefined,
-			content: clearContent ?? undefined
+			content: clearContent ?? undefined,
+			editOriginalId
 		}
 	}
 }
