@@ -2,10 +2,20 @@ import client from '$lib/client/index'
 import DOMPurify from 'dompurify'
 import twemoji from '$lib/utils/twemoji'
 import { highlightElement } from '$lib/utils/highlight'
+import linkifyHtml from 'linkify-html'
+
+DOMPurify.addHook('afterSanitizeAttributes', function (node) {
+	if (node.tagName === 'A') {
+		node.setAttribute('target', '_blank')
+	}
+})
 
 function linkPrettier(url: string) {
 	return url.replace(/^[a-zA-Z]+?:\/\//, '').replace(/\/$/, '')
 }
+
+const mxidRegexp =
+	/@([a-z0-9._=\-/]+):((?:[a-zA-Z0-9\.]+|\[[0-9a-f:]+])(?::[0-9]{1,5})?)/gm
 
 export function parseBody(body: string) {
 	const parser = new DOMParser()
@@ -13,6 +23,33 @@ export function parseBody(body: string) {
 		`<html><body>${body.replace(/\n(<pre>)/gm, '$1')}</body></html>`,
 		'text/html'
 	)
+	bodyDoc.body.childNodes.forEach(node => {
+		if (node.nodeType === Node.TEXT_NODE) {
+			if (mxidRegexp.test(node.textContent ?? '')) {
+				const span = document.createElement('span')
+				span.innerHTML =
+					node.textContent?.replace(
+						mxidRegexp,
+						'<span class="mention"><span class="name">@$1</span><span>:</span><span class="instance">$2</span></span>'
+					) ?? ''
+				node.replaceWith(span)
+				console.log(span.innerHTML)
+			}
+		}
+	})
+	bodyDoc.querySelectorAll('a[href^="https://matrix.to/#/%40"]').forEach(a => {
+		const href = a.getAttribute('href')
+		const urlObj = new URL(href ?? '')
+		const [name, instance] = decodeURIComponent(urlObj.hash.slice(2))
+			.slice(1)
+			.split(':')
+		const span = document.createElement('span')
+		span.innerHTML = `<span class="mention"><span class="name">@${name}</span><span>:</span><span class="instance">${instance}</span></span>`
+		a.replaceWith(span)
+	})
+	bodyDoc.body.innerHTML = linkifyHtml(bodyDoc.body.innerHTML, {
+		ignoreTags: ['span', 'a', 'mx-reply', 'code']
+	})
 	twemoji.parse(bodyDoc.body)
 	bodyDoc.querySelectorAll('img[data-mx-emoticon]').forEach(img => {
 		img.classList.add('emoji')
@@ -56,7 +93,8 @@ export function parseBody(body: string) {
 	}
 	return {
 		text: DOMPurify.sanitize(bodyDoc.body.innerHTML, {
-			FORBID_TAGS: ['style']
+			FORBID_TAGS: ['style'],
+			FORBID_ATTR: ['style']
 		}).trim(),
 		codePromise
 	}

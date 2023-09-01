@@ -40,6 +40,25 @@
 		color: #b7bec9;
 		background: #262729;
 	}
+	.body :global(.mention),
+	.body :global(a) {
+		color: var(--violet-400);
+		text-decoration: none;
+	}
+	.body :global(a:hover) {
+		text-decoration: underline;
+	}
+	.body :global(.mention span:not(.name)) {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border-width: 0;
+	}
 	.body :global(blockquote) {
 		padding: 0;
 		margin: 0;

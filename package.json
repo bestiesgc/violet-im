@@ -46,6 +46,7 @@
 		"@twemoji/api": "^14.1.2",
 		"dompurify": "^3.0.5",
 		"highlight.js": "^11.8.0",
+		"linkify-html": "^4.1.1",
 		"marked": "^7.0.4",
 		"matrix-encrypt-attachment": "^1.0.3",
 		"matrix-js-sdk": "^27.2.0"
