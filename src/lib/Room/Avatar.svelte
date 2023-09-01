@@ -6,7 +6,6 @@
 </script>
 
 <img
-	loading="lazy"
 	class="avatar"
 	aria-hidden="true"
 	draggable="false"
