@@ -1,12 +1,20 @@
 import { decryptAttachment } from 'matrix-encrypt-attachment'
 import type { MatrixEvent, Room, RoomMember } from 'matrix-js-sdk'
 import type { WrappedEvent } from './event'
+import {
+	Crypto,
+	ClientEvent,
+	CryptoEvent,
+	RoomMemberEvent,
+	IndexedDBCryptoStore,
+	IndexedDBStore,
+	createClient
+} from 'matrix-js-sdk'
 
 class MatrixClientWrapper {
 	matrixClient: import('matrix-js-sdk').MatrixClient
 	allRooms: import('matrix-js-sdk').Room[]
 	verificationMethods: string[]
-	matrixSdk: typeof import('matrix-js-sdk')
 
 	constructor() {
 		/**
@@ -16,22 +24,11 @@ class MatrixClientWrapper {
 		 */
 		// @ts-ignore
 		this.matrixClient = null
-		// @ts-ignore
-		this.matrixSdk = {}
 		this.allRooms = []
 		this.verificationMethods = []
 	}
 	async start() {
 		if (this.matrixClient) return
-		this.matrixSdk = await import('matrix-js-sdk')
-		const {
-			ClientEvent,
-			CryptoEvent,
-			RoomMemberEvent,
-			IndexedDBCryptoStore,
-			IndexedDBStore,
-			createClient
-		} = this.matrixSdk
 		const { verificationMethods } = await import('matrix-js-sdk/lib/crypto')
 		this.verificationMethods = [verificationMethods.SAS]
 		// Initialize IndexedDB stores
@@ -72,12 +69,9 @@ class MatrixClientWrapper {
 		matrixClient.on(CryptoEvent.VerificationRequestReceived, async request => {
 			await request.accept()
 			const verifier = await request.startVerification(verificationMethods.SAS)
-			verifier.on(
-				this.matrixSdk.Crypto.VerifierEvent.ShowSas,
-				async sasData => {
-					await sasData.confirm()
-				}
-			)
+			verifier.on(Crypto.VerifierEvent.ShowSas, async sasData => {
+				await sasData.confirm()
+			})
 			await verifier.verify()
 		})
 

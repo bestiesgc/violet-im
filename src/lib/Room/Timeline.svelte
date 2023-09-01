@@ -1,5 +1,10 @@
 <script lang="ts">
-	import type { EventTimeline, Room } from 'matrix-js-sdk'
+	import {
+		Direction,
+		RoomEvent,
+		type EventTimeline,
+		type Room
+	} from 'matrix-js-sdk'
 	import { afterUpdate, beforeUpdate, onMount } from 'svelte'
 	import client from '$lib/client/index'
 	import Event from '$lib/Event/Event.svelte'
@@ -19,8 +24,8 @@
 	async function loadPrevious(limit = 20) {
 		function getFirstLinkedTimeline() {
 			let tl: EventTimeline | null = activeTimeline
-			while (tl?.getNeighbouringTimeline(client.matrixSdk.Direction.Backward)) {
-				tl = tl.getNeighbouringTimeline(client.matrixSdk.Direction.Backward)
+			while (tl?.getNeighbouringTimeline(Direction.Backward)) {
+				tl = tl.getNeighbouringTimeline(Direction.Backward)
 			}
 			return tl
 		}
@@ -79,9 +84,9 @@
 
 	onMount(() => {
 		loadPrevious(20)
-		room.on(client.matrixSdk.RoomEvent.Timeline, onTimeline)
+		room.on(RoomEvent.Timeline, onTimeline)
 		return () => {
-			room.off(client.matrixSdk.RoomEvent.Timeline, onTimeline)
+			room.off(RoomEvent.Timeline, onTimeline)
 		}
 	})
 </script>
