@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { setContext } from 'svelte'
+	import { onMount, setContext } from 'svelte'
 	import { writable } from 'svelte/store'
 	import client from '$lib/client/index'
-	import type { Room } from 'matrix-js-sdk'
+	import { Crypto, CryptoEvent, type Room } from 'matrix-js-sdk'
 	import Sidebar from './Sidebar.svelte'
+	import Verifier from './Verifier.svelte'
 	import SettingsDialog from '$lib/Dialogs/Settings.svelte'
 	import AtIcon from '$lib/Icons/at.svg?c'
 	import HashIcon from '$lib/Icons/hash.svg?c'
@@ -55,12 +56,35 @@
 		spaces = allRooms.filter(room => room.isSpaceRoom())
 	}
 
+	let verificationRequest: Crypto.VerificationRequest
+
+	async function onVerificationRequest(request: Crypto.VerificationRequest) {
+		verificationRequest = request
+	}
+
+	onMount(() => {
+		client.matrixClient.on(
+			CryptoEvent.VerificationRequest,
+			onVerificationRequest
+		)
+		return () => {
+			client.matrixClient.off(
+				CryptoEvent.VerificationRequest,
+				onVerificationRequest
+			)
+		}
+	})
+
 	$: {
 		load($page.data.roomId)
 	}
 </script>
 
 <div class="layout">
+	{#if verificationRequest}
+		<Verifier bind:request={verificationRequest}></Verifier>
+	{/if}
+
 	<div class="sidebar-wrapper" class:mobile-visible={mobileSidebarOpen}>
 		<Sidebar {spaces} {rooms}></Sidebar>
 	</div>
@@ -178,6 +202,14 @@
 {/if}
 
 <style lang="postcss">
+	.layout :global(.verifier) {
+		z-index: 99999999999;
+		background-color: var(--slate-950);
+		position: fixed;
+		left: 0;
+		right: 0;
+		top: 0;
+	}
 	.layout {
 		height: 100%;
 		display: grid;
