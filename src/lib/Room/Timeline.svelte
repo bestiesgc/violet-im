@@ -19,7 +19,7 @@
 
 	$: {
 		if (room) {
-			loadPrevious(20)
+			loadTimeline(20, true)
 		}
 	}
 
@@ -27,18 +27,19 @@
 		wrappedTimeline = await client.wrapTimeline(timeline, room)
 	}
 
-	async function loadPrevious(limit = 20) {
+	async function loadTimeline(limit = 20, backwards = false) {
 		function getFirstLinkedTimeline() {
 			let tl: EventTimeline | null = activeTimeline
-			while (tl?.getNeighbouringTimeline(Direction.Backward)) {
-				tl = tl.getNeighbouringTimeline(Direction.Backward)
+			const direction = backwards ? Direction.Backward : Direction.Forward
+			while (tl?.getNeighbouringTimeline(direction)) {
+				tl = tl.getNeighbouringTimeline(direction)
 			}
 			return tl
 		}
 		const tl = getFirstLinkedTimeline()
 		if (tl) {
 			await client.matrixClient.paginateEventTimeline(tl, {
-				backwards: true,
+				backwards,
 				limit
 			})
 		}
@@ -53,7 +54,7 @@
 			timelineElement.scrollTop + timelineElement.offsetHeight ==
 			timelineElement.scrollHeight
 		scrollPosition = timelineElement.scrollTop
-		if (timelineElement?.scrollTop <= 100) loadPrevious()
+		if (timelineElement?.scrollTop <= 100) loadTimeline(20, true)
 	}
 
 	let oldestMessageId = timeline[0].getId()
