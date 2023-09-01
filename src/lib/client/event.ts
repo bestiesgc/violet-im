@@ -1,6 +1,7 @@
-import type { IContent, Room, RoomMember } from 'matrix-js-sdk'
+import type { IContent, MatrixEvent, Room, RoomMember } from 'matrix-js-sdk'
 
 export interface WrappedEvent {
+	_debug: MatrixEvent
 	room: Room
 	type: string
 	sender?: RoomMember

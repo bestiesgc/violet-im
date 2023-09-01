@@ -282,6 +282,7 @@ class MatrixClientWrapper {
 			if (!clearContent) throw new Error('No content')
 		}
 		return {
+			_debug: event,
 			room: room,
 			id: <string>event.getId(),
 			type: event.getType(),

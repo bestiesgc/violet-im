@@ -19,5 +19,5 @@
 		{/if}
 	</MultiPage>
 {:else}
-	<SecureBackup></SecureBackup>
+	<SecureBackup closeDialog={() => (secureBackupSetup = false)}></SecureBackup>
 {/if}

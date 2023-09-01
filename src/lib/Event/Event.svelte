@@ -2,7 +2,9 @@
 	import { useMediaQuery } from '$lib/utils/media'
 	import client from '$lib/client/index'
 	import Context from '$lib/Context.svelte'
+	import Dialog from '$lib/Dialogs/Wrapper.svelte'
 	import DeleteIcon from '$lib/Icons/delete.svg?c'
+	import CodeIcon from '$lib/Icons/code.svg?c'
 	import type { WrappedEvent, WrappedMessageEvent } from '$lib/client/event.js'
 	import type { Writable } from 'svelte/store'
 	import { tap, holdtap } from '../actions/tap.js'
@@ -18,6 +20,8 @@
 	export let nextEvent: WrappedEvent | null
 
 	let messageEvent = <WrappedMessageEvent>event
+
+	let viewSource = false
 
 	const finePointer = useMediaQuery('(pointer: fine)')
 
@@ -81,8 +85,23 @@
 			<span>Delete</span>
 			<DeleteIcon aria-hidden="true"></DeleteIcon>
 		</button>
+		<button on:click={() => (viewSource = true)}>
+			<span>View Source</span>
+			<CodeIcon aria-hidden="true"></CodeIcon>
+		</button>
 	</svelte:fragment>
 </Context>
+
+{#if viewSource}
+	<Dialog closeDialog={() => (viewSource = false)}>
+		<span slot="title">View Source</span>
+		{#if event._debug.isEncrypted()}
+			<pre>{JSON.stringify(event._debug.getEffectiveEvent(), null, '\t')}</pre>
+		{:else}
+			<pre>{JSON.stringify(event._debug.getEffectiveEvent(), null, '\t')}</pre>
+		{/if}
+	</Dialog>
+{/if}
 
 <style lang="postcss">
 	.event-wrapper {

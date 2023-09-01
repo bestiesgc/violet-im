@@ -1,14 +1,12 @@
 <script lang="ts">
 	import client from '$lib/client'
-	import { createEventDispatcher } from 'svelte'
 
 	import Wrapper from './Wrapper.svelte'
 	import Form from '$lib/Form/Form.svelte'
 	import TextInput from '$lib/Form/TextInput.svelte'
 	import Button from '$lib/Form/Button.svelte'
 
-	const dispatcher = createEventDispatcher()
-
+	export let closeDialog: (() => void) | null = null
 	let securityKey: string
 
 	async function submit() {
@@ -22,7 +20,7 @@
 				undefined,
 				backup.backupInfo
 			)
-		dispatcher('submit')
+		closeDialog?.()
 		if (restoreResult?.total) {
 			console.log('Successfully restored backup')
 		} else {
@@ -31,7 +29,7 @@
 	}
 </script>
 
-<Wrapper>
+<Wrapper {closeDialog}>
 	<span slot="title">Secure Backup</span>
 	<p>Input a Security Key.</p>
 	<Form on:submit={submit}>
