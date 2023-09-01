@@ -33,7 +33,6 @@ export function parseBody(body: string) {
 						'<span class="mention"><span class="name">@$1</span><span>:</span><span class="instance">$2</span></span>'
 					) ?? ''
 				node.replaceWith(span)
-				console.log(span.innerHTML)
 			}
 		}
 	})
