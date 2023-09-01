@@ -184,6 +184,7 @@
 		max-width: 60rem;
 		margin: 0 auto;
 		padding: 0.5rem;
+		padding-bottom: calc(env(safe-area-inset-bottom, 0rem) + 0.5rem);
 	}
 	.form.has-buttons {
 		grid-template-columns: 1fr auto;
