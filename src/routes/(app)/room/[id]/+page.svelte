@@ -143,9 +143,10 @@
 	.timeline-wrapper {
 		position: relative;
 		min-height: 0;
+		transition: padding-bottom 200ms cubic-bezier(0.075, 0.82, 0.165, 1);
 	}
-	.timeline-wrapper.has-form-status :global(.timeline) {
-		padding-bottom: 2rem;
+	.timeline-wrapper.has-form-status {
+		padding-bottom: 1rem;
 	}
 	.form-status {
 		display: flex;

@@ -13,6 +13,10 @@
 	export let room: Room
 
 	let timelineElement: HTMLElement
+	let timelineHeight: number
+	$: {
+		if (timelineHeight) updateScrollPosition()
+	}
 	const activeTimeline = room.getLiveTimeline()
 	const timeline = activeTimeline.getEvents()
 	let wrappedTimeline: WrappedEvent[] = []
@@ -99,7 +103,12 @@
 
 <svelte:window on:resize={updateScrollPosition} />
 
-<ol class="timeline scroller" bind:this={timelineElement} on:scroll={onScroll}>
+<ol
+	class="timeline scroller"
+	bind:this={timelineElement}
+	bind:clientHeight={timelineHeight}
+	on:scroll={onScroll}
+>
 	<div style:margin-top="auto"></div>
 	{#each wrappedTimeline as event, i (event.id)}
 		<li>
