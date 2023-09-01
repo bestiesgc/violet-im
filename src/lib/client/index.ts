@@ -1,5 +1,5 @@
 import { decryptAttachment } from 'matrix-encrypt-attachment'
-import type { MatrixEvent, Room, RoomMember } from 'matrix-js-sdk'
+import type { MatrixEvent, Room, RoomMember, User } from 'matrix-js-sdk'
 import type { WrappedEvent } from './event'
 import {
 	Crypto,
@@ -64,16 +64,6 @@ class MatrixClientWrapper {
 			})
 		})
 		this.allRooms = await this.loadAllRooms()
-
-		// Handle verification requests
-		matrixClient.on(CryptoEvent.VerificationRequestReceived, async request => {
-			await request.accept()
-			const verifier = await request.startVerification(verificationMethods.SAS)
-			verifier.on(Crypto.VerifierEvent.ShowSas, async sasData => {
-				await sasData.confirm()
-			})
-			await verifier.verify()
-		})
 
 		matrixClient.on(RoomMemberEvent.Membership, async () => {
 			this.allRooms = await this.loadAllRooms()
@@ -144,7 +134,14 @@ class MatrixClientWrapper {
 			true
 		)
 		if (avatar?.startsWith('mxc://')) {
-			return this.matrixClient.mxcUrlToHttp(avatar)
+			return this.matrixClient.mxcUrlToHttp(avatar, size, size, 'crop')
+		}
+		return avatar
+	}
+	getUserAvatarUrl(user: User, size = 64) {
+		const avatar = user.avatarUrl
+		if (avatar?.startsWith('mxc://')) {
+			return this.matrixClient.mxcUrlToHttp(avatar, size, size, 'crop')
 		}
 		return avatar
 	}
@@ -157,7 +154,7 @@ class MatrixClientWrapper {
 		)
 		if (avatar) {
 			if (avatar?.startsWith('mxc://')) {
-				return this.matrixClient.mxcUrlToHttp(avatar)
+				return this.matrixClient.mxcUrlToHttp(avatar, size, size, 'crop')
 			}
 			return avatar
 		}
