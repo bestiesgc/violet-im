@@ -95,7 +95,12 @@
 						class="group"
 						in:fly={{ easing: expoOut, duration: 200, y: -20 }}
 					>
-						<button on:click={() => ($selection = null)}>
+						<button
+							on:click={() => {
+								$selection = null
+								$editingOrReplying = null
+							}}
+						>
 							<span class="sr-only">Deselect messages</span>
 							<CloseIcon aria-hidden="true"></CloseIcon>
 						</button>
@@ -154,6 +159,7 @@
 									$selection.map(event => client.deleteEvent(event))
 								)
 								$selection = null
+								$editingOrReplying = null
 							}}
 						>
 							<span class="sr-only">Delete</span>

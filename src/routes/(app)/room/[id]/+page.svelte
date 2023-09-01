@@ -2,6 +2,7 @@
 	import client from '$lib/client/index'
 	import Timeline from '$lib/Room/Timeline.svelte'
 	import Textarea from '$lib/GrowingTextarea.svelte'
+	import CloseIcon from '$lib/Icons/close.svg?c'
 	import * as marked from 'marked'
 	import type { IContent } from 'matrix-js-sdk'
 	import { decodeEntities, escape } from '$lib/utils/escape'
@@ -95,11 +96,22 @@
 		{/key}
 		{#if $editingOrReplying}
 			<div class="form-status">
-				{#if $editingOrReplying == 'editing'}
-					Editing message...
-				{:else if $editingOrReplying == 'replying'}
-					Replying to message...
-				{/if}
+				<span class="text"
+					>{#if $editingOrReplying == 'editing'}
+						Editing message...
+					{:else if $editingOrReplying == 'replying'}
+						Replying to message...
+					{/if}</span
+				>
+				<button
+					on:click={() => {
+						$selection = null
+						$editingOrReplying = null
+					}}
+				>
+					<span class="sr-only">Cancel</span>
+					<CloseIcon width="12" height="12" aria-hidden="true"></CloseIcon>
+				</button>
 			</div>
 		{/if}
 	</div>
@@ -123,6 +135,9 @@
 		min-height: 0;
 	}
 	.form-status {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
 		border-radius: 0.25rem;
 		width: fit-content;
 		padding: 0.25rem;
@@ -134,6 +149,13 @@
 		font-size: 0.75rem;
 		margin-inline: 0.5rem;
 		margin-block-end: 0.75rem;
+	}
+	.form-status button {
+		width: 1.5rem;
+		height: 1.5rem;
+		margin: -0.5rem;
+		display: grid;
+		place-items: center;
 	}
 	.center {
 		height: 100%;

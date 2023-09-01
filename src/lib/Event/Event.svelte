@@ -36,6 +36,7 @@
 	function updateSelection(touchEvent?: Event) {
 		if ($editingOrReplying) return
 		if ((<Element | null>touchEvent?.target)?.closest('button') != null) return
+		$editingOrReplying = null
 		if (!$selection) {
 			$selection = [event]
 		} else {
@@ -50,19 +51,22 @@
 </script>
 
 <Context
-	visible={$finePointer ? isSelected ?? false : false}
+	visible={$finePointer ? (isSelected && !$editingOrReplying) ?? false : false}
 	on:contextmenu={() => {
 		if (!$finePointer) return
 		$selection = [event]
+		$editingOrReplying = null
 	}}
 	on:escape={() => {
 		if (!$finePointer) return
-		$selection = null
+		if (!$editingOrReplying) {
+			$selection = null
+		}
 	}}
 >
 	<div
 		class="event-wrapper"
-		class:selected={!$finePointer && isSelected}
+		class:selected={isSelected}
 		bind:this={eventElement}
 		use:holdtap={updateSelection}
 		use:tap={event => ($selection ? updateSelection(event) : null)}
@@ -77,7 +81,12 @@
 				<Message event={messageEvent} {nextEvent} {lastEvent} />
 			{/if}
 			<div class="options">
-				<button on:click={() => ($editingOrReplying = 'replying')}>
+				<button
+					on:click={() => {
+						$selection = [event]
+						$editingOrReplying = 'replying'
+					}}
+				>
 					<span class="sr-only">Reply</span>
 					<ReplyIcon aria-hidden="true"></ReplyIcon>
 				</button>
@@ -93,6 +102,7 @@
 			on:click={() => {
 				$selection = [event]
 				$editingOrReplying = 'replying'
+				console.log('!?!?!?', $selection, $editingOrReplying)
 			}}
 		>
 			<span>Reply</span>
