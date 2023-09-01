@@ -51,7 +51,23 @@
 
 <svelte:window on:click={onClickOff} />
 
-<style>
+<style lang="postcss">
+	@property --x {
+		syntax: '<number>';
+		inherits: false;
+	}
+	@property --y {
+		syntax: '<number>';
+		inherits: false;
+	}
+	@property --width {
+		syntax: '<number>';
+		inherits: false;
+	}
+	@property --height {
+		syntax: '<number>';
+		inherits: false;
+	}
 	.contextmenu {
 		width: var(--width, max-content);
 		display: grid;
@@ -64,6 +80,13 @@
 		left: min(var(--x), 100vw - var(--width) - 1rem);
 		top: var(--y);
 		top: min(var(--y), 100vh - var(--height) - 1rem);
+	}
+	@media (prefers-reduced-motion: no-preference) {
+		.contextmenu {
+			transition:
+				left 50ms cubic-bezier(0.165, 0.84, 0.44, 1),
+				top 50ms cubic-bezier(0.165, 0.84, 0.44, 1);
+		}
 	}
 	.contextmenu :global(button) {
 		border-radius: 0.125rem;
