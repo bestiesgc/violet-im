@@ -1,0 +1,4 @@
+{
+	"name": "@matrix-org/matrix-sdk-crypto-wasm",
+	"main": "index.js"
+}

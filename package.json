@@ -12,8 +12,14 @@
 		"format": "prettier --write .",
 		"preinstall": "npx only-allow pnpm"
 	},
+	"pnpm": {
+		"overrides": {
+			"@matrix-org/matrix-sdk-crypto-wasm": "link:src/dummy/rust-crypto"
+		}
+	},
 	"devDependencies": {
 		"@besties/eslint-config": "^0.2.2",
+		"@matrix-org/matrix-sdk-crypto-wasm": "link:src/dummy/rust-crypto",
 		"@rollup/plugin-typescript": "^11.0.0",
 		"@sveltejs/adapter-static": "^2.0.3",
 		"@sveltejs/kit": "^1.20.4",
