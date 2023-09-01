@@ -186,7 +186,7 @@
 	}
 	.options button {
 		display: grid;
-		place-items: center;
+		place-content: center;
 	}
 	@media (pointer: fine) {
 		.event-wrapper:hover {

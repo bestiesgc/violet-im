@@ -168,12 +168,12 @@
 		height: 1.5rem;
 		margin: -0.5rem;
 		display: grid;
-		place-items: center;
+		place-content: center;
 	}
 	.center {
 		height: 100%;
 		display: grid;
-		place-items: center;
+		place-content: center;
 	}
 	.form {
 		display: grid;
@@ -192,7 +192,7 @@
 	.form button {
 		background-color: var(--slate-900);
 		display: grid;
-		place-items: center;
+		place-content: center;
 		width: 2.5rem;
 		height: 2rem;
 		border-radius: 0.25rem;

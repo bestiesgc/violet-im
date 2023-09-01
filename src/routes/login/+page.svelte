@@ -64,7 +64,7 @@
 <style lang="postcss">
 	.center {
 		display: grid;
-		place-items: center;
+		place-content: center;
 		height: 100%;
 	}
 	.login-wrapper {

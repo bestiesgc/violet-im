@@ -78,7 +78,7 @@
 		background-color: var(--slate-700);
 		color: var(--slate-100);
 		display: grid;
-		place-items: center;
+		place-content: center;
 	}
 	.space:hover {
 		background-color: var(--slate-800);

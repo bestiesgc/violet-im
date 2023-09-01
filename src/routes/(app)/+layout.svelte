@@ -255,7 +255,7 @@
 	}
 	.room-view .header button {
 		display: grid;
-		place-items: center;
+		place-content: center;
 		width: 2rem;
 		height: 2rem;
 	}

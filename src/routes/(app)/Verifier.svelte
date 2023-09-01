@@ -160,7 +160,7 @@
 		display: grid;
 		width: 2rem;
 		height: 2rem;
-		place-items: center;
+		place-content: center;
 	}
 
 	.verification :global(.avatar) {

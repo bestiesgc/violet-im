@@ -60,7 +60,7 @@
 		backdrop-filter: blur(4px);
 		background-color: rgb(0 0 0 / 0.25);
 		display: grid;
-		place-items: center;
+		place-content: center;
 	}
 	.dialog {
 		position: relative;
@@ -101,7 +101,7 @@
 	}
 	.close {
 		display: grid;
-		place-items: center;
+		place-content: center;
 		width: 1.5rem;
 		height: 1.5rem;
 	}
