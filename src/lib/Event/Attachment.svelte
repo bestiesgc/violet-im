@@ -28,6 +28,7 @@
 		></div>
 	{:else}
 		<img
+			loading="lazy"
 			width={Math.min(event.content.info.w, maxWidth)}
 			style:aspect-ratio="{event.content.info.w} / {event.content.info.h}"
 			src={attachmentUrl}

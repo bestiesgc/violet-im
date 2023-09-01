@@ -120,6 +120,7 @@
 						<span class="reaction">
 							{#if reaction.startsWith('mxc://')}
 								<img
+									loading="lazy"
 									class="emoji"
 									title={event.reactions[reaction].shortcode}
 									alt={event.reactions[reaction].shortcode}
@@ -127,6 +128,7 @@
 								/>
 							{:else if /^https?:\/\//.test(reaction)}
 								<img
+									loading="lazy"
 									class="emoji"
 									title={event.reactions[reaction].shortcode}
 									alt={event.reactions[reaction].shortcode}
@@ -137,7 +139,7 @@
 							{/if}
 							<span aria-hidden="true" class="reactors">
 								{#each event.reactions[reaction].senders as reactor}
-									<img src={client.getMemberAvatarUrl(reactor, 16)} alt="" />
+									<Avatar member={reactor} size={16} />
 								{/each}
 							</span>
 						</span>
@@ -232,7 +234,7 @@
 		aspect-ratio: 1;
 		object-fit: cover;
 	}
-	.reaction .reactors img {
+	.reaction .reactors :global(img) {
 		width: 1.25rem;
 		aspect-ratio: 1;
 		object-fit: cover;
