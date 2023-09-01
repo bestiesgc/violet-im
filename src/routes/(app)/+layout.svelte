@@ -20,8 +20,7 @@
 	import { expoOut } from 'svelte/easing'
 	import Ticker from '$lib/Ticker.svelte'
 	import type { WrappedEvent } from '$lib/client/event'
-
-	import { finePointer } from '$lib/stores'
+	import { finePointer, visualViewport } from '$lib/stores'
 
 	const selection = writable(<WrappedEvent[] | null>null)
 	const editingOrReplying = writable(<'editing' | 'replying' | null>null)
@@ -30,6 +29,26 @@
 	setContext('editingOrReplying', editingOrReplying)
 	setContext('showSettings', showSettings)
 
+	const onWindowScroll = () => {
+		let correctedPosition: number = 0
+		if ($visualViewport?.offsetTop) {
+			correctedPosition = $visualViewport?.offsetTop
+		} else {
+			const { top } = headerElement.getBoundingClientRect()
+			correctedPosition = Math.abs(top)
+		}
+		headerElement.getAnimations().forEach(animation => animation.cancel())
+		headerElement.animate(
+			{ transform: `translateY(${correctedPosition}px)` },
+			{
+				duration: 200,
+				easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+				fill: 'forwards'
+			}
+		)
+	}
+
+	let headerElement: HTMLElement
 	let rooms: Room[] = []
 	let spaces: Room[] = []
 	let mobileSidebarOpen = !$page.data.roomId || $page.data.roomIsSpace
@@ -67,11 +86,21 @@
 			CryptoEvent.VerificationRequest,
 			onVerificationRequest
 		)
+		if (window.visualViewport) {
+			window.visualViewport.addEventListener('scroll', onWindowScroll)
+		} else {
+			window.addEventListener('scroll', onWindowScroll)
+		}
 		return () => {
 			client.matrixClient.off(
 				CryptoEvent.VerificationRequest,
 				onVerificationRequest
 			)
+			if (window.visualViewport) {
+				window.visualViewport.removeEventListener('scroll', onWindowScroll)
+			} else {
+				window.removeEventListener('scroll', onWindowScroll)
+			}
 		}
 	})
 
@@ -90,7 +119,7 @@
 	</div>
 	<main class="panel">
 		<div class="room-view">
-			<div class="header">
+			<div class="header" bind:this={headerElement}>
 				{#if $finePointer || $editingOrReplying || !$selection}
 					<div
 						class="group"
@@ -229,6 +258,9 @@
 		grid-template-rows: min-content 1fr auto;
 	}
 	.room-view .header {
+		z-index: 99;
+		border-radius: 0.25rem 0.25rem 0 0;
+		background-color: var(--slate-900);
 		display: flex;
 		align-items: center;
 		gap: 0.25rem;
