@@ -74,12 +74,13 @@
 							class="menu-button"
 							on:click={() => (mobileSidebarOpen = !mobileSidebarOpen)}
 						>
-							<HamburgerIcon></HamburgerIcon>
+							<span class="sr-only">Expand menu</span>
+							<HamburgerIcon aria-hidden="true"></HamburgerIcon>
 						</button>
 						{#if $page.data.isDirectMessage}
-							<AtIcon class="room-icon"></AtIcon>
+							<AtIcon class="room-icon" aria-hidden="true"></AtIcon>
 						{:else if $page.data.roomId && !$page.data.roomIsSpace}
-							<HashIcon class="room-icon"></HashIcon>
+							<HashIcon class="room-icon" aria-hidden="true"></HashIcon>
 						{/if}
 						<span class="room-name"
 							>{$page.data.room?.name && !$page.data.roomIsSpace
@@ -93,7 +94,8 @@
 						in:fly={{ easing: expoOut, duration: 200, y: -20 }}
 					>
 						<button on:click={() => ($selection = null)}>
-							<CloseIcon></CloseIcon>
+							<span class="sr-only">Deselect messages</span>
+							<CloseIcon aria-hidden="true"></CloseIcon>
 						</button>
 						<span class="room-name">
 							<Ticker number={$selection.length}></Ticker> selected

@@ -38,7 +38,8 @@
 	<button on:click={() => ($showSettings = true)} class="space">
 		<span class="sr-only">Settings</span>
 		<div class="avatar icon">
-			<SettingsIcon></SettingsIcon>
+			<span class="sr-only">Settings</span>
+			<SettingsIcon aria-hidden="true"></SettingsIcon>
 		</div>
 	</button>
 </div>
