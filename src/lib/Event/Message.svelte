@@ -139,7 +139,7 @@
 							{/if}
 							<span aria-hidden="true" class="reactors">
 								{#each event.reactions[reaction].senders as reactor}
-									<Avatar member={reactor} size={16} />
+									<Avatar member={reactor} size={20} />
 								{/each}
 							</span>
 						</span>
@@ -199,7 +199,7 @@
 		grid-template-columns: 2rem 1fr;
 		gap: 0.5rem;
 	}
-	.message :global(.avatar) {
+	.message :global(> .avatar) {
 		user-select: none;
 		width: 2rem;
 		border-radius: 0.25rem;
@@ -219,6 +219,7 @@
 		width: fit-content;
 	}
 	.reaction {
+		height: 1.5rem;
 		display: flex;
 		gap: 0.25rem;
 		border-radius: 0.75rem;
@@ -227,6 +228,7 @@
 	}
 	.reaction .reactors {
 		display: flex;
+		align-items: center;
 		gap: 0.125rem;
 	}
 	.reaction :global(.emoji) {
@@ -240,7 +242,7 @@
 		object-fit: cover;
 		border-radius: 100%;
 	}
-	.message-wrapper:not(.starts-group) :global(.avatar) {
+	.message-wrapper:not(.starts-group) .message > :global(.avatar) {
 		visibility: hidden;
 		width: 0px;
 		height: 0px;
@@ -268,7 +270,7 @@
 			order: 3;
 		}
 		.message .sender,
-		.message :global(.avatar) {
+		.message :global(> .avatar) {
 			opacity: 0;
 			width: 0px;
 			height: 0px;
