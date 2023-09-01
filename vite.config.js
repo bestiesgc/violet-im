@@ -1,23 +1,9 @@
 import svelteSVG from 'vite-plugin-svelte-svg'
 import { sveltekit } from '@sveltejs/kit/vite'
 import { defineConfig } from 'vite'
-import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 export default defineConfig({
-	optimizeDeps: {
-		esbuildOptions: {
-			define: {
-				global: 'globalThis'
-			},
-			plugins: [
-				// Enable esbuild polyfill plugins
-				NodeGlobalsPolyfillPlugin({
-					process: false,
-					buffer: true
-				})
-			]
-		}
-	},
 	plugins: [
 		svelteSVG({
 			svgoConfig: {
@@ -35,6 +21,14 @@ export default defineConfig({
 			},
 			requireSuffix: false
 		}),
-		sveltekit()
+		sveltekit(),
+		nodePolyfills({
+			include: [],
+			globals: {
+				Buffer: true,
+				global: true,
+				process: false
+			}
+		})
 	]
 })
