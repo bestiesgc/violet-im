@@ -17,6 +17,12 @@
 	const timeline = activeTimeline.getEvents()
 	let wrappedTimeline: WrappedEvent[] = []
 
+	$: {
+		if (room) {
+			loadPrevious(20)
+		}
+	}
+
 	async function onTimeline() {
 		wrappedTimeline = await client.wrapTimeline(timeline, room)
 	}
@@ -83,7 +89,6 @@
 	})
 
 	onMount(() => {
-		loadPrevious(20)
 		room.on(RoomEvent.Timeline, onTimeline)
 		return () => {
 			room.off(RoomEvent.Timeline, onTimeline)
