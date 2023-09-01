@@ -5,6 +5,13 @@
 	const dispatcher = createEventDispatcher()
 
 	let position = { x: 0, y: 0 }
+	let borderBoxSize: ResizeObserverSize[]
+
+	$: {
+		if (borderBoxSize) {
+			console.log('content box!', borderBoxSize)
+		}
+	}
 
 	function onClickOff(e: MouseEvent) {
 		if (!(e.target instanceof HTMLElement)) {
@@ -29,10 +36,13 @@
 	<slot />
 	{#if visible}
 		<div
+			bind:borderBoxSize
 			transition:fly={{ y: 2, duration: 100 }}
 			class="contextmenu"
 			style:--x="{position.x}px"
 			style:--y="{position.y}px"
+			style:--width="{borderBoxSize?.[borderBoxSize.length - 1]?.inlineSize}px"
+			style:--height="{borderBoxSize?.[borderBoxSize.length - 1]?.blockSize}px"
 		>
 			<slot name="contextmenu" />
 		</div>
@@ -43,7 +53,7 @@
 
 <style>
 	.contextmenu {
-		width: 8rem;
+		width: var(--width, max-content);
 		display: grid;
 		background-color: var(--slate-950);
 		padding: 0.25rem 0.25rem;
@@ -51,8 +61,9 @@
 		position: fixed;
 		z-index: 9999;
 		left: var(--x);
-		left: min(var(--x), calc(100vw - 9rem));
+		left: min(var(--x), 100vw - var(--width) - 1rem);
 		top: var(--y);
+		top: min(var(--y), 100vh - var(--height) - 1rem);
 	}
 	.contextmenu :global(button) {
 		border-radius: 0.125rem;
@@ -60,7 +71,7 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 0.125rem 0.25rem;
-		gap: 0.25rem;
+		gap: 1rem;
 	}
 	.contextmenu :global(button:hover) {
 		background-color: var(--slate-900);
