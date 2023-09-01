@@ -101,7 +101,7 @@
 	.options {
 		margin-inline-end: 0.25rem;
 		padding: 0rem 0.25rem;
-		border-radius: 0.5rem;
+		border-radius: 0.25rem;
 		background-color: var(--slate-950);
 		display: none;
 		align-items: center;
