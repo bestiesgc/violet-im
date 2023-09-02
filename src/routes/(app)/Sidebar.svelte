@@ -1,15 +1,14 @@
 <script lang="ts">
+	import SettingsDialog from '$lib/Dialogs/Settings.svelte'
 	import type { Room } from 'matrix-js-sdk'
-	import { getContext } from 'svelte'
 	import { page } from '$app/stores'
 	import RoomAvatar from '$lib/Room/Avatar.svelte'
 	import RoomList from '$lib/Room/RoomList.svelte'
 	import SettingsIcon from '$lib/Icons/settings.svg?c'
-	import type { Writable } from 'svelte/store'
 	export let spaces: Room[]
 	export let rooms: Room[]
 
-	const showSettings: Writable<boolean> = getContext('showSettings')
+	let showSettings = false
 </script>
 
 <div class="panel spaces">
@@ -35,7 +34,7 @@
 		</a>
 	{/each}
 	<div style:flex-grow="1"></div>
-	<button on:click={() => ($showSettings = true)} class="space">
+	<button on:click={() => (showSettings = true)} class="space">
 		<span class="sr-only">Settings</span>
 		<div class="avatar icon">
 			<span class="sr-only">Settings</span>
@@ -55,6 +54,10 @@
 		<RoomList {rooms}></RoomList>
 	</div>
 </div>
+
+{#if showSettings}
+	<SettingsDialog closeDialog={() => (showSettings = false)} />
+{/if}
 
 <style lang="postcss">
 	.spaces {

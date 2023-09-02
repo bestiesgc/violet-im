@@ -1,17 +1,31 @@
 <script lang="ts">
-	import type { Writable } from 'svelte/store'
 	import MultiPage from './MultiPage.svelte'
 	import Button from '$lib/Form/Button.svelte'
 	import SecureBackup from './SecureBackup.svelte'
 	import { getContext } from 'svelte'
-	const showSettings: Writable<boolean> = getContext('showSettings')
+	import type { Writable } from 'svelte/store'
+
+	const hasDialog: Writable<boolean> = getContext('hasDialog')
+
+	export let closeDialog: (() => void) | null = null
 	let pages = ['Security']
 	let page: string
 	let secureBackupSetup = false
 </script>
 
 {#if !secureBackupSetup}
-	<MultiPage closeDialog={() => ($showSettings = false)} {pages} bind:page>
+	<MultiPage
+		on:introend={() => ($hasDialog = true)}
+		on:outrostart={() => {
+			if (secureBackupSetup) return
+			$hasDialog = false
+		}}
+		updateStore={false}
+		{closeDialog}
+		{pages}
+		bind:page
+	>
+		<span slot="title">Settings</span>
 		{#if page == 'Security'}
 			<h3>Secure Backup</h3>
 			<p>Restore from Security Key</p>
@@ -19,7 +33,10 @@
 		{/if}
 	</MultiPage>
 {:else}
-	<SecureBackup closeDialog={() => (secureBackupSetup = false)}></SecureBackup>
+	<SecureBackup
+		updateStore={false}
+		closeDialog={() => (secureBackupSetup = false)}
+	></SecureBackup>
 {/if}
 
 <style lang="postcss">

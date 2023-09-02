@@ -1,13 +1,14 @@
 <script lang="ts">
 	import Wrapper from './Wrapper.svelte'
+	export let updateStore = true
 	export let pages: string[]
 	export let page: string = pages[0]
-	export let closeDialog: () => void
+	export let closeDialog: (() => void) | null
 </script>
 
-<Wrapper {closeDialog}>
-	<span slot="title">Settings</span>
-	<div class="layout">
+<Wrapper on:introend on:outrostart {updateStore} {closeDialog}>
+	<svelte:fragment slot="title"><slot name="title" /></svelte:fragment>
+	<div class="layout" slot="content">
 		<div class="pages">
 			{#each pages as pageName}
 				<button on:click={() => (page = pageName)}>{pageName}</button>
@@ -21,8 +22,7 @@
 
 <style lang="postcss">
 	.layout {
-		margin: -0.75rem -0.5rem;
-		width: calc(100% + 1rem);
+		/* margin: -0.75rem -0.5rem; */
 		display: grid;
 		grid-template-columns: 8rem 1fr;
 		height: 100%;

@@ -2,6 +2,7 @@ import { readable } from 'svelte/store'
 import { useMediaQuery } from './utils/media'
 
 export const finePointer = useMediaQuery('(pointer: fine)')
+export const mobile = useMediaQuery('(max-width: 600px)')
 
 type Viewport = {
 	width: number

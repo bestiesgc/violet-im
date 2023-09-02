@@ -3,51 +3,75 @@
 	import { expoOut } from 'svelte/easing'
 	import CloseIcon from '$lib/Icons/close.svg?c'
 	import { focusTrap } from 'svelte-focus-trap'
+	import { mobile } from '$lib/stores'
+	import { onMount } from 'svelte'
+	import Portal from 'svelte-portal'
+	import { getContext } from 'svelte'
+	import type { Writable } from 'svelte/store'
+	const hasDialog: Writable<boolean> = getContext('hasDialog')
+
+	let visible = false
+
+	export let updateStore = true
 	export let closeDialog: (() => void) | null = null
 	function clickOff(event: Event) {
 		if (!closeDialog) return
 		if ((<HTMLElement | null>event.target)?.closest('.dialog')) return
-		closeDialog()
+		visible = false
 	}
-	let innerWidth: number = window.innerWidth
-	let mobile = true
-	$: mobile = innerWidth <= 600
+
+	$: {
+		if (updateStore) hasDialog.set(visible)
+	}
+
+	onMount(() => {
+		visible = true
+		return () => (visible = false)
+	})
 </script>
 
-<svelte:window bind:innerWidth />
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-	class="dialog-wrapper"
-	out:fade={mobile
-		? { delay: 250, duration: 250, easing: expoOut }
-		: { duration: 200, easing: expoOut }}
-	in:fade={mobile ? { duration: 0 } : { duration: 200, easing: expoOut }}
-	on:click={clickOff}
->
-	<div
-		class="dialog"
-		use:focusTrap
-		transition:fly={mobile
-			? { y: 0, x: '-100%', duration: 500, opacity: 1, easing: expoOut }
-			: { y: 10, duration: 200, easing: expoOut }}
-	>
-		<div class="heading">
-			<slot name="heading">
-				<h1 class="title"><slot name="title" /></h1>
-				{#if closeDialog}
-					<button class="close" on:click={closeDialog}>
-						<span class="sr-only">Close</span>
-						<CloseIcon aria-hidden="true"></CloseIcon>
-					</button>
-				{/if}
-			</slot>
+{#if visible}
+	<Portal target="#dialogs">
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<div
+			class="dialog-wrapper"
+			out:fade={$mobile
+				? { delay: 200, duration: 50, easing: expoOut }
+				: { duration: 200, easing: expoOut }}
+			in:fade={$mobile ? { duration: 0 } : { duration: 200, easing: expoOut }}
+			on:outrostart
+			on:outroend={closeDialog}
+			on:click={clickOff}
+		>
+			<div
+				class="dialog"
+				use:focusTrap
+				on:introend
+				transition:fly={$mobile
+					? { y: 0, x: '-100%', duration: 500, opacity: 1, easing: expoOut }
+					: { y: 10, duration: 200, easing: expoOut }}
+			>
+				<div class="heading">
+					<slot name="heading">
+						<h1 class="title"><slot name="title" /></h1>
+						{#if closeDialog}
+							<button class="close" on:click={() => (visible = false)}>
+								<span class="sr-only">Close</span>
+								<CloseIcon aria-hidden="true"></CloseIcon>
+							</button>
+						{/if}
+					</slot>
+				</div>
+				<slot name="content">
+					<div class="content">
+						<slot />
+					</div>
+				</slot>
+			</div>
 		</div>
-		<div class="content">
-			<slot />
-		</div>
-	</div>
-</div>
+	</Portal>
+{/if}
 
 <style lang="postcss">
 	.dialog-wrapper {

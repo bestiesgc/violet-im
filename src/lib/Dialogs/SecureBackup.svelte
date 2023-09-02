@@ -6,6 +6,7 @@
 	import TextInput from '$lib/Form/TextInput.svelte'
 	import Button from '$lib/Form/Button.svelte'
 
+	export let updateStore = true
 	export let closeDialog: (() => void) | null = null
 	let securityKey: string
 
@@ -29,7 +30,7 @@
 	}
 </script>
 
-<Wrapper {closeDialog}>
+<Wrapper on:introend on:outrostart {updateStore} {closeDialog}>
 	<span slot="title">Secure Backup</span>
 	<p>Input a Security Key.</p>
 	<Form on:submit={submit}>

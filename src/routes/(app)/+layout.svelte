@@ -5,7 +5,6 @@
 	import { Crypto, CryptoEvent, type Room } from 'matrix-js-sdk'
 	import Sidebar from './Sidebar.svelte'
 	import Verifier from './Verifier.svelte'
-	import SettingsDialog from '$lib/Dialogs/Settings.svelte'
 	import AtIcon from '$lib/Icons/at.svg?c'
 	import HashIcon from '$lib/Icons/hash.svg?c'
 	import HamburgerIcon from '$lib/Icons/hamburger.svg?c'
@@ -23,12 +22,12 @@
 	import { finePointer, visualViewport } from '$lib/stores'
 	import convertRemToPixels from '$lib/utils/rem'
 
+	const hasDialog = writable(false)
 	const selection = writable(<WrappedEvent[] | null>null)
 	const editingOrReplying = writable(<'editing' | 'replying' | null>null)
-	const showSettings = writable(false)
 	setContext('selection', selection)
 	setContext('editingOrReplying', editingOrReplying)
-	setContext('showSettings', showSettings)
+	setContext('hasDialog', hasDialog)
 
 	const onWindowScroll = () => {
 		let correctedPosition: number = 0
@@ -108,13 +107,13 @@
 	}
 </script>
 
-<div class="layout">
+<div class="layout" class:has-dialog={$hasDialog}>
 	{#if verificationRequest}
 		<Verifier bind:request={verificationRequest}></Verifier>
 	{/if}
 
 	<div class="sidebar-wrapper" class:mobile-visible={mobileSidebarOpen}>
-		<Sidebar {spaces} {rooms}></Sidebar>
+		<Sidebar {spaces} {rooms} />
 	</div>
 	<main class="panel">
 		<div class="room-view">
@@ -225,9 +224,7 @@
 	</main>
 </div>
 
-{#if $showSettings}
-	<SettingsDialog></SettingsDialog>
-{/if}
+<div id="dialogs"></div>
 
 <style lang="postcss">
 	.layout :global(.verifier) {
@@ -296,6 +293,12 @@
 		margin-right: 0.5rem;
 	}
 	@media screen and (max-width: 600px) {
+		.layout.has-dialog {
+			background-color: var(--slate-900);
+		}
+		.layout.has-dialog > * {
+			opacity: 0;
+		}
 		.layout {
 			grid-template-columns: 1fr;
 			padding: 0;
