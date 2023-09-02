@@ -1,11 +1,8 @@
 <script lang="ts">
 	import type { WrappedEvent } from '$lib/client/event'
+	import convertRemToPixels from '$lib/utils/rem'
 	import client from '$lib/client/index'
 	export let event: WrappedEvent
-
-	function convertRemToPixels(rem: number) {
-		return rem * parseFloat(getComputedStyle(document.documentElement).fontSize)
-	}
 
 	let attachmentUrl: string
 	$: event && loadAttachment()

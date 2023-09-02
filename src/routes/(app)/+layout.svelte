@@ -21,6 +21,7 @@
 	import Ticker from '$lib/Ticker.svelte'
 	import type { WrappedEvent } from '$lib/client/event'
 	import { finePointer, visualViewport } from '$lib/stores'
+	import convertRemToPixels from '$lib/utils/rem'
 
 	const selection = writable(<WrappedEvent[] | null>null)
 	const editingOrReplying = writable(<'editing' | 'replying' | null>null)
@@ -31,18 +32,16 @@
 
 	const onWindowScroll = () => {
 		let correctedPosition: number = 0
-		if ($visualViewport?.offsetTop) {
+		if ($visualViewport?.offsetTop != null) {
 			correctedPosition = $visualViewport?.offsetTop
 		} else {
 			const { top } = headerElement.getBoundingClientRect()
 			correctedPosition = Math.abs(top)
 		}
-		headerElement.getAnimations().forEach(animation => animation.cancel())
 		headerElement.animate(
-			{ transform: `translateY(${correctedPosition}px)` },
+			{ paddingTop: `${correctedPosition + convertRemToPixels(0.5)}px` },
 			{
-				duration: 200,
-				easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+				duration: 0,
 				fill: 'forwards'
 			}
 		)
@@ -268,7 +267,6 @@
 		font-weight: 700;
 		padding: 0.5rem;
 		font-size: 1.25rem;
-		height: 51px;
 		border-bottom: 1px solid var(--slate-700);
 	}
 	.room-view .header .group {
@@ -322,6 +320,12 @@
 		.sidebar-wrapper.mobile-visible {
 			transform: translateX(0%);
 			visibility: visible;
+		}
+		.room-view .header {
+			position: sticky;
+			top: 0;
+			left: 0;
+			right: 0;
 		}
 		.room-view .header .menu-button {
 			display: grid;
