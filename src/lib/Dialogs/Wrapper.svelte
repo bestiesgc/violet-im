@@ -112,7 +112,7 @@
 	@media screen and (max-width: 600px) {
 		.dialog-wrapper {
 			backdrop-filter: none;
-			place-items: unset;
+			place-content: unset;
 			background: none;
 		}
 		.dialog {
