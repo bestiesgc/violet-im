@@ -55,8 +55,11 @@
 	function onScroll() {
 		if (!hasLoaded) return
 		shouldScroll =
-			timelineElement.scrollTop + timelineElement.offsetHeight ==
-			timelineElement.scrollHeight
+			Math.abs(
+				timelineElement.scrollTop +
+					timelineElement.offsetHeight -
+					timelineElement.scrollHeight
+			) < 10
 		scrollPosition = timelineElement.scrollTop
 		if (timelineElement?.scrollTop <= 100) loadTimeline(20, true)
 	}
@@ -75,6 +78,7 @@
 
 	function updateScrollPosition() {
 		if (!timelineElement) return
+		console.log('!!!', shouldScroll)
 		if (shouldScroll) {
 			timelineElement.scrollTop = timelineElement.scrollHeight
 		} else {
