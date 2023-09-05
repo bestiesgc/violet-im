@@ -78,7 +78,6 @@
 
 	function updateScrollPosition() {
 		if (!timelineElement) return
-		console.log('!!!', shouldScroll)
 		if (shouldScroll) {
 			timelineElement.scrollTop = timelineElement.scrollHeight
 		} else {
