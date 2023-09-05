@@ -69,12 +69,18 @@ export function parseBody(body: string) {
 	bodyDoc.querySelectorAll('a').forEach(a => {
 		a.setAttribute('target', '_blank')
 		a.setAttribute('rel', 'noopener noreferrer')
-		if (a.innerText != a.getAttribute('href')) {
+		const link = a.getAttribute('href') ?? ''
+		const prettierLink = linkPrettier(link)
+		const unmatchedLink =
+			a.innerText != link &&
+			a.innerText != prettierLink &&
+			a.innerText != prettierLink + '/'
+		if (unmatchedLink) {
 			const text = a.innerText
-			a.innerText = linkPrettier(a.getAttribute('href') ?? '')
+			a.innerText = prettierLink
 			a.replaceWith('[' + text + '](', a, ')')
 		} else {
-			a.innerText = linkPrettier(a.getAttribute('href') ?? '')
+			a.innerText = prettierLink
 		}
 	})
 	let codePromise: Promise<string> | null = null
