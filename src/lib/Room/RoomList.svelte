@@ -149,6 +149,11 @@
 		border-radius: 0.25rem;
 		gap: 0.5rem;
 	}
+	.room .name {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
 	.room:hover {
 		background-color: var(--slate-800);
 	}
