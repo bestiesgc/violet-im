@@ -100,8 +100,10 @@
 
 	onMount(() => {
 		room.on(RoomEvent.Timeline, onTimeline)
+		room.on(RoomEvent.Receipt, onTimeline)
 		return () => {
 			room.off(RoomEvent.Timeline, onTimeline)
+			room.off(RoomEvent.Receipt, onTimeline)
 		}
 	})
 </script>
