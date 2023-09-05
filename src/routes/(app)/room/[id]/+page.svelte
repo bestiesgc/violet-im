@@ -97,23 +97,25 @@
 			<Timeline room={data.room}></Timeline>
 		{/key}
 		{#if $editingOrReplying}
-			<div class="form-status">
-				<span class="text"
-					>{#if $editingOrReplying == 'editing'}
-						Editing message...
-					{:else if $editingOrReplying == 'replying'}
-						Replying to message...
-					{/if}</span
-				>
-				<button
-					on:click={() => {
-						$selection = null
-						$editingOrReplying = null
-					}}
-				>
-					<span class="sr-only">Cancel</span>
-					<CloseIcon width="12" height="12" aria-hidden="true"></CloseIcon>
-				</button>
+			<div class="form-status-wrapper">
+				<div class="form-status">
+					<span class="text"
+						>{#if $editingOrReplying == 'editing'}
+							Editing message...
+						{:else if $editingOrReplying == 'replying'}
+							Replying to message...
+						{/if}</span
+					>
+					<button
+						on:click={() => {
+							$selection = null
+							$editingOrReplying = null
+						}}
+					>
+						<span class="sr-only">Cancel</span>
+						<CloseIcon width="12" height="12" aria-hidden="true"></CloseIcon>
+					</button>
+				</div>
 			</div>
 		{/if}
 	</div>
@@ -148,6 +150,17 @@
 	.timeline-wrapper.has-form-status {
 		padding-bottom: 1rem;
 	}
+	.form-status-wrapper {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		font-size: 0.75rem;
+		margin-inline: auto;
+		width: 100%;
+		max-width: 60rem;
+		padding-inline: 0.5rem;
+	}
 	.form-status {
 		display: flex;
 		gap: 0.5rem;
@@ -156,12 +169,6 @@
 		width: fit-content;
 		padding: 0.25rem;
 		background-color: var(--slate-950);
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		font-size: 0.75rem;
-		margin-inline: 0.5rem;
 	}
 	.form-status button {
 		width: 1.5rem;
