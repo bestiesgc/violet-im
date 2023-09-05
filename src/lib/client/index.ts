@@ -265,10 +265,16 @@ class MatrixClientWrapper {
 		if (clearContent?.['m.new_content']) {
 			editOriginalId = event.relationEventId
 		}
+		const receipts = <RoomMember[]>room
+			.getReceiptsForEvent(event)
+			.filter(r => r.userId != this.getUserId())
+			.map(r => room.getMember(r.userId))
+			.filter(r => r)
 		return {
 			edited: false,
 			_debug: event,
 			room: room,
+			receipts,
 			id: <string>event.getId(),
 			type: type,
 			sender: event.sender ?? undefined,

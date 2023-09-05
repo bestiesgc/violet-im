@@ -87,10 +87,11 @@
 					tail={!allEmoji}
 					joinLast={!(
 						Object.keys(lastEvent?.reactions ?? {}).length > 0 ||
+						(lastEvent?.receipts?.length ?? 0) > 0 ||
 						startsGroup ||
 						event.replyEvent
 					)}
-					joinNext={!endsGroup}
+					joinNext={event.receipts.length == 0 && !endsGroup}
 					rightSide={!preview && event.sender.userId == client.getUserId()}
 				>
 					{#if event.content?.formatted_body && event.content.format == 'org.matrix.custom.html'}<Body

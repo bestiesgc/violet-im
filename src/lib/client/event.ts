@@ -6,6 +6,7 @@ export interface WrappedEvent {
 	room: Room
 	type: string
 	sender?: RoomMember
+	receipts: RoomMember[]
 	id: string
 	reactions: {
 		[key: string]: {

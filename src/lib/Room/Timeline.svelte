@@ -9,6 +9,7 @@
 	import client from '$lib/client/index'
 	import Event from '$lib/Event/Event.svelte'
 	import type { WrappedEvent } from '$lib/client/event'
+	import MemberAvatar from '$lib/Member/Avatar.svelte'
 
 	export let room: Room
 
@@ -113,7 +114,7 @@
 	bind:clientHeight={timelineHeight}
 	on:scroll={onScroll}
 >
-	<div style:margin-top="auto"></div>
+	<li style:margin-top="auto"></li>
 	{#each wrappedTimeline as event, i (event.id)}
 		<li>
 			<Event
@@ -121,6 +122,15 @@
 				nextEvent={client.getNextMessageEvent(wrappedTimeline, i) ?? null}
 				lastEvent={client.getLastMessageEvent(wrappedTimeline, i) ?? null}
 			/>
+			{#if event.receipts.length > 0}
+				<div class="receipts">
+					{#each event.receipts as receipt}
+						<div class="receipt" title="Read by {receipt.name}">
+							<MemberAvatar member={receipt}></MemberAvatar>
+						</div>
+					{/each}
+				</div>
+			{/if}
 		</li>
 	{/each}
 </ol>
@@ -135,5 +145,19 @@
 		height: 100%;
 		word-break: break-word;
 		transition: padding-bottom 200ms cubic-bezier(0.075, 0.82, 0.165, 1);
+	}
+	.receipts {
+		padding: 0 0.5rem;
+		max-width: 60rem;
+		margin: 0 auto;
+		display: flex;
+		justify-content: flex-end;
+		margin-block: 0.25rem;
+		height: 1.25rem;
+	}
+	.receipts :global(.avatar) {
+		border-radius: 100%;
+		height: 1.25rem;
+		width: 1.25rem;
 	}
 </style>
