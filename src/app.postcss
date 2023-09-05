@@ -52,13 +52,24 @@ code {
 }
 
 .scroller {
-	scrollbar-width: thin;
-	scrollbar-color: var(--slate-500) transparent;
 	overflow-y: auto;
 }
-.scroller::-webkit-scrollbar {
-	width: 0.25rem;
+
+@media (pointer: fine) {
+	.scroller {
+		scrollbar-width: thin;
+		scrollbar-color: var(--slate-500) transparent;
+	}
+	.scroller::-webkit-scrollbar {
+		width: 0.25rem;
+	}
+	.scroller::-webkit-scrollbar-thumb {
+		border-radius: 0.25rem;
+	}
 }
-.scroller::-webkit-scrollbar-thumb {
-	border-radius: 0.25rem;
+
+@media (pointer: coarse) {
+	.scroller::-webkit-scrollbar {
+		display: none;
+	}
 }
