@@ -11,6 +11,8 @@ DOMPurify.addHook('afterSanitizeAttributes', function (node) {
 })
 
 function linkPrettier(url: string) {
+	if (url.startsWith('mailto:') || url.startsWith('tel:'))
+		return url.split(':').slice(1).join(':')
 	return url.replace(/^[a-zA-Z]+?:\/\//, '').replace(/\/$/, '')
 }
 
