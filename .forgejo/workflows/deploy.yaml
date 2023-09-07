@@ -9,18 +9,12 @@ jobs:
     runs-on: docker
     steps:
       - name: Checkout repository
-        uses: https://code.forgejo.org/actions/checkout@v3
+        uses: https://code.forgejo.org/actions/checkout@v4
 
       - name: Install pnpm
         uses: https://github.com/pnpm/action-setup@v2
         with:
           version: 8
-
-      - name: Install Node.js
-        uses: https://github.com/actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: pnpm
 
       - name: Install dependencies
         run: pnpm install
