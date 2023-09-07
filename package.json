@@ -1,6 +1,7 @@
 {
 	"name": "violet",
 	"version": "0.1.0",
+	"description": "A client for the Matrix protocol made with SvelteKit",
 	"private": true,
 	"scripts": {
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
