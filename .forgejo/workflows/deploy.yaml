@@ -1,0 +1,43 @@
+name: Deploy to pages.gay
+
+on:
+  push:
+    branches: 'main'
+
+jobs:
+  build_site:
+    runs-on: docker
+    steps:
+      - name: Checkout repository
+        uses: https://code.forgejo.org/actions/checkout@v3
+
+      - name: Install pnpm
+        uses: https://github.com/pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install Node.js
+        uses: https://github.com/actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        env:
+          BASE_PATH: '/'
+        run: |
+          pnpm run build
+          touch build/.nojekyll
+
+      - name: Setup Go
+        uses: https://code.forgejo.org/actions/setup-go@v3
+        with:
+          go-version: '1.21'
+
+      - name: Deploy
+        uses: https://git.gay/gitgay/pages-deploy-action@v1
+        with:
+          folder: ./build
